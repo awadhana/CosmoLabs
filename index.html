@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CosmoLabs — Computing, Aerospace &amp; Nuclear Engineering Consulting</title>
+  <meta name="description" content="CosmoLabs is a multidisciplinary consulting firm delivering expert services in computer science, aerospace engineering, and nuclear engineering for mission-critical commercial and federal programs.">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#05070D">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="CosmoLabs">
+  <meta property="og:title" content="CosmoLabs — Computing, Aerospace &amp; Nuclear Engineering Consulting">
+  <meta property="og:description" content="Where science is standard, excellence is engineered. Professional consulting in computing, aerospace &amp; nuclear engineering for mission-critical programs.">
+  <meta property="og:url" content="https://www.cosmolabs.io/">
+  <meta property="og:image" content="https://www.cosmolabs.io/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="CosmoLabs — computing, aerospace &amp; nuclear engineering consulting">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CosmoLabs — Computing, Aerospace &amp; Nuclear Engineering Consulting">
+  <meta name="twitter:description" content="Professional consulting in computing, aerospace &amp; nuclear engineering for mission-critical programs.">
+  <meta name="twitter:image" content="https://www.cosmolabs.io/og-image.png">
+
+  <!-- Favicon: inline SVG data URI -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237C6CFF'/%3E%3Cstop offset='1' stop-color='%2338E1FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2305070D'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='10' fill='none' stroke='url(%23g)' stroke-width='3' transform='rotate(-25 32 32)'/%3E%3Ccircle cx='32' cy='32' r='10' fill='url(%23g)'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts (only allowed external request) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Mark JS availability so scroll-reveal hiding never applies without JS -->
+  <script>document.documentElement.classList.add('js');</script>
+
+  <style>
+    /* ============================================================
+       CosmoLabs — Bold Modern Enterprise
+       Palette: base #05070D · alt #070B13 · surface #0B101D
+                accent gradient #7C6CFF → #38E1FF
+       Type:    Sora (display) · Manrope (body)
+       ============================================================ */
+
+    :root{
+      --bg:        #05070D;
+      --bg-alt:    #070B13;
+      --bg-deep:   #04060B;
+      --surface:   #0B101D;
+      --surface-2: #0E1424;
+      --line:      rgba(148,163,196,.14);
+      --line-soft: rgba(148,163,196,.09);
+      --text:      #EDF1F9;
+      --text-2:    #A6B0C6;
+      --text-3:    #8B96AD;
+      --violet:    #7C6CFF;
+      --cyan:      #38E1FF;
+      --grad:      linear-gradient(92deg, #7C6CFF 0%, #38E1FF 100%);
+      --radius:    20px;
+      --header-h:  72px;
+      --container: 1180px;
+      --pad-x:     clamp(1.25rem, 5vw, 2.5rem);
+      --sec-pad:   clamp(4.5rem, 9vw, 7.5rem);
+      --ease:      cubic-bezier(.22, .8, .3, 1);
+    }
+
+    /* ---------- Reset / base ---------- */
+    *, *::before, *::after{ box-sizing:border-box; margin:0; padding:0; }
+    html{ overflow-x:clip; scroll-padding-top:calc(var(--header-h) + 16px); }
+    @media (prefers-reduced-motion: no-preference){
+      html{ scroll-behavior:smooth; }
+    }
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:"Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-size:1rem;
+      line-height:1.65;
+      overflow-x:clip;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+    img, svg{ display:block; max-width:100%; }
+    a{ color:inherit; }
+    ul{ list-style:none; }
+    button{ font:inherit; color:inherit; background:none; border:none; cursor:pointer; }
+
+    :focus-visible{
+      outline:2px solid var(--cyan);
+      outline-offset:3px;
+      border-radius:6px;
+    }
+
+    .container{
+      max-width:var(--container);
+      margin-inline:auto;
+      padding-inline:var(--pad-x);
+    }
+    .sr-only{
+      position:absolute; width:1px; height:1px; margin:-1px;
+      padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+    }
+    .skip-link{
+      position:absolute; left:1rem; top:-4rem; z-index:1000;
+      background:var(--surface-2); color:var(--text);
+      padding:.75rem 1.25rem; border-radius:10px; border:1px solid var(--line);
+      font-weight:700; text-decoration:none; transition:top .2s var(--ease);
+    }
+    .skip-link:focus{ top:1rem; }
+
+    /* ---------- Typography helpers ---------- */
+    h1, h2, h3{ font-family:"Sora", "Manrope", sans-serif; line-height:1.15; }
+    .grad-text{
+      background:var(--grad);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .eyebrow{
+      display:inline-flex; align-items:center; gap:.6rem;
+      font-family:"Sora", sans-serif;
+      font-size:.8rem; font-weight:700;
+      letter-spacing:.22em; text-transform:uppercase;
+      color:var(--cyan);
+    }
+    .eyebrow::before{
+      content:""; width:26px; height:2px; border-radius:2px;
+      background:var(--grad); flex:none;
+    }
+    .sec-head{ max-width:720px; margin-bottom:clamp(2.5rem, 5vw, 3.75rem); }
+    .sec-head h2{
+      font-size:clamp(1.85rem, 4vw, 2.9rem);
+      font-weight:700; letter-spacing:-.01em;
+      margin:.85rem 0 .9rem;
+    }
+    .sec-head p{ color:var(--text-2); font-size:1.05rem; max-width:62ch; }
+    .sec-head.center{ margin-inline:auto; text-align:center; }
+    .sec-head.center p{ margin-inline:auto; }
+
+    section{ padding-block:var(--sec-pad); position:relative; }
+    .bg-alt{ background:var(--bg-alt); border-block:1px solid var(--line-soft); }
+
+    /* ---------- Buttons ---------- */
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:.55rem;
+      min-height:52px; padding:.8rem 1.8rem;
+      font-family:"Sora", sans-serif; font-weight:600; font-size:.98rem;
+      border-radius:12px; text-decoration:none; border:1px solid transparent;
+      transition:transform .2s var(--ease), box-shadow .25s var(--ease),
+                 background-color .2s var(--ease), border-color .2s var(--ease);
+      touch-action:manipulation;
+    }
+    .btn-primary{
+      background:var(--grad);
+      color:#04060B;
+      box-shadow:0 10px 32px rgba(92,120,255,.28);
+    }
+    .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 14px 40px rgba(92,140,255,.4); }
+    .btn-primary:active{ transform:translateY(0); }
+    .btn-ghost{
+      background:rgba(255,255,255,.04);
+      border-color:rgba(148,163,196,.3);
+      color:var(--text);
+    }
+    .btn-ghost:hover{ background:rgba(255,255,255,.08); border-color:rgba(148,163,196,.5); transform:translateY(-2px); }
+    .btn-ghost:active{ transform:translateY(0); }
+
+    /* ---------- Header / nav ---------- */
+    .site-header{
+      position:sticky; top:0; z-index:100;
+      background:rgba(5,7,13,.72);
+      -webkit-backdrop-filter:blur(14px);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line-soft);
+      transition:background-color .25s var(--ease);
+    }
+    .site-header.is-scrolled{ background:rgba(5,7,13,.92); }
+    .nav-wrap{
+      display:flex; align-items:center; gap:2rem;
+      height:var(--header-h);
+    }
+    .brand{
+      display:inline-flex; align-items:center; gap:.65rem;
+      text-decoration:none; margin-right:auto;
+    }
+    .brand-mark{ width:34px; height:34px; flex:none; }
+    .brand-name{
+      font-family:"Sora", sans-serif; font-weight:800; font-size:1.3rem;
+      letter-spacing:-.02em; color:var(--text);
+    }
+    .brand-name em{ font-style:normal; background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+    .nav-links{ display:flex; align-items:center; gap:.25rem; }
+    .nav-links a{
+      display:inline-flex; align-items:center;
+      padding:.65rem .95rem; border-radius:10px;
+      font-weight:600; font-size:.95rem; color:var(--text-2);
+      text-decoration:none;
+      transition:color .18s var(--ease), background-color .18s var(--ease);
+    }
+    .nav-links a:hover{ color:var(--text); background:rgba(255,255,255,.05); }
+
+    .btn-nav{ min-height:44px; padding:.55rem 1.25rem; font-size:.9rem; }
+
+    .nav-toggle{
+      display:none; flex-direction:column; justify-content:center; gap:5px;
+      width:48px; height:48px; align-items:center;
+      border-radius:12px; border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+    .nav-toggle .bar{
+      width:20px; height:2px; border-radius:2px; background:var(--text);
+      transition:transform .25s var(--ease), opacity .2s var(--ease);
+    }
+    .nav-toggle[aria-expanded="true"] .bar:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+    .nav-toggle[aria-expanded="true"] .bar:nth-child(2){ opacity:0; }
+    .nav-toggle[aria-expanded="true"] .bar:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu{
+      border-top:1px solid var(--line-soft);
+      background:#080C15;
+      padding:1rem var(--pad-x) 1.5rem;
+      max-height:calc(100vh - var(--header-h));
+      max-height:calc(100dvh - var(--header-h));
+      overflow-y:auto;
+    }
+    .mobile-menu[hidden]{ display:none; }
+    @media (prefers-reduced-motion: no-preference){
+      .mobile-menu:not([hidden]){ animation:menu-in .28s var(--ease); }
+    }
+    @keyframes menu-in{ from{ opacity:0; transform:translateY(-8px); } }
+    .mobile-menu a:not(.btn){
+      display:flex; align-items:center;
+      padding:.9rem .5rem; min-height:48px;
+      font-family:"Sora", sans-serif; font-weight:600; font-size:1.05rem;
+      color:var(--text); text-decoration:none;
+      border-bottom:1px solid var(--line-soft);
+    }
+    .mobile-menu a:not(.btn):hover{ color:var(--cyan); }
+    .mobile-menu .btn{ width:100%; margin-top:1.25rem; }
+
+    /* ---------- Hero ---------- */
+    .hero{
+      min-height:calc(100vh - var(--header-h));
+      min-height:calc(100svh - var(--header-h));
+      display:flex; align-items:center;
+      padding-block:clamp(4rem, 10vh, 7rem);
+      overflow:hidden;
+      isolation:isolate;
+    }
+    .hero-bg{ position:absolute; inset:0; z-index:-1; pointer-events:none; }
+    .hero-bg::before{
+      content:""; position:absolute; inset:0;
+      background:
+        radial-gradient(52rem 32rem at 18% -8%, rgba(124,108,255,.18), transparent 60%),
+        radial-gradient(46rem 30rem at 88% 108%, rgba(56,225,255,.12), transparent 60%);
+    }
+    .hero-bg::after{ /* engineering grid, faded at edges */
+      content:""; position:absolute; inset:0;
+      background:
+        linear-gradient(rgba(148,163,196,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148,163,196,.055) 1px, transparent 1px);
+      background-size:56px 56px;
+      -webkit-mask-image:radial-gradient(75% 65% at 50% 40%, #000 30%, transparent 100%);
+      mask-image:radial-gradient(75% 65% at 50% 40%, #000 30%, transparent 100%);
+    }
+    .hero-orbits{
+      position:absolute; top:50%; left:50%;
+      width:min(120vw, 1400px); height:auto;
+      transform:translate(-50%, -50%);
+      opacity:.5;
+    }
+    @media (prefers-reduced-motion: no-preference){
+      .hero-orbits g{
+        transform-origin:600px 300px;
+        animation:orbit-spin 90s linear infinite;
+      }
+    }
+    @keyframes orbit-spin{ to{ transform:rotate(360deg); } }
+
+    .hero-inner{ width:100%; }
+    .hero-tagline{
+      font-family:"Sora", sans-serif;
+      font-size:clamp(1.9rem, 5.6vw, 4.35rem);
+      font-weight:800;
+      line-height:1.08;
+      letter-spacing:.01em;
+      text-transform:uppercase;
+      max-width:20ch;
+      text-wrap:balance;
+    }
+    .hero h1{
+      margin-top:1.5rem;
+      font-size:clamp(1.2rem, 2.4vw, 1.6rem);
+      font-weight:600;
+      color:#CBD4E6;
+      max-width:44ch;
+      text-wrap:balance;
+    }
+    .hero-sub{
+      margin-top:1rem;
+      font-size:clamp(1rem, 1.6vw, 1.15rem);
+      color:var(--text-2);
+      max-width:52ch;
+    }
+    .hero-ctas{
+      display:flex; flex-wrap:wrap; gap:.9rem;
+      margin-top:2.25rem;
+    }
+    .hero-note{
+      margin-top:2.5rem;
+      display:flex; align-items:center; gap:.65rem;
+      font-size:.9rem; color:var(--text-3);
+    }
+    .hero-note svg{ width:18px; height:18px; color:var(--cyan); flex:none; }
+
+    /* ---------- Partners marquee ---------- */
+    .partners{ padding-block:clamp(3.5rem, 6vw, 5rem); }
+    .partners .sec-head{ margin-bottom:2.25rem; }
+    .partners h2{
+      font-size:clamp(1.3rem, 2.4vw, 1.7rem);
+      font-weight:700; margin-top:.85rem;
+    }
+    .marquee{
+      --gap:clamp(2.5rem, 5vw, 4.5rem);
+      display:flex; gap:var(--gap);
+      overflow:hidden;
+      padding-block:1.4rem;
+      border-block:1px solid var(--line-soft);
+      -webkit-mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+      mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    }
+    .marquee-track{
+      display:flex; align-items:center; gap:var(--gap);
+      flex:none; min-width:max-content;
+    }
+    @media (prefers-reduced-motion: no-preference){
+      .marquee-track{ animation:marquee 48s linear infinite; }
+      .marquee:hover .marquee-track,
+      .marquee.is-paused .marquee-track{ animation-play-state:paused; }
+    }
+    @keyframes marquee{
+      from{ transform:translateX(0); }
+      to{ transform:translateX(calc(-100% - var(--gap))); }
+    }
+    .marquee-controls{ display:flex; justify-content:center; margin-top:1.25rem; }
+    .marquee-toggle{
+      min-height:44px; padding:.5rem 1.2rem;
+      border:1px solid var(--line); border-radius:999px;
+      background:rgba(255,255,255,.03);
+      font-size:.85rem; font-weight:600; color:var(--text-2);
+      transition:color .18s var(--ease), background-color .18s var(--ease);
+    }
+    .marquee-toggle:hover{ color:var(--text); background:rgba(255,255,255,.06); }
+    @media (prefers-reduced-motion: reduce){
+      .marquee{ flex-wrap:wrap; -webkit-mask-image:none; mask-image:none; }
+      .marquee-track{ flex-wrap:wrap; justify-content:center; min-width:0; row-gap:1.25rem; }
+      .marquee-track[aria-hidden="true"]{ display:none; }
+      .marquee-controls{ display:none; }
+    }
+    .wm{
+      font-family:"Sora", sans-serif;
+      font-size:clamp(1.05rem, 1.8vw, 1.3rem);
+      font-weight:700; letter-spacing:.01em;
+      color:var(--text-3); white-space:nowrap;
+      transition:color .2s var(--ease);
+    }
+    .marquee li:hover .wm{ color:var(--text); }
+    .wm-lower{ text-transform:lowercase; }
+    .wm-caps{ text-transform:uppercase; letter-spacing:.14em; font-weight:600; }
+    .wm-wide{ letter-spacing:.06em; }
+    .wm-light{ font-weight:400; }
+    .wm-serifish{ font-weight:800; letter-spacing:-.02em; }
+
+    /* ---------- Cards (shared) ---------- */
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.008)) , var(--surface);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      transition:transform .25s var(--ease), border-color .25s var(--ease), box-shadow .3s var(--ease);
+    }
+    .card:hover{
+      transform:translateY(-4px);
+      border-color:rgba(124,108,255,.45);
+      box-shadow:0 18px 48px rgba(3,6,20,.6), 0 0 0 1px rgba(124,108,255,.12);
+    }
+
+    /* ---------- Services ---------- */
+    .services-grid{
+      display:grid; gap:1.4rem;
+      grid-template-columns:repeat(3, 1fr);
+    }
+    .svc-card{ padding:clamp(1.6rem, 2.6vw, 2.25rem); display:flex; flex-direction:column; }
+    .svc-icon{
+      width:58px; height:58px; border-radius:16px;
+      display:grid; place-items:center;
+      background:linear-gradient(135deg, rgba(124,108,255,.16), rgba(56,225,255,.10));
+      border:1px solid rgba(124,108,255,.35);
+      color:#A9C4FF;
+      margin-bottom:1.5rem;
+    }
+    .svc-icon svg{ width:28px; height:28px; }
+    .svc-card h3{ font-size:1.3rem; font-weight:700; letter-spacing:-.01em; }
+    .svc-card > p{ color:var(--text-2); font-size:.98rem; margin:.75rem 0 1.25rem; }
+    .svc-list{ margin-top:auto; display:grid; gap:.65rem; }
+    .svc-list li{
+      display:flex; align-items:baseline; gap:.7rem;
+      color:#C3CCDF; font-weight:500; font-size:.95rem;
+    }
+    .svc-list li::before{
+      content:""; flex:none; width:7px; height:7px; border-radius:50%;
+      background:var(--grad); transform:translateY(-1px);
+    }
+
+    /* ---------- Why choose us ---------- */
+    .why-grid{
+      display:grid; gap:1.4rem;
+      grid-template-columns:repeat(2, 1fr);
+    }
+    .why-card{ padding:clamp(1.6rem, 2.6vw, 2.25rem); }
+    .why-num{
+      font-family:"Sora", sans-serif; font-weight:800; font-size:.95rem;
+      letter-spacing:.18em;
+      background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .why-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
+    .why-icon{
+      width:46px; height:46px; border-radius:13px;
+      display:grid; place-items:center;
+      background:linear-gradient(135deg, rgba(124,108,255,.16), rgba(56,225,255,.10));
+      border:1px solid rgba(124,108,255,.35);
+      color:#A9C4FF;
+    }
+    .why-icon svg{ width:22px; height:22px; }
+    .why-card h3{ font-size:1.25rem; margin:0 0 .6rem; }
+    .why-card p{ color:var(--text-2); font-size:.98rem; }
+
+    /* ---------- Metrics ---------- */
+    .metrics{
+      background:
+        radial-gradient(60rem 24rem at 50% 120%, rgba(124,108,255,.16), transparent 65%),
+        var(--bg-deep);
+      border-block:1px solid var(--line-soft);
+      padding-block:clamp(3.5rem, 7vw, 5.5rem);
+    }
+    .metrics-grid{
+      display:grid; gap:2.25rem 1.5rem;
+      grid-template-columns:repeat(4, 1fr);
+      text-align:center;
+    }
+    .stat-num{
+      font-family:"Sora", sans-serif;
+      font-size:clamp(2.3rem, 5vw, 3.7rem);
+      font-weight:800; letter-spacing:-.02em;
+      font-variant-numeric:tabular-nums;
+      background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;
+      display:block; line-height:1.1;
+    }
+    .stat-label{
+      display:block; margin-top:.5rem;
+      color:var(--text-2); font-weight:600; font-size:.95rem;
+    }
+
+    /* ---------- About ---------- */
+    .about-grid{
+      display:grid; gap:clamp(2.5rem, 5vw, 4.5rem);
+      grid-template-columns:1.15fr .85fr;
+      align-items:center;
+    }
+    .about-copy p + p{ margin-top:1.15rem; }
+    .about-copy p{ color:var(--text-2); font-size:1.02rem; }
+    .about-copy p strong{ color:var(--text); }
+    .about-panel{
+      padding:clamp(1.75rem, 3vw, 2.5rem);
+      display:flex; flex-direction:column; align-items:center; gap:1.75rem;
+      text-align:center;
+    }
+    .about-panel svg{ width:min(100%, 300px); height:auto; color:var(--violet); }
+    .about-chips{ display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem; }
+    .about-chips span{
+      font-size:.82rem; font-weight:700; letter-spacing:.04em;
+      color:#BAC6DE;
+      padding:.45rem .9rem; border-radius:999px;
+      border:1px solid var(--line); background:rgba(255,255,255,.03);
+    }
+
+    /* ---------- Testimonials ---------- */
+    .quotes-grid{
+      display:grid; gap:1.4rem;
+      grid-template-columns:repeat(3, 1fr);
+    }
+    .quote-card{
+      padding:clamp(1.6rem, 2.6vw, 2.1rem);
+      display:flex; flex-direction:column;
+    }
+    .quote-mark{ width:34px; height:34px; color:var(--violet); margin-bottom:1.1rem; }
+    .quote-card blockquote p{
+      color:#C9D2E4; font-size:.99rem; line-height:1.7;
+    }
+    .quote-card figcaption{
+      margin-top:1.5rem; padding-top:1.1rem;
+      border-top:1px solid var(--line-soft);
+      font-family:"Sora", sans-serif; font-weight:600; font-size:.9rem;
+      color:var(--text-2);
+    }
+    .quote-card figcaption strong{ display:block; color:var(--text); font-weight:700; }
+    .stars{ display:flex; gap:.25rem; margin-top:auto; padding-top:1.25rem; }
+    .stars svg{ width:16px; height:16px; color:var(--cyan); }
+
+    /* ---------- Industries (bento) ---------- */
+    .ind-grid{
+      display:grid; gap:1.1rem;
+      grid-template-columns:repeat(4, 1fr);
+    }
+    .ind-tile{
+      padding:1.5rem 1.6rem;
+      display:flex; flex-direction:column; justify-content:flex-end; gap:.4rem;
+      min-height:172px;
+      position:relative; overflow:hidden;
+    }
+    .ind-tile::after{ /* faint corner glow */
+      content:""; position:absolute; top:-40%; right:-25%;
+      width:60%; aspect-ratio:1; border-radius:50%;
+      background:radial-gradient(circle, rgba(56,225,255,.10), transparent 70%);
+      pointer-events:none;
+    }
+    .ind-tile svg{
+      width:30px; height:30px; color:#93A8E8;
+      margin-bottom:auto;
+    }
+    .ind-tile h3{ font-size:1.08rem; font-weight:700; }
+    .ind-tile p{ color:var(--text-3); font-size:.88rem; line-height:1.5; }
+    .ind-tile.span-2{ grid-column:span 2; }
+
+    /* ---------- Contact ---------- */
+    .contact-grid{
+      display:grid; gap:clamp(2.5rem, 5vw, 4rem);
+      grid-template-columns:.9fr 1.1fr;
+      align-items:start;
+    }
+    .contact-info h2{
+      font-size:clamp(1.85rem, 4vw, 2.9rem);
+      font-weight:700; letter-spacing:-.01em; margin:.85rem 0 1rem;
+    }
+    .contact-info > p{ color:var(--text-2); max-width:46ch; }
+    .contact-rows{ margin-top:2.25rem; display:grid; gap:1.1rem; }
+    .contact-row{
+      display:flex; align-items:flex-start; gap:1rem;
+    }
+    .contact-row .ico{
+      width:46px; height:46px; flex:none; border-radius:12px;
+      display:grid; place-items:center;
+      background:rgba(124,108,255,.12); border:1px solid rgba(124,108,255,.3);
+      color:#A9C4FF;
+    }
+    .contact-row .ico svg{ width:21px; height:21px; }
+    .contact-row .lbl{ display:block; font-size:.8rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--text-3); }
+    .contact-row a, .contact-row .val{
+      color:var(--text); font-weight:600; text-decoration:none; font-size:1rem;
+    }
+    .contact-row a:hover{ color:var(--cyan); }
+
+    .contact-form{
+      padding:clamp(1.75rem, 3vw, 2.5rem);
+    }
+    .contact-form h3{ font-size:1.25rem; margin-bottom:1.5rem; }
+    .field{ margin-bottom:1.15rem; }
+    .field label{
+      display:block; font-weight:700; font-size:.9rem; margin-bottom:.45rem;
+      color:#C9D2E4;
+    }
+    .field label .req{ color:var(--cyan); }
+    .field input, .field textarea{
+      width:100%; min-height:50px;
+      background:rgba(255,255,255,.035);
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:.8rem 1rem;
+      color:var(--text);
+      font:inherit;
+      transition:border-color .2s var(--ease), background-color .2s var(--ease);
+    }
+    .field textarea{ min-height:132px; resize:vertical; }
+    .field input::placeholder, .field textarea::placeholder{ color:var(--text-3); opacity:1; }
+    .field input:focus, .field textarea:focus{
+      outline:2px solid var(--cyan); outline-offset:0;
+      border-color:transparent;
+      background:rgba(255,255,255,.05);
+    }
+    .contact-form .btn{ width:100%; margin-top:.5rem; }
+    .form-status{ margin-top:.9rem; font-size:.9rem; color:var(--cyan); min-height:1.4em; }
+    .form-hint{ margin-top:.65rem; font-size:.82rem; color:var(--text-3); }
+
+    /* ---------- Footer ---------- */
+    .site-footer{
+      background:var(--bg-deep);
+      border-top:1px solid var(--line-soft);
+      padding-top:clamp(3.5rem, 6vw, 5rem);
+    }
+    .footer-grid{
+      display:grid; gap:2.75rem;
+      grid-template-columns:1.4fr 1fr 1fr 1fr;
+      padding-bottom:3rem;
+    }
+    .footer-brand p{
+      margin-top:1rem; color:var(--text-3); font-size:.93rem; max-width:34ch;
+    }
+    .footer-col h3{
+      font-size:.85rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+      color:var(--text-2); margin-bottom:1.15rem;
+    }
+    .footer-col ul{ display:grid; gap:.35rem; }
+    .footer-col a{
+      display:inline-flex; padding:.3rem 0; min-height:36px; align-items:center;
+      color:var(--text-3); text-decoration:none; font-size:.95rem; font-weight:500;
+      transition:color .18s var(--ease);
+    }
+    .footer-col a:hover{ color:var(--cyan); }
+    .footer-bottom{
+      border-top:1px solid var(--line-soft);
+      padding:1.5rem 0 1.75rem;
+      display:flex; flex-wrap:wrap; gap:.75rem; justify-content:space-between; align-items:center;
+      color:var(--text-3); font-size:.88rem;
+    }
+    .footer-bottom .tag{ font-family:"Sora", sans-serif; letter-spacing:.14em; text-transform:uppercase; font-size:.72rem; font-weight:600; }
+
+    /* ---------- Scroll reveal (only hidden when JS is present) ---------- */
+    .js .reveal{
+      opacity:0;
+      transform:translateY(26px);
+      transition:opacity .7s var(--ease), transform .7s var(--ease);
+      transition-delay:var(--d, 0s);
+    }
+    .js .reveal.in-view{ opacity:1; transform:none; }
+    @media (prefers-reduced-motion: reduce){
+      .js .reveal{ opacity:1; transform:none; transition:none; }
+      .btn, .card{ transition:none; }
+    }
+
+    /* ============================================================
+       Responsive
+       ============================================================ */
+    @media (max-width: 1024px){
+      .services-grid{ grid-template-columns:1fr 1fr; }
+      .svc-card:last-child{ grid-column:span 2; }
+      .quotes-grid{ grid-template-columns:1fr; max-width:680px; margin-inline:auto; }
+      .ind-grid{ grid-template-columns:1fr 1fr; }
+      .ind-tile.span-2{ grid-column:span 2; }
+      .ind-tile{ min-height:150px; }
+      .about-grid{ grid-template-columns:1fr; }
+      .about-panel{ max-width:520px; margin-inline:auto; width:100%; }
+      .contact-grid{ grid-template-columns:1fr; }
+      .footer-grid{ grid-template-columns:1fr 1fr; }
+    }
+
+    @media (max-width: 980px){
+      .primary-nav, .btn-nav{ display:none; }
+      .nav-toggle{ display:flex; }
+    }
+
+    @media (max-width: 640px){
+      .services-grid{ grid-template-columns:1fr; }
+      .svc-card:last-child{ grid-column:auto; }
+      .why-grid{ grid-template-columns:1fr; }
+      .metrics-grid{ grid-template-columns:1fr 1fr; }
+      .ind-grid{ grid-template-columns:1fr; }
+      .ind-tile.span-2{ grid-column:auto; }
+      .ind-tile{ min-height:0; padding:1.35rem 1.4rem; }
+      .ind-tile svg{ margin-bottom:.75rem; }
+      .footer-grid{ grid-template-columns:1fr; gap:2rem; }
+      .hero-ctas .btn{ width:100%; }
+    }
+  </style>
+
+  <!-- No-JS fallback: keep mobile navigation reachable when scripts are unavailable -->
+  <noscript>
+    <style>
+      @media (max-width: 980px){
+        .mobile-menu[hidden]{ display:block; }
+        .nav-toggle{ display:none; }
+      }
+    </style>
+  </noscript>
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "CosmoLabs",
+    "slogan": "Where science is standard, excellence is engineered",
+    "description": "Multidisciplinary consulting firm delivering expert services in computer science, aerospace engineering, and nuclear engineering for mission-critical commercial and federal programs.",
+    "email": "info@cosmolabs.io",
+    "telephone": "+1-404-555-0142",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "1200 Innovation Way, Suite 400",
+      "addressLocality": "Atlanta",
+      "addressRegion": "GA",
+      "postalCode": "30309",
+      "addressCountry": "US"
+    },
+    "knowsAbout": [
+      "Computer Science",
+      "Software Engineering",
+      "Cloud Computing",
+      "Artificial Intelligence",
+      "Cybersecurity",
+      "Aerospace Engineering",
+      "Guidance Navigation and Control",
+      "Nuclear Engineering",
+      "Reactor Safety Analysis"
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ================= HEADER ================= -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#home" aria-label="CosmoLabs — back to top">
+        <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="lg-brand" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#7C6CFF"/><stop offset="1" stop-color="#38E1FF"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="url(#lg-brand)" stroke-width="4" transform="rotate(-25 32 32)"/>
+          <circle cx="32" cy="32" r="11" fill="url(#lg-brand)"/>
+        </svg>
+        <span class="brand-name">Cosmo<em>Labs</em></span>
+      </a>
+
+      <nav class="primary-nav" aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#industries">Industries</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <a class="btn btn-primary btn-nav" href="#contact">Free Consultation</a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+    </div>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <nav aria-label="Mobile">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#industries">Industries</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-primary" href="#contact">Free Consultation</a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ================= HERO ================= -->
+    <section class="hero" id="home" aria-labelledby="hero-heading">
+      <div class="hero-bg" aria-hidden="true">
+        <svg class="hero-orbits" viewBox="0 0 1200 600" fill="none" focusable="false">
+          <g>
+            <ellipse cx="600" cy="300" rx="520" ry="180" stroke="rgba(124,108,255,.14)" stroke-width="1.5" transform="rotate(-12 600 300)"/>
+            <ellipse cx="600" cy="300" rx="400" ry="130" stroke="rgba(56,225,255,.10)" stroke-width="1.5" transform="rotate(14 600 300)"/>
+            <circle cx="140" cy="220" r="4" fill="#7C6CFF" opacity=".7"/>
+            <circle cx="1010" cy="410" r="3" fill="#38E1FF" opacity=".7"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="container hero-inner">
+        <p class="hero-tagline reveal">
+          Where <span class="grad-text">science</span> is standard,<br>
+          excellence is <span class="grad-text">engineered</span>
+        </p>
+        <h1 id="hero-heading" class="reveal" style="--d:.08s">
+          We provide professional consulting in computing, aerospace &amp; nuclear engineering.
+        </h1>
+        <p class="hero-sub reveal" style="--d:.16s">
+          Take charge of your mission-critical programs with innovative engineering solutions.
+        </p>
+        <div class="hero-ctas reveal" style="--d:.24s">
+          <a class="btn btn-primary" href="#contact">Schedule a Free Consultation</a>
+          <a class="btn btn-ghost" href="#services">Our Services</a>
+        </div>
+        <p class="hero-note reveal" style="--d:.32s">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/>
+          </svg>
+          Trusted by Fortune 500 engineering teams and federal programs alike.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= TRUSTED PARTNERS ================= -->
+    <section class="partners bg-alt" aria-labelledby="partners-heading">
+      <div class="container sec-head center">
+        <span class="eyebrow">Client Wall</span>
+        <h2 id="partners-heading">Trusted Partners</h2>
+      </div>
+
+      <div class="marquee">
+        <ul class="marquee-track">
+          <li><span class="wm wm-lower">amazon</span></li>
+          <li><span class="wm wm-caps">The Home Depot</span></li>
+          <li><span class="wm wm-light">Microsoft</span></li>
+          <li><span class="wm wm-serifish">Walmart</span></li>
+          <li><span class="wm">Meta</span></li>
+          <li><span class="wm wm-caps">Tesla</span></li>
+          <li><span class="wm wm-lower wm-wide">cisco</span></li>
+          <li><span class="wm wm-caps">Delta Air Lines</span></li>
+          <li><span class="wm wm-serifish">Best Buy</span></li>
+          <li><span class="wm wm-light">Starbucks</span></li>
+          <li><span class="wm wm-lower">airbnb</span></li>
+          <li><span class="wm wm-caps">Epic Games</span></li>
+          <li><span class="wm">UnitedHealth Group</span></li>
+          <li><span class="wm wm-lower wm-wide">coinbase</span></li>
+          <li><span class="wm wm-caps">Under Armour</span></li>
+          <li><span class="wm wm-light wm-wide">Hyatt</span></li>
+        </ul>
+        <ul class="marquee-track" aria-hidden="true">
+          <li><span class="wm wm-lower">amazon</span></li>
+          <li><span class="wm wm-caps">The Home Depot</span></li>
+          <li><span class="wm wm-light">Microsoft</span></li>
+          <li><span class="wm wm-serifish">Walmart</span></li>
+          <li><span class="wm">Meta</span></li>
+          <li><span class="wm wm-caps">Tesla</span></li>
+          <li><span class="wm wm-lower wm-wide">cisco</span></li>
+          <li><span class="wm wm-caps">Delta Air Lines</span></li>
+          <li><span class="wm wm-serifish">Best Buy</span></li>
+          <li><span class="wm wm-light">Starbucks</span></li>
+          <li><span class="wm wm-lower">airbnb</span></li>
+          <li><span class="wm wm-caps">Epic Games</span></li>
+          <li><span class="wm">UnitedHealth Group</span></li>
+          <li><span class="wm wm-lower wm-wide">coinbase</span></li>
+          <li><span class="wm wm-caps">Under Armour</span></li>
+          <li><span class="wm wm-light wm-wide">Hyatt</span></li>
+        </ul>
+        <ul class="marquee-track" aria-hidden="true">
+          <li><span class="wm wm-lower">amazon</span></li>
+          <li><span class="wm wm-caps">The Home Depot</span></li>
+          <li><span class="wm wm-light">Microsoft</span></li>
+          <li><span class="wm wm-serifish">Walmart</span></li>
+          <li><span class="wm">Meta</span></li>
+          <li><span class="wm wm-caps">Tesla</span></li>
+          <li><span class="wm wm-lower wm-wide">cisco</span></li>
+          <li><span class="wm wm-caps">Delta Air Lines</span></li>
+          <li><span class="wm wm-serifish">Best Buy</span></li>
+          <li><span class="wm wm-light">Starbucks</span></li>
+          <li><span class="wm wm-lower">airbnb</span></li>
+          <li><span class="wm wm-caps">Epic Games</span></li>
+          <li><span class="wm">UnitedHealth Group</span></li>
+          <li><span class="wm wm-lower wm-wide">coinbase</span></li>
+          <li><span class="wm wm-caps">Under Armour</span></li>
+          <li><span class="wm wm-light wm-wide">Hyatt</span></li>
+        </ul>
+      </div>
+
+      <div class="container marquee-controls">
+        <button class="marquee-toggle" type="button" hidden>Pause logo animation</button>
+      </div>
+    </section>
+
+    <!-- ================= SERVICES ================= -->
+    <section id="services" aria-labelledby="services-heading">
+      <div class="container">
+        <div class="sec-head reveal">
+          <span class="eyebrow">What We Do</span>
+          <h2 id="services-heading">Three disciplines. One standard of excellence.</h2>
+          <p>Senior consultants who have shipped production software, flown hardware, and licensed reactors — embedded directly into your program.</p>
+        </div>
+
+        <div class="services-grid">
+          <!-- Computer Science & Software -->
+          <article class="card svc-card reveal">
+            <div class="svc-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <rect x="5" y="5" width="14" height="14" rx="2"/>
+                <rect x="9.5" y="9.5" width="5" height="5" rx="1"/>
+                <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>
+              </svg>
+            </div>
+            <h3>Computer Science &amp; Software</h3>
+            <p>Full-lifecycle software consulting — from architecture reviews to production-grade platforms that scale under real-world load.</p>
+            <ul class="svc-list">
+              <li>Software engineering &amp; architecture</li>
+              <li>Cloud &amp; DevOps transformation</li>
+              <li>AI / ML systems</li>
+              <li>Cybersecurity &amp; zero-trust</li>
+              <li>Data engineering &amp; analytics</li>
+            </ul>
+          </article>
+
+          <!-- Aerospace Engineering -->
+          <article class="card svc-card reveal" style="--d:.1s">
+            <div class="svc-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+                <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+                <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+                <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+              </svg>
+            </div>
+            <h3>Aerospace Engineering</h3>
+            <p>Mission-grade engineering support across the full flight-vehicle lifecycle, from concept studies to certification.</p>
+            <ul class="svc-list">
+              <li>Mission &amp; systems engineering</li>
+              <li>Guidance, navigation &amp; control (GNC)</li>
+              <li>Propulsion &amp; structures analysis</li>
+              <li>Avionics &amp; flight software</li>
+              <li>Test &amp; certification support</li>
+            </ul>
+          </article>
+
+          <!-- Nuclear Engineering -->
+          <article class="card svc-card reveal" style="--d:.2s">
+            <div class="svc-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <circle cx="12" cy="12" r="1.9" fill="currentColor" stroke="none"/>
+                <ellipse cx="12" cy="12" rx="9.5" ry="4"/>
+                <ellipse cx="12" cy="12" rx="9.5" ry="4" transform="rotate(60 12 12)"/>
+                <ellipse cx="12" cy="12" rx="9.5" ry="4" transform="rotate(120 12 12)"/>
+              </svg>
+            </div>
+            <h3>Nuclear Engineering</h3>
+            <p>Safety-first nuclear consulting grounded in regulatory rigor, validated codes, and advanced simulation.</p>
+            <ul class="svc-list">
+              <li>Reactor safety analysis</li>
+              <li>Licensing &amp; regulatory support (NRC)</li>
+              <li>Thermal-hydraulics &amp; criticality</li>
+              <li>Radiation shielding</li>
+              <li>Decommissioning planning</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= WHY CHOOSE US ================= -->
+    <section class="bg-alt" aria-labelledby="why-heading">
+      <div class="container">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Why Choose Us</span>
+          <h2 id="why-heading">Built for programs where failure is not an option.</h2>
+        </div>
+
+        <div class="why-grid">
+          <article class="card why-card reveal">
+            <div class="why-head">
+              <span class="why-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 6.5v11M14.8 9c-.55-.95-1.6-1.5-2.8-1.5-1.75 0-3 .95-3 2.25 0 2.9 5.9 1.55 5.9 4.45 0 1.3-1.3 2.3-3 2.3-1.3 0-2.4-.55-2.95-1.5"/>
+                </svg>
+              </span>
+              <span class="why-num" aria-hidden="true">01</span>
+            </div>
+            <h3>Cost-Effectiveness</h3>
+            <p>Senior-level expertise without big-consultancy overhead. We scope lean, deliver fast, and tie every engagement to measurable engineering outcomes.</p>
+          </article>
+          <article class="card why-card reveal" style="--d:.08s">
+            <div class="why-head">
+              <span class="why-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="M9 18h6M10 21h4"/>
+                  <path d="M12 3a6 6 0 0 0-4 10.4c.6.6 1 1.4 1 2.3v.3h6v-.3c0-.9.4-1.7 1-2.3A6 6 0 0 0 12 3z"/>
+                </svg>
+              </span>
+              <span class="why-num" aria-hidden="true">02</span>
+            </div>
+            <h3>Innovative Technology</h3>
+            <p>From cloud-native platforms and applied AI to model-based systems engineering, we bring the modern toolchain to legacy-bound programs.</p>
+          </article>
+          <article class="card why-card reveal" style="--d:.16s">
+            <div class="why-head">
+              <span class="why-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <circle cx="12" cy="9" r="6"/>
+                  <path d="M8.7 14 7 22l5-3 5 3-1.7-8"/>
+                </svg>
+              </span>
+              <span class="why-num" aria-hidden="true">03</span>
+            </div>
+            <h3>Deep Domain Expertise</h3>
+            <p>PhD-level engineers who have shipped flight software, licensed reactors, and secured critical infrastructure — not generalists reading from a playbook.</p>
+          </article>
+          <article class="card why-card reveal" style="--d:.24s">
+            <div class="why-head">
+              <span class="why-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="M12 2 3 7l9 5 9-5-9-5z"/>
+                  <path d="M3 12l9 5 9-5"/>
+                  <path d="M3 17l9 5 9-5"/>
+                </svg>
+              </span>
+              <span class="why-num" aria-hidden="true">04</span>
+            </div>
+            <h3>Scalability</h3>
+            <p>Engage a single specialist or a full multidisciplinary team. We scale with your program from feasibility study through sustained operations.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= METRICS ================= -->
+    <section class="metrics" aria-label="Company metrics">
+      <div class="container">
+        <div class="metrics-grid">
+          <div class="stat reveal">
+            <span class="stat-num" data-count="10" data-suffix="">10</span>
+            <span class="stat-label">Years Proven Track Record</span>
+          </div>
+          <div class="stat reveal" style="--d:.08s">
+            <span class="stat-num" data-count="98" data-suffix="%">98%</span>
+            <span class="stat-label">Client Satisfaction</span>
+          </div>
+          <div class="stat reveal" style="--d:.16s">
+            <span class="stat-num" data-count="30" data-suffix="+">30+</span>
+            <span class="stat-label">PhD &amp; Senior Engineers</span>
+          </div>
+          <div class="stat reveal" style="--d:.24s">
+            <span class="stat-num" data-count="120" data-suffix="+">120+</span>
+            <span class="stat-label">Projects Delivered</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ABOUT ================= -->
+    <section id="about" aria-labelledby="about-heading">
+      <div class="container about-grid">
+        <div class="about-copy reveal">
+          <span class="eyebrow">About CosmoLabs</span>
+          <div class="sec-head" style="margin-bottom:1.5rem">
+            <h2 id="about-heading">Founded by engineers. Run like a mission.</h2>
+          </div>
+          <p><strong>CosmoLabs was founded by engineers</strong> who spent their careers inside demanding programs — shipping cloud platforms at global scale, integrating flight hardware, and defending reactor safety cases. We started the firm with a simple conviction: mission-critical work deserves consultants who have actually done the work.</p>
+          <p>We combine <strong>startup agility with national-laboratory rigor</strong>. Our teams move in weeks, not quarters — yet every deliverable, whether an architecture review, a GNC simulation campaign, or a licensing submittal, is engineered to withstand board-level and regulator-level scrutiny.</p>
+          <p>Today CosmoLabs serves <strong>CTOs, CIOs, and program managers</strong> across commercial and federal programs, acting as the trusted technical bridge between ambitious roadmaps and the engineering reality required to deliver them.</p>
+        </div>
+
+        <div class="card about-panel reveal" style="--d:.12s">
+          <svg viewBox="0 0 300 220" fill="none" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="lg-about" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#7C6CFF"/><stop offset="1" stop-color="#38E1FF"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="150" cy="110" rx="130" ry="46" stroke="url(#lg-about)" stroke-opacity=".5" stroke-width="1.5" transform="rotate(-18 150 110)"/>
+            <ellipse cx="150" cy="110" rx="100" ry="34" stroke="url(#lg-about)" stroke-opacity=".3" stroke-width="1.5" transform="rotate(22 150 110)"/>
+            <circle cx="150" cy="110" r="30" fill="url(#lg-about)" fill-opacity=".16" stroke="url(#lg-about)" stroke-width="1.5"/>
+            <circle cx="150" cy="110" r="9" fill="url(#lg-about)"/>
+            <circle cx="46" cy="76" r="5" fill="#38E1FF"/>
+            <circle cx="252" cy="152" r="4" fill="#7C6CFF"/>
+            <path d="M60 190h180" stroke="rgba(148,163,196,.25)" stroke-dasharray="3 6"/>
+          </svg>
+          <div class="about-chips">
+            <span>Commercial</span><span>Federal</span><span>R&amp;D</span>
+            <span>Cleared Staff</span><span>ISO-Grade Process</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TESTIMONIALS ================= -->
+    <section class="bg-alt" aria-labelledby="quotes-heading">
+      <div class="container">
+        <div class="sec-head center reveal">
+          <span class="eyebrow">Testimonials</span>
+          <h2 id="quotes-heading">What our partners say</h2>
+        </div>
+
+        <div class="quotes-grid">
+          <figure class="card quote-card reveal">
+            <svg class="quote-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+              <path d="M4 12.5C4 8.4 6.6 5.5 10.2 4.5l.8 1.8c-2.1.8-3.4 2.3-3.7 4.2.3-.1.7-.2 1.1-.2 1.8 0 3.1 1.3 3.1 3.2 0 1.9-1.5 3.3-3.4 3.3-2.4 0-4.1-1.8-4.1-4.3zm9.5 0c0-4.1 2.6-7 6.2-8l.8 1.8c-2.1.8-3.4 2.3-3.7 4.2.3-.1.7-.2 1.1-.2 1.8 0 3.1 1.3 3.1 3.2 0 1.9-1.5 3.3-3.4 3.3-2.4 0-4.1-1.8-4.1-4.3z"/>
+            </svg>
+            <blockquote>
+              <p>CosmoLabs re-architected our multi-region cloud migration and cut infrastructure spend by double digits while hardening security across hundreds of services. They operate like an extension of our own engineering org.</p>
+            </blockquote>
+            <div class="stars" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+            </div>
+            <span class="sr-only">Rated 5 out of 5 stars</span>
+            <figcaption><span class="sr-only">— </span><strong>Director of Infrastructure</strong><span class="sr-only">,</span> Amazon</figcaption>
+          </figure>
+
+          <figure class="card quote-card reveal" style="--d:.1s">
+            <svg class="quote-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+              <path d="M4 12.5C4 8.4 6.6 5.5 10.2 4.5l.8 1.8c-2.1.8-3.4 2.3-3.7 4.2.3-.1.7-.2 1.1-.2 1.8 0 3.1 1.3 3.1 3.2 0 1.9-1.5 3.3-3.4 3.3-2.4 0-4.1-1.8-4.1-4.3zm9.5 0c0-4.1 2.6-7 6.2-8l.8 1.8c-2.1.8-3.4 2.3-3.7 4.2.3-.1.7-.2 1.1-.2 1.8 0 3.1 1.3 3.1 3.2 0 1.9-1.5 3.3-3.4 3.3-2.4 0-4.1-1.8-4.1-4.3z"/>
+            </svg>
+            <blockquote>
+              <p>Their team modernized the data backbone of our supply-chain platform — from demand forecasting models to store-level telemetry. Delivery was on schedule, on budget, and rigorously documented.</p>
+            </blockquote>
+            <div class="stars" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+            </div>
+            <span class="sr-only">Rated 5 out of 5 stars</span>
+            <figcaption><span class="sr-only">— </span><strong>VP of Technology</strong><span class="sr-only">,</span> The Home Depot</figcaption>
+          </figure>
+
+          <figure class="card quote-card reveal" style="--d:.2s">
+            <svg class="quote-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+              <path d="M4 12.5C4 8.4 6.6 5.5 10.2 4.5l.8 1.8c-2.1.8-3.4 2.3-3.7 4.2.3-.1.7-.2 1.1-.2 1.8 0 3.1 1.3 3.1 3.2 0 1.9-1.5 3.3-3.4 3.3-2.4 0-4.1-1.8-4.1-4.3zm9.5 0c0-4.1 2.6-7 6.2-8l.8 1.8c-2.1.8-3.4 2.3-3.7 4.2.3-.1.7-.2 1.1-.2 1.8 0 3.1 1.3 3.1 3.2 0 1.9-1.5 3.3-3.4 3.3-2.4 0-4.1-1.8-4.1-4.3z"/>
+            </svg>
+            <blockquote>
+              <p>The avionics software audit CosmoLabs performed ahead of our certification cycle was the most thorough we have seen. Findings were precise, prioritized, and immediately actionable.</p>
+            </blockquote>
+            <div class="stars" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
+            </div>
+            <span class="sr-only">Rated 5 out of 5 stars</span>
+            <figcaption><span class="sr-only">— </span><strong>Engineering Manager</strong><span class="sr-only">,</span> Delta Air Lines</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= INDUSTRIES ================= -->
+    <section id="industries" aria-labelledby="industries-heading">
+      <div class="container">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Industries We Serve</span>
+          <h2 id="industries-heading">Deep expertise across regulated, high-stakes sectors.</h2>
+        </div>
+
+        <div class="ind-grid">
+          <article class="card ind-tile span-2 reveal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"/>
+            </svg>
+            <h3>Aerospace &amp; Defense</h3>
+            <p>Flight systems, satellite programs &amp; defense platforms.</p>
+          </article>
+          <article class="card ind-tile reveal" style="--d:.06s">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M13 2 4.5 13.5H11L9.5 22 18 10.5h-6.5L13 2z"/>
+            </svg>
+            <h3>Energy &amp; Utilities</h3>
+            <p>Grid modernization &amp; nuclear generation.</p>
+          </article>
+          <article class="card ind-tile reveal" style="--d:.12s">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M3 21h18M5 21v-11M9.5 21v-11M14.5 21v-11M19 21v-11M12 3 3 8h18l-9-5z"/>
+            </svg>
+            <h3>Government &amp; Federal</h3>
+            <p>FedRAMP, NRC &amp; mission-system delivery.</p>
+          </article>
+          <article class="card ind-tile reveal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M12 21S5 16.6 2.7 12A5.4 5.4 0 0 1 12 6.3 5.4 5.4 0 0 1 21.3 12C19 16.6 12 21 12 21z"/>
+            </svg>
+            <h3>Healthcare</h3>
+            <p>Secure data platforms &amp; compliance engineering.</p>
+          </article>
+          <article class="card ind-tile reveal" style="--d:.06s">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>
+            </svg>
+            <h3>Finance &amp; Fintech</h3>
+            <p>Resilient, low-latency trading infrastructure.</p>
+          </article>
+          <article class="card ind-tile span-2 reveal" style="--d:.12s">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M3 21h18M4 21V11l5 3v-3l5 3v-3l6 3.5V21"/>
+            </svg>
+            <h3>Manufacturing</h3>
+            <p>Automation, digital twins &amp; industrial IoT.</p>
+          </article>
+          <article class="card ind-tile span-2 reveal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M2 8h11v8H2zM13 10h4.5l3.5 3.5V16h-8z"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="16.5" cy="18" r="1.8"/>
+            </svg>
+            <h3>Transportation &amp; Logistics</h3>
+            <p>Routing optimization, telemetry &amp; fleet platforms.</p>
+          </article>
+          <article class="card ind-tile span-2 reveal" style="--d:.06s">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <path d="M9.5 3v6L4.7 17.4a2 2 0 0 0 1.7 3.1h11.2a2 2 0 0 0 1.7-3.1L14.5 9V3"/><path d="M8 3h8"/><path d="M7.5 14h9"/>
+            </svg>
+            <h3>Research &amp; Academia</h3>
+            <p>HPC, simulation campaigns &amp; laboratory partnerships.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section id="contact" class="bg-alt" aria-labelledby="contact-heading">
+      <div class="container contact-grid">
+        <div class="contact-info reveal">
+          <span class="eyebrow">Contact</span>
+          <h2 id="contact-heading">Get a Free Consultation</h2>
+          <p>Tell us about your program. A senior engineer — not a salesperson — will respond within one business day.</p>
+
+          <div class="contact-rows">
+            <div class="contact-row">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/>
+                </svg>
+              </span>
+              <div>
+                <span class="lbl">Email</span>
+                <a href="mailto:info@cosmolabs.io">info@cosmolabs.io</a>
+              </div>
+            </div>
+            <div class="contact-row">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.25a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7a2 2 0 0 1 1.7 2z"/>
+                </svg>
+              </span>
+              <div>
+                <span class="lbl">Phone</span>
+                <a href="tel:+14045550142">+1 (404) 555-0142</a>
+              </div>
+            </div>
+            <div class="contact-row">
+              <span class="ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+              </span>
+              <div>
+                <span class="lbl">Office</span>
+                <span class="val">1200 Innovation Way, Suite 400,<br>Atlanta, GA 30309</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form class="card contact-form reveal" id="contact-form" style="--d:.12s" novalidate>
+          <h3>Start the conversation</h3>
+          <div class="field">
+            <label for="cf-name">Full name <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="cf-name" name="name" autocomplete="name" placeholder="Jane Doe" required>
+          </div>
+          <div class="field">
+            <label for="cf-email">Work email <span class="req" aria-hidden="true">*</span></label>
+            <input type="email" id="cf-email" name="email" autocomplete="email" placeholder="jane@company.com" required>
+          </div>
+          <div class="field">
+            <label for="cf-msg">How can we help? <span class="req" aria-hidden="true">*</span></label>
+            <textarea id="cf-msg" name="message" placeholder="Briefly describe your program, timeline, and goals…" required></textarea>
+          </div>
+          <button class="btn btn-primary" type="submit">Request Free Consultation</button>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          <p class="form-hint">Submitting opens a pre-filled email in your mail app — nothing is stored on this site.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="#home" aria-label="CosmoLabs — back to top">
+            <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+              <defs>
+                <linearGradient id="lg-foot" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#7C6CFF"/><stop offset="1" stop-color="#38E1FF"/>
+                </linearGradient>
+              </defs>
+              <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="url(#lg-foot)" stroke-width="4" transform="rotate(-25 32 32)"/>
+              <circle cx="32" cy="32" r="11" fill="url(#lg-foot)"/>
+            </svg>
+            <span class="brand-name">Cosmo<em>Labs</em></span>
+          </a>
+          <p>Multidisciplinary consulting in computer science, aerospace engineering, and nuclear engineering — for programs where excellence is engineered.</p>
+        </div>
+
+        <nav class="footer-col" aria-label="Quick links">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#industries">Industries</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-col" aria-label="Services">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="#services">Computer Science &amp; Software</a></li>
+            <li><a href="#services">Aerospace Engineering</a></li>
+            <li><a href="#services">Nuclear Engineering</a></li>
+            <li><a href="#contact">Free Consultation</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-col" aria-label="Information">
+          <h3>Information</h3>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms &amp; Conditions</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 CosmoLabs. All rights reserved.</span>
+        <span class="tag">Where science is standard, excellence is engineered</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* ---------- Sticky header shade ---------- */
+      var header = document.querySelector('.site-header');
+      if (header) {
+        var onScroll = function () {
+          header.classList.toggle('is-scrolled', window.scrollY > 12);
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      }
+
+      /* ---------- Mobile menu ---------- */
+      var toggle = document.querySelector('.nav-toggle');
+      var menu = document.getElementById('mobile-menu');
+
+      function setMenu(open) {
+        if (!toggle || !menu) return;
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        menu.hidden = !open;
+      }
+
+      if (toggle && menu) {
+        toggle.addEventListener('click', function () {
+          setMenu(toggle.getAttribute('aria-expanded') !== 'true');
+        });
+        // Close after choosing a destination
+        menu.querySelectorAll('a').forEach(function (link) {
+          link.addEventListener('click', function () { setMenu(false); });
+        });
+        // Close on Escape and return focus to the toggle
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+            setMenu(false);
+            toggle.focus();
+          }
+        });
+        // Reset when resizing up to the desktop nav
+        window.addEventListener('resize', function () {
+          if (window.innerWidth > 980) setMenu(false);
+        });
+      }
+
+      /* ---------- Marquee pause/play (WCAG 2.2.2) ----------
+         Button ships hidden and is only revealed when JS runs,
+         so no dead control appears without JS. Under reduced
+         motion the marquee is static and CSS hides the control. */
+      var marquee = document.querySelector('.marquee');
+      var marqueeToggle = document.querySelector('.marquee-toggle');
+      if (marquee && marqueeToggle) {
+        marqueeToggle.hidden = false;
+        marqueeToggle.addEventListener('click', function () {
+          var paused = marquee.classList.toggle('is-paused');
+          marqueeToggle.textContent = paused ? 'Play logo animation' : 'Pause logo animation';
+        });
+      }
+
+      /* ---------- Scroll-reveal (IntersectionObserver) ---------- */
+      var revealEls = document.querySelectorAll('.reveal');
+      if (reducedMotion || !('IntersectionObserver' in window)) {
+        revealEls.forEach(function (el) { el.classList.add('in-view'); });
+      } else {
+        var revealIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              revealIO.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        revealEls.forEach(function (el) { revealIO.observe(el); });
+      }
+
+      /* ---------- Metric count-up ----------
+         Final values are already in the markup, so users without JS,
+         with reduced motion, or on old browsers see correct numbers. */
+      var counters = document.querySelectorAll('.stat-num[data-count]');
+      if (!reducedMotion && 'IntersectionObserver' in window && counters.length) {
+        var runCount = function (el) {
+          var target = parseInt(el.getAttribute('data-count'), 10);
+          var suffix = el.getAttribute('data-suffix') || '';
+          if (isNaN(target)) return;
+          var duration = 1800;
+          var start = null;
+          var step = function (ts) {
+            if (start === null) start = ts;
+            var p = Math.min((ts - start) / duration, 1);
+            var eased = 1 - Math.pow(1 - p, 3); /* ease-out cubic */
+            el.textContent = Math.round(target * eased) + suffix;
+            if (p < 1) window.requestAnimationFrame(step);
+          };
+          window.requestAnimationFrame(step);
+        };
+        var countIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              countIO.unobserve(entry.target);
+              runCount(entry.target);
+            }
+          });
+        }, { threshold: 0.5 });
+        counters.forEach(function (c) { countIO.observe(c); });
+      }
+
+      /* ---------- Contact form → mailto (no backend) ---------- */
+      var form = document.getElementById('contact-form');
+      if (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var status = document.getElementById('form-status');
+
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+          var name = form.elements.name.value.trim();
+          var email = form.elements.email.value.trim();
+          var message = form.elements.message.value.trim();
+
+          var subject = 'Free consultation request — ' + name;
+          var body = message + '\n\n— ' + name + ' (' + email + ')';
+          window.location.href = 'mailto:info@cosmolabs.io' +
+            '?subject=' + encodeURIComponent(subject) +
+            '&body=' + encodeURIComponent(body);
+
+          if (status) {
+            status.textContent = 'Opening your email app — your message is ready to send.';
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
