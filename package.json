@@ -1,0 +1,10 @@
+{
+  "name": "cosmolabs",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@vercel/blob": "latest",
+    "@anthropic-ai/sdk": "latest",
+    "nodemailer": "latest"
+  }
+}

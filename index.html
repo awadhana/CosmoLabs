@@ -32,6 +32,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- Preload first hero slide -->
+  <link rel="preload" as="image" href="assets/hero-nebula.jpg">
+
   <!-- Mark JS availability so scroll-reveal hiding never applies without JS -->
   <script>document.documentElement.classList.add('js');</script>
 
@@ -67,6 +70,7 @@
 
     /* ---------- Reset / base ---------- */
     *, *::before, *::after{ box-sizing:border-box; margin:0; padding:0; }
+    [hidden]{ display:none !important; }
     html{ overflow-x:clip; scroll-padding-top:calc(var(--header-h) + 16px); }
     @media (prefers-reduced-motion: no-preference){
       html{ scroll-behavior:smooth; }
@@ -264,6 +268,37 @@
       background-size:56px 56px;
       -webkit-mask-image:radial-gradient(75% 65% at 50% 40%, #000 30%, transparent 100%);
       mask-image:radial-gradient(75% 65% at 50% 40%, #000 30%, transparent 100%);
+    }
+    /* Photographic slideshow — sits UNDER the radial glows + grid above */
+    .hero-bg::before, .hero-bg::after{ z-index:1; }
+    .hero-slides{ position:absolute; inset:0; z-index:0; overflow:hidden; }
+    .hero-slide{
+      position:absolute; inset:0;
+      background-size:cover; background-position:center;
+      opacity:0; transform:scale(1);
+    }
+    .hero-slides::after{ /* darkening scrim keeps hero text at AA contrast */
+      content:""; position:absolute; inset:0;
+      background:linear-gradient(180deg, rgba(5,7,13,.55) 0%, rgba(5,7,13,.95) 100%);
+    }
+    @media (prefers-reduced-motion: no-preference){
+      .hero-slide{
+        will-change:transform, opacity;
+        animation:hero-kb 21s linear infinite;
+      }
+      .hero-slide:nth-child(2){ animation-delay:7s; }
+      .hero-slide:nth-child(3){ animation-delay:14s; }
+    }
+    @keyframes hero-kb{ /* 21s cycle: ~7s visible per slide, slow Ken Burns push-in */
+      0%     { opacity:0;   transform:scale(1); }
+      5%     { opacity:.38; }
+      33.33% { opacity:.38; transform:scale(1.055); }
+      40%    { opacity:0;   transform:scale(1.08); }
+      100%   { opacity:0;   transform:scale(1); }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .hero-slide{ animation:none; opacity:0; }
+      .hero-slide:first-child{ opacity:.25; }
     }
     .hero-orbits{
       position:absolute; top:50%; left:50%;
@@ -592,6 +627,188 @@
     .form-status{ margin-top:.9rem; font-size:.9rem; color:var(--cyan); min-height:1.4em; }
     .form-hint{ margin-top:.65rem; font-size:.82rem; color:var(--text-3); }
 
+    /* ---------- Intake wizard (#start) ---------- */
+    .wiz-card{ padding:clamp(1.75rem, 3.5vw, 3rem); max-width:920px; margin-inline:auto; }
+    .wiz-card:hover{ transform:none; } /* form card shouldn't lift while typing */
+    .wiz-noscript{
+      padding:1rem 1.2rem; border:1px solid var(--line); border-radius:12px;
+      color:var(--text-2); background:rgba(255,255,255,.03);
+    }
+    .wiz-noscript a{ color:var(--cyan); }
+    .wiz-steps{
+      list-style:none;
+      display:grid; grid-template-columns:repeat(4, 1fr); gap:.6rem;
+      margin-bottom:2rem;
+    }
+    .wiz-steps li{
+      display:flex; align-items:center; gap:.55rem;
+      padding:.55rem .35rem .8rem;
+      border-bottom:2px solid var(--line);
+      font-family:"Sora", sans-serif; font-size:.85rem; font-weight:600;
+      color:var(--text-3);
+    }
+    .wiz-steps .n{
+      width:26px; height:26px; flex:none; border-radius:50%;
+      display:grid; place-items:center;
+      border:1px solid var(--line);
+      font-size:.75rem; font-weight:700;
+    }
+    .wiz-steps li[aria-current="step"]{ color:var(--text); border-color:var(--cyan); }
+    .wiz-steps li[aria-current="step"] .n{ background:var(--grad); color:#04060B; border-color:transparent; }
+    .wiz-steps li.wiz-done{ color:var(--text-2); border-color:rgba(124,108,255,.55); }
+    .wiz-steps li.wiz-done .n{ border-color:rgba(124,108,255,.55); color:#A9C4FF; }
+
+    .wiz-panel{ border:0; padding:0; margin:0; min-width:0; }
+    .wiz-legend{
+      font-family:"Sora", sans-serif; font-size:1.25rem; font-weight:700;
+      padding:0; margin-bottom:1.4rem; color:var(--text);
+    }
+    .wiz-legend:focus{ outline:none; }
+    .wiz-sub{
+      font-family:"Sora", sans-serif; font-size:1rem; font-weight:700;
+      color:#C9D2E4; margin:1.8rem 0 .8rem;
+    }
+    .wiz-sub:first-of-type{ margin-top:0; }
+    .wiz-opt{ font-family:"Manrope", sans-serif; font-weight:500; font-size:.85rem; color:var(--text-3); }
+    .wiz-row2{ display:grid; grid-template-columns:1fr 1fr; gap:0 1.1rem; }
+
+    .wiz-err{ display:none; margin-top:.45rem; font-size:.85rem; font-weight:600; color:#FF8FA3; }
+    .wiz-err.show{ display:block; }
+    .field input.wiz-invalid, .field textarea.wiz-invalid,
+    .wiz-in.wiz-invalid{ border-color:rgba(255,143,163,.7); }
+
+    .wiz-in{ /* bare input matching .field inputs, for dynamic rows */
+      width:100%; min-height:50px;
+      background:rgba(255,255,255,.035);
+      border:1px solid var(--line); border-radius:12px;
+      padding:.8rem 1rem; color:var(--text); font:inherit;
+      transition:border-color .2s var(--ease), background-color .2s var(--ease);
+    }
+    .wiz-in::placeholder{ color:var(--text-3); opacity:1; }
+    .wiz-in:focus{ outline:2px solid var(--cyan); outline-offset:0; border-color:transparent; background:rgba(255,255,255,.05); }
+
+    .wiz-ref-row{
+      display:grid; grid-template-columns:1.2fr 1fr auto; gap:.6rem;
+      margin-bottom:.6rem; align-items:center;
+    }
+    .wiz-mini{
+      min-width:44px; min-height:44px; align-self:center;
+      display:inline-grid; place-items:center;
+      border:1px solid var(--line); border-radius:10px;
+      background:rgba(255,255,255,.04); color:var(--text-2);
+      font-size:1.1rem; font-weight:700; line-height:1;
+      transition:color .18s var(--ease), border-color .18s var(--ease);
+    }
+    .wiz-mini:hover{ color:#FF8FA3; border-color:rgba(255,143,163,.5); }
+    .wiz-add{
+      display:inline-flex; align-items:center; gap:.45rem;
+      min-height:44px; padding:.5rem 1.15rem; margin-top:.2rem;
+      border:1px dashed rgba(148,163,196,.4); border-radius:10px;
+      color:var(--text-2); font-weight:600; font-size:.9rem;
+      transition:color .18s var(--ease), border-color .18s var(--ease);
+    }
+    .wiz-add:hover{ color:var(--text); border-color:var(--cyan); }
+    .wiz-add[disabled]{ opacity:.45; cursor:not-allowed; }
+
+    .wiz-seg{
+      display:inline-flex; border:1px solid var(--line); border-radius:12px;
+      overflow:hidden; background:rgba(255,255,255,.03); margin-bottom:1rem;
+    }
+    .wiz-seg label{ position:relative; }
+    .wiz-seg label + label{ border-left:1px solid var(--line-soft); }
+    .wiz-seg input{ position:absolute; inset:0; opacity:0; cursor:pointer; }
+    .wiz-seg span{
+      display:inline-flex; align-items:center; justify-content:center;
+      min-height:44px; padding:.5rem 1.35rem;
+      font-weight:600; font-size:.92rem; color:var(--text-2);
+    }
+    .wiz-seg input:checked + span{
+      background:linear-gradient(135deg, rgba(124,108,255,.28), rgba(56,225,255,.18));
+      color:var(--text);
+    }
+    .wiz-seg input:focus-visible + span{ outline:2px solid var(--cyan); outline-offset:-2px; border-radius:10px; }
+
+    .wiz-colors{ display:flex; flex-wrap:wrap; gap:.6rem; margin-bottom:.6rem; }
+    .wiz-swatch{
+      display:flex; align-items:center; gap:.5rem;
+      border:1px solid var(--line); border-radius:12px;
+      padding:.35rem .45rem; background:rgba(255,255,255,.03);
+    }
+    .wiz-swatch input[type="color"]{
+      width:44px; height:44px; padding:0; border:none; border-radius:9px;
+      background:none; cursor:pointer;
+    }
+    .wiz-swatch code{ font-size:.85rem; color:var(--text-2); min-width:5.5ch; }
+
+    .wiz-drop{
+      display:block; width:100%; text-align:center;
+      border:1.5px dashed rgba(148,163,196,.4); border-radius:14px;
+      padding:1.8rem 1.4rem; background:rgba(255,255,255,.02);
+      color:var(--text-2); font-size:.95rem; line-height:1.6;
+      transition:border-color .2s var(--ease), background-color .2s var(--ease);
+    }
+    .wiz-drop strong{ color:var(--text); }
+    .wiz-drop:hover, .wiz-drop.wiz-drag{ border-color:var(--cyan); background:rgba(56,225,255,.05); }
+    .wiz-drop-hint{ display:block; margin-top:.35rem; font-size:.82rem; color:var(--text-3); }
+    .wiz-files{ margin-top:.8rem; display:grid; gap:.5rem; }
+    .wiz-file{
+      display:flex; align-items:center; gap:.75rem;
+      padding:.45rem .45rem .45rem .9rem;
+      border:1px solid var(--line); border-radius:10px;
+      background:rgba(255,255,255,.03); font-size:.9rem;
+    }
+    .wiz-file .wiz-file-name{ overflow-wrap:anywhere; }
+    .wiz-file .wiz-file-size{ color:var(--text-3); margin-left:auto; white-space:nowrap; }
+
+    .wiz-loading{ display:flex; align-items:center; gap:.7rem; color:var(--text-2); }
+    .wiz-spin{
+      width:20px; height:20px; flex:none; border-radius:50%;
+      border:2px solid rgba(148,163,196,.3); border-top-color:var(--cyan);
+      animation:wiz-spin .8s linear infinite;
+    }
+    @keyframes wiz-spin{ to{ transform:rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce){
+      .wiz-spin{ animation:none; }
+    }
+    .wiz-ready{
+      display:flex; flex-wrap:wrap; align-items:center; gap:.9rem;
+      padding:.9rem 1.1rem; margin-bottom:1.2rem;
+      border:1px solid rgba(56,225,255,.35); border-radius:12px;
+      background:rgba(56,225,255,.06); color:var(--text);
+    }
+    .wiz-clarify-note{ color:var(--text-2); font-size:.95rem; margin-bottom:1.2rem; }
+
+    .wiz-review dl{
+      display:grid; grid-template-columns:max-content 1fr; gap:.6rem 1.4rem;
+      margin-bottom:1.4rem;
+    }
+    .wiz-review dt{ font-weight:700; font-size:.88rem; color:var(--text-3); letter-spacing:.04em; text-transform:uppercase; }
+    .wiz-review dd{ color:var(--text); font-size:.96rem; overflow-wrap:anywhere; white-space:pre-line; }
+    .wiz-turnstile{ margin:1rem 0; min-height:0; }
+    .wiz-errorbox{
+      margin-top:1rem; padding:.9rem 1.1rem;
+      border:1px solid rgba(255,143,163,.45); border-radius:12px;
+      background:rgba(255,99,132,.08); color:#FFB3C0; font-size:.92rem;
+    }
+    .wiz-actions{
+      display:flex; justify-content:space-between; gap:.9rem; margin-top:2rem;
+    }
+    .wiz-status{ min-height:0; }
+    .wiz-hp{
+      position:absolute; left:-9999px; top:auto;
+      width:1px; height:1px; overflow:hidden;
+    }
+    .wiz-success{ text-align:center; padding:2.5rem 1rem; }
+    .wiz-success svg{ width:64px; height:64px; margin:0 auto 1.4rem; color:var(--cyan); }
+    .wiz-success h3{ font-size:1.5rem; margin-bottom:.7rem; }
+    .wiz-success p{ color:var(--text-2); max-width:46ch; margin-inline:auto; }
+    .wiz-success p + p{ margin-top:.5rem; }
+    .wiz-success code{
+      font-size:.95rem; color:var(--cyan);
+      background:rgba(56,225,255,.08); border:1px solid rgba(56,225,255,.3);
+      border-radius:8px; padding:.15rem .5rem;
+    }
+
     /* ---------- Footer ---------- */
     .site-footer{
       background:var(--bg-deep);
@@ -670,6 +887,18 @@
       .ind-tile svg{ margin-bottom:.75rem; }
       .footer-grid{ grid-template-columns:1fr; gap:2rem; }
       .hero-ctas .btn{ width:100%; }
+      /* Intake wizard: single column */
+      .wiz-steps{ grid-template-columns:1fr 1fr; }
+      .wiz-row2{ grid-template-columns:1fr; }
+      .wiz-ref-row{ grid-template-columns:1fr; }
+      .wiz-ref-row .wiz-mini{ justify-self:end; }
+      .wiz-actions{ flex-direction:column-reverse; }
+      .wiz-actions .btn{ width:100%; }
+      .wiz-review dl{ grid-template-columns:1fr; gap:.15rem; }
+      .wiz-review dd{ margin-bottom:.8rem; }
+      .wiz-seg{ display:flex; }
+      .wiz-seg label{ flex:1; }
+      .wiz-seg span{ width:100%; }
     }
   </style>
 
@@ -677,7 +906,7 @@
   <noscript>
     <style>
       @media (max-width: 980px){
-        .mobile-menu[hidden]{ display:block; }
+        .mobile-menu[hidden]{ display:block !important; }
         .nav-toggle{ display:none; }
       }
     </style>
@@ -691,7 +920,7 @@
     "name": "CosmoLabs",
     "slogan": "Where science is standard, excellence is engineered",
     "description": "Multidisciplinary consulting firm delivering expert services in computer science, aerospace engineering, and nuclear engineering for mission-critical commercial and federal programs.",
-    "email": "info@cosmolabs.io",
+    "email": "cosmolabshq@gmail.com",
     "telephone": "+1-404-555-0142",
     "address": {
       "@type": "PostalAddress",
@@ -738,6 +967,7 @@
       <nav class="primary-nav" aria-label="Primary">
         <ul class="nav-links">
           <li><a href="#home">Home</a></li>
+          <li><a href="#start">Start a Project</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#industries">Industries</a></li>
@@ -756,6 +986,7 @@
       <nav aria-label="Mobile">
         <ul>
           <li><a href="#home">Home</a></li>
+          <li><a href="#start">Start a Project</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#industries">Industries</a></li>
@@ -771,6 +1002,11 @@
     <!-- ================= HERO ================= -->
     <section class="hero" id="home" aria-labelledby="hero-heading">
       <div class="hero-bg" aria-hidden="true">
+        <div class="hero-slides">
+          <div class="hero-slide" style="background-image:url('assets/hero-nebula.jpg')"></div>
+          <div class="hero-slide" style="background-image:url('assets/hero-earth.jpg')"></div>
+          <div class="hero-slide" style="background-image:url('assets/hero-launch.jpg')"></div>
+        </div>
         <svg class="hero-orbits" viewBox="0 0 1200 600" fill="none" focusable="false">
           <g>
             <ellipse cx="600" cy="300" rx="520" ry="180" stroke="rgba(124,108,255,.14)" stroke-width="1.5" transform="rotate(-12 600 300)"/>
@@ -793,7 +1029,7 @@
           Take charge of your mission-critical programs with innovative engineering solutions.
         </p>
         <div class="hero-ctas reveal" style="--d:.24s">
-          <a class="btn btn-primary" href="#contact">Schedule a Free Consultation</a>
+          <a class="btn btn-primary" href="#start">Start Your Project</a>
           <a class="btn btn-ghost" href="#services">Our Services</a>
         </div>
         <p class="hero-note reveal" style="--d:.32s">
@@ -802,6 +1038,128 @@
           </svg>
           Trusted by Fortune 500 engineering teams and federal programs alike.
         </p>
+      </div>
+    </section>
+
+    <!-- ================= START A PROJECT (intake wizard) ================= -->
+    <section id="start" aria-labelledby="start-heading">
+      <div class="container">
+        <div class="sec-head center reveal">
+          <span class="eyebrow">Start a Project</span>
+          <h2 id="start-heading">What can we do for you?</h2>
+          <p>Tell us what you want built — a website, an app, a platform. Our AI-assisted engineering team scopes it and gets to work.</p>
+        </div>
+
+        <div class="card wiz-card reveal" style="--d:.1s" id="wiz-card">
+          <noscript>
+            <p class="wiz-noscript">This form requires JavaScript — email us at <a href="mailto:cosmolabshq@gmail.com">cosmolabshq@gmail.com</a> instead.</p>
+          </noscript>
+
+          <form id="wiz-form" novalidate>
+            <ol class="wiz-steps" id="wiz-steps" aria-label="Form progress">
+              <li aria-current="step"><span class="n" aria-hidden="true">1</span> Brief</li>
+              <li><span class="n" aria-hidden="true">2</span> Details</li>
+              <li><span class="n" aria-hidden="true">3</span> Clarify</li>
+              <li><span class="n" aria-hidden="true">4</span> Review</li>
+            </ol>
+
+            <p class="wiz-status sr-only" id="wiz-status" role="status" aria-live="polite"></p>
+
+            <!-- Honeypot: off-screen, not display:none -->
+            <div class="wiz-hp" aria-hidden="true">
+              <label for="wiz-website">Website</label>
+              <input type="text" id="wiz-website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <!-- STEP 1: The brief -->
+            <fieldset class="wiz-panel" id="wiz-p1">
+              <legend class="wiz-legend" tabindex="-1">The brief</legend>
+              <div class="field">
+                <label for="wiz-title">Project title <span class="req" aria-hidden="true">*</span></label>
+                <input type="text" id="wiz-title" name="title" maxlength="200" placeholder="e.g. Booking website for my clinic" required aria-describedby="wiz-title-err">
+                <p class="wiz-err" id="wiz-title-err" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="wiz-desc">What do you want built? <span class="req" aria-hidden="true">*</span></label>
+                <textarea id="wiz-desc" name="description" maxlength="5000" placeholder="Describe the project, its goals, the features you already know you need, and anything else that matters…" required aria-describedby="wiz-desc-err"></textarea>
+                <p class="wiz-err" id="wiz-desc-err" role="alert"></p>
+              </div>
+              <div class="wiz-row2">
+                <div class="field">
+                  <label for="wiz-email">Work email <span class="req" aria-hidden="true">*</span></label>
+                  <input type="email" id="wiz-email" name="email" maxlength="254" autocomplete="email" placeholder="jane@company.com" required aria-describedby="wiz-email-err">
+                  <p class="wiz-err" id="wiz-email-err" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label for="wiz-phone">Phone <span class="req" aria-hidden="true">*</span></label>
+                  <input type="tel" id="wiz-phone" name="phone" maxlength="25" autocomplete="tel" placeholder="+1 (404) 555-0100" required aria-describedby="wiz-phone-err">
+                  <p class="wiz-err" id="wiz-phone-err" role="alert"></p>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- STEP 2: Design & references -->
+            <fieldset class="wiz-panel" id="wiz-p2" hidden>
+              <legend class="wiz-legend" tabindex="-1">Design &amp; references</legend>
+
+              <h3 class="wiz-sub">Reference websites or apps <span class="wiz-opt">(optional, up to 5)</span></h3>
+              <div id="wiz-refs"></div>
+              <p class="wiz-err" id="wiz-ref-err" role="alert"></p>
+              <button type="button" class="wiz-add" id="wiz-ref-add">+ Add a reference</button>
+
+              <h3 class="wiz-sub">Color scheme</h3>
+              <div class="wiz-seg" role="group" aria-label="Light or dark interface preference">
+                <label><input type="radio" name="colorMode" value="light"><span>Light</span></label>
+                <label><input type="radio" name="colorMode" value="dark"><span>Dark</span></label>
+                <label><input type="radio" name="colorMode" value="either" checked><span>Either</span></label>
+              </div>
+              <div class="wiz-colors" id="wiz-colors"></div>
+              <button type="button" class="wiz-add" id="wiz-color-add">+ Add a brand color</button>
+              <div class="field" style="margin-top:1.1rem">
+                <label for="wiz-color-notes">Color notes <span class="wiz-opt">(optional)</span></label>
+                <input type="text" id="wiz-color-notes" maxlength="500" placeholder="e.g. Match our existing logo; avoid bright red">
+              </div>
+
+              <h3 class="wiz-sub">Documents <span class="wiz-opt">(optional)</span></h3>
+              <input type="file" id="wiz-file-input" class="sr-only" multiple tabindex="-1" aria-hidden="true"
+                     accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.md,.docx,.xlsx,.csv">
+              <button type="button" class="wiz-drop" id="wiz-drop">
+                <strong>Drag &amp; drop files here</strong> or click to browse
+                <span class="wiz-drop-hint" id="wiz-drop-hint">PDF, PNG, JPG, JPEG, WEBP, TXT, MD, DOCX, XLSX, CSV — up to 3 files, 1.5 MB each, 3 MB total.</span>
+              </button>
+              <ul class="wiz-files" id="wiz-files"></ul>
+              <p class="wiz-err" id="wiz-file-err" role="alert"></p>
+            </fieldset>
+
+            <!-- STEP 3: Clarify -->
+            <fieldset class="wiz-panel" id="wiz-p3" hidden>
+              <legend class="wiz-legend" tabindex="-1">Clarify</legend>
+              <p class="wiz-clarify-note">A few quick questions help us scope your project accurately. Answers are optional, but the more you share the better our first response will be.</p>
+              <div class="wiz-loading" id="wiz-clarify-loading" hidden>
+                <span class="wiz-spin" aria-hidden="true"></span> Reviewing your brief…
+              </div>
+              <div class="wiz-ready" id="wiz-clarify-ready" hidden>
+                <span>Your brief looks complete — you can continue straight to review.</span>
+                <button type="button" class="btn btn-primary" id="wiz-ready-next" style="min-height:44px">Continue to review</button>
+              </div>
+              <div id="wiz-questions"></div>
+            </fieldset>
+
+            <!-- STEP 4: Review & submit -->
+            <fieldset class="wiz-panel" id="wiz-p4" hidden>
+              <legend class="wiz-legend" tabindex="-1">Review &amp; submit</legend>
+              <div class="wiz-review" id="wiz-review"></div>
+              <div class="wiz-turnstile" id="wiz-turnstile"></div>
+              <div class="wiz-errorbox" id="wiz-submit-err" role="alert" hidden></div>
+            </fieldset>
+
+            <div class="wiz-actions">
+              <button type="button" class="btn btn-ghost" id="wiz-back" style="visibility:hidden">Back</button>
+              <button type="button" class="btn btn-primary" id="wiz-next">Next</button>
+              <button type="submit" class="btn btn-primary" id="wiz-submit" hidden>Submit brief</button>
+            </div>
+          </form>
+        </div>
       </div>
     </section>
 
@@ -1227,7 +1585,7 @@
               </span>
               <div>
                 <span class="lbl">Email</span>
-                <a href="mailto:info@cosmolabs.io">info@cosmolabs.io</a>
+                <a href="mailto:cosmolabshq@gmail.com">cosmolabshq@gmail.com</a>
               </div>
             </div>
             <div class="contact-row">
@@ -1301,6 +1659,7 @@
           <h3>Quick Links</h3>
           <ul>
             <li><a href="#home">Home</a></li>
+            <li><a href="#start">Start a Project</a></li>
             <li><a href="#services">Services</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#industries">Industries</a></li>
@@ -1461,7 +1820,7 @@
 
           var subject = 'Free consultation request — ' + name;
           var body = message + '\n\n— ' + name + ' (' + email + ')';
-          window.location.href = 'mailto:info@cosmolabs.io' +
+          window.location.href = 'mailto:cosmolabshq@gmail.com' +
             '?subject=' + encodeURIComponent(subject) +
             '&body=' + encodeURIComponent(body);
 
@@ -1470,6 +1829,612 @@
           }
         });
       }
+    })();
+
+    /* ============================================================
+       Intake wizard (#start) — 4-step "What can we do for you?"
+       Talks to /api/intake-config, /api/clarify, /api/intake.
+       ============================================================ */
+    (function () {
+      'use strict';
+
+      var form = document.getElementById('wiz-form');
+      if (!form || !window.fetch) return;
+
+      /* ---------- Config (hardcoded fallbacks match the API contract) ---------- */
+      var config = {
+        turnstileSiteKey: null,
+        clarifyEnabled: false,
+        maxFiles: 3,
+        maxFileBytes: 1572864,
+        maxTotalBytes: 3145728,
+        allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg', 'webp', 'txt', 'md', 'docx', 'xlsx', 'csv']
+      };
+
+      var FALLBACK_QUESTIONS = [
+        { id: 'q1', question: 'Who is the primary audience or user of this project, and what is the single most important thing they should be able to do?' },
+        { id: 'q2', question: 'Do you have existing branding, content, or accounts (domain, logins, copy, images) we should build with, or are we starting from scratch?' },
+        { id: 'q3', question: 'What is your ideal timeline and budget range for this project?' }
+      ];
+
+      var STEP_NAMES = ['Brief', 'Details', 'Clarify', 'Review'];
+
+      var state = {
+        step: 1,
+        files: [],            // File objects
+        startedAt: Date.now(),
+        turnstileToken: '',
+        turnstileWidgetId: null,
+        turnstileRequested: false,
+        clarifyKey: '',       // brief snapshot the questions were fetched for
+        submitting: false
+      };
+
+      /* ---------- Element handles ---------- */
+      var $ = function (id) { return document.getElementById(id); };
+      var panels = [$('wiz-p1'), $('wiz-p2'), $('wiz-p3'), $('wiz-p4')];
+      var stepItems = $('wiz-steps').children;
+      var backBtn = $('wiz-back'), nextBtn = $('wiz-next'), submitBtn = $('wiz-submit');
+      var statusEl = $('wiz-status');
+
+      /* ---------- startedAt: reset when the section first scrolls into view ---------- */
+      var startSection = document.getElementById('start');
+      if (startSection && 'IntersectionObserver' in window) {
+        var startIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) {
+              state.startedAt = Date.now();
+              startIO.disconnect();
+            }
+          });
+        }, { threshold: 0.2 });
+        startIO.observe(startSection);
+      }
+
+      /* ---------- Fetch server config ---------- */
+      function updateDropHint() {
+        var hint = $('wiz-drop-hint');
+        if (!hint) return;
+        hint.textContent = config.allowedExtensions.join(', ').toUpperCase() +
+          ' — up to ' + config.maxFiles + ' files, ' + fmtSize(config.maxFileBytes) +
+          ' each, ' + fmtSize(config.maxTotalBytes) + ' total.';
+        var input = $('wiz-file-input');
+        if (input) {
+          input.setAttribute('accept', config.allowedExtensions.map(function (e) { return '.' + e; }).join(','));
+        }
+      }
+      fetch('/api/intake-config')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (c) {
+          if (!c) return;
+          if (typeof c.turnstileSiteKey === 'string' && c.turnstileSiteKey) config.turnstileSiteKey = c.turnstileSiteKey;
+          if (typeof c.clarifyEnabled === 'boolean') config.clarifyEnabled = c.clarifyEnabled;
+          if (typeof c.maxFiles === 'number') config.maxFiles = c.maxFiles;
+          if (typeof c.maxFileBytes === 'number') config.maxFileBytes = c.maxFileBytes;
+          if (typeof c.maxTotalBytes === 'number') config.maxTotalBytes = c.maxTotalBytes;
+          if (Object.prototype.toString.call(c.allowedExtensions) === '[object Array]' && c.allowedExtensions.length) {
+            config.allowedExtensions = c.allowedExtensions;
+          }
+          updateDropHint();
+          if (state.step === 4) setupTurnstile();
+        })
+        .catch(function () { /* fallbacks already in place */ });
+
+      /* ---------- Helpers ---------- */
+      function fmtSize(bytes) {
+        if (bytes >= 1048576) return (Math.round(bytes / 104857.6) / 10) + ' MB';
+        if (bytes >= 1024) return Math.round(bytes / 1024) + ' KB';
+        return bytes + ' B';
+      }
+      function announce(msg) { if (statusEl) statusEl.textContent = msg; }
+      function setErr(input, errId, msg) {
+        var el = $(errId);
+        if (el) { el.textContent = msg || ''; el.classList.toggle('show', !!msg); }
+        if (input) {
+          input.classList.toggle('wiz-invalid', !!msg);
+          if (msg) input.setAttribute('aria-invalid', 'true');
+          else input.removeAttribute('aria-invalid');
+        }
+      }
+
+      /* ---------- Step navigation ---------- */
+      function showStep(n, focusHeading) {
+        state.step = n;
+        for (var i = 0; i < panels.length; i++) {
+          panels[i].hidden = (i !== n - 1);
+          if (i === n - 1) stepItems[i].setAttribute('aria-current', 'step');
+          else stepItems[i].removeAttribute('aria-current');
+          stepItems[i].classList.toggle('wiz-done', i < n - 1);
+        }
+        backBtn.style.visibility = (n === 1) ? 'hidden' : 'visible';
+        nextBtn.hidden = (n === 4);
+        submitBtn.hidden = (n !== 4);
+        if (n === 3) enterClarify();
+        if (n === 4) { buildReview(); setupTurnstile(); }
+        if (focusHeading) {
+          var legend = panels[n - 1].querySelector('.wiz-legend');
+          if (legend) legend.focus();
+        }
+        announce('Step ' + n + ' of 4: ' + STEP_NAMES[n - 1]);
+      }
+
+      backBtn.addEventListener('click', function () {
+        if (state.step > 1) showStep(state.step - 1, true);
+      });
+      nextBtn.addEventListener('click', function () {
+        if (state.step === 1 && !validateStep1()) return;
+        if (state.step === 2 && !validateStep2()) return;
+        if (state.step < 4) showStep(state.step + 1, true);
+      });
+      $('wiz-ready-next').addEventListener('click', function () { showStep(4, true); });
+
+      // Enter never implicitly advances/submits from a text input
+      form.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && e.target && e.target.tagName === 'INPUT') e.preventDefault();
+      });
+
+      /* ---------- STEP 1 validation ---------- */
+      var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      var PHONE_RE = /^[0-9+\-() ]{7,25}$/;
+      function validateStep1() {
+        var t = $('wiz-title'), d = $('wiz-desc'), em = $('wiz-email'), ph = $('wiz-phone');
+        var firstBad = null;
+        function check(input, errId, bad, msg) {
+          setErr(input, errId, bad ? msg : '');
+          if (bad && !firstBad) firstBad = input;
+        }
+        var tv = t.value.trim();
+        check(t, 'wiz-title-err', tv.length < 3 || tv.length > 200, 'Please give your project a title (3–200 characters).');
+        var dv = d.value.trim();
+        check(d, 'wiz-desc-err', dv.length < 10 || dv.length > 5000, 'Please describe your project in at least 10 characters (max 5,000).');
+        var ev = em.value.trim();
+        check(em, 'wiz-email-err', ev.length > 254 || !EMAIL_RE.test(ev), 'Please enter a valid email address.');
+        var pv = ph.value.trim();
+        check(ph, 'wiz-phone-err', !PHONE_RE.test(pv), 'Please enter a valid phone number (7–25 characters; digits, spaces, +, -, parentheses).');
+        if (firstBad) { firstBad.focus(); announce('Please fix the highlighted fields.'); return false; }
+        return true;
+      }
+
+      /* ---------- STEP 2: references ---------- */
+      var refsWrap = $('wiz-refs'), refAddBtn = $('wiz-ref-add');
+      var MAX_REFS = 5;
+      function refRowCount() { return refsWrap.querySelectorAll('.wiz-ref-row').length; }
+      function addRefRow() {
+        if (refRowCount() >= MAX_REFS) return;
+        var row = document.createElement('div');
+        row.className = 'wiz-ref-row';
+        var url = document.createElement('input');
+        url.type = 'url'; url.className = 'wiz-in wiz-ref-url';
+        url.placeholder = 'https://example.com'; url.maxLength = 500;
+        url.setAttribute('aria-label', 'Reference URL');
+        var note = document.createElement('input');
+        note.type = 'text'; note.className = 'wiz-in wiz-ref-note';
+        note.placeholder = 'What do you like about it? (optional)'; note.maxLength = 300;
+        note.setAttribute('aria-label', 'Reference note');
+        var del = document.createElement('button');
+        del.type = 'button'; del.className = 'wiz-mini';
+        del.setAttribute('aria-label', 'Remove this reference');
+        del.textContent = '×';
+        del.addEventListener('click', function () {
+          row.parentNode.removeChild(row);
+          refAddBtn.disabled = false;
+        });
+        row.appendChild(url); row.appendChild(note); row.appendChild(del);
+        refsWrap.appendChild(row);
+        refAddBtn.disabled = refRowCount() >= MAX_REFS;
+        return url;
+      }
+      refAddBtn.addEventListener('click', function () {
+        var input = addRefRow();
+        if (input) input.focus();
+      });
+
+      function collectRefs() {
+        var out = [];
+        refsWrap.querySelectorAll('.wiz-ref-row').forEach(function (row) {
+          var u = row.querySelector('.wiz-ref-url').value.trim();
+          if (!u) return;
+          out.push({ url: u, note: row.querySelector('.wiz-ref-note').value.trim() });
+        });
+        return out.slice(0, MAX_REFS);
+      }
+
+      // Mirrors the server's isValidHttpUrl (new URL() parse) so a link that
+      // passes step 2 can't be rejected with a 400 at final submit.
+      function isValidHttpUrlClient(v) {
+        if (!v || v.length > 500) return false;
+        try {
+          var u = new URL(v);
+          return u.protocol === 'http:' || u.protocol === 'https:';
+        } catch (e) {
+          return false;
+        }
+      }
+      function validateStep2() {
+        var bad = null;
+        refsWrap.querySelectorAll('.wiz-ref-url').forEach(function (u) {
+          var v = u.value.trim();
+          var invalid = v && !isValidHttpUrlClient(v);
+          u.classList.toggle('wiz-invalid', !!invalid);
+          if (invalid && !bad) bad = u;
+        });
+        setErr(null, 'wiz-ref-err', bad ? 'Reference links must start with http:// or https:// (max 500 characters). Leave the row blank to skip it.' : '');
+        if (bad) { bad.focus(); return false; }
+        return true;
+      }
+
+      /* ---------- STEP 2: colors ---------- */
+      var colorsWrap = $('wiz-colors'), colorAddBtn = $('wiz-color-add');
+      var MAX_COLORS = 6;
+      function colorCount() { return colorsWrap.querySelectorAll('.wiz-swatch').length; }
+      function addColor(hex) {
+        if (colorCount() >= MAX_COLORS) return;
+        var wrap = document.createElement('div');
+        wrap.className = 'wiz-swatch';
+        var input = document.createElement('input');
+        input.type = 'color'; input.value = hex || '#7C6CFF';
+        input.setAttribute('aria-label', 'Brand color ' + (colorCount() + 1));
+        var code = document.createElement('code');
+        code.textContent = input.value.toUpperCase();
+        input.addEventListener('input', function () { code.textContent = input.value.toUpperCase(); });
+        var del = document.createElement('button');
+        del.type = 'button'; del.className = 'wiz-mini';
+        del.setAttribute('aria-label', 'Remove this color');
+        del.textContent = '×';
+        del.addEventListener('click', function () {
+          wrap.parentNode.removeChild(wrap);
+          colorAddBtn.disabled = false;
+        });
+        wrap.appendChild(input); wrap.appendChild(code); wrap.appendChild(del);
+        colorsWrap.appendChild(wrap);
+        colorAddBtn.disabled = colorCount() >= MAX_COLORS;
+      }
+      colorAddBtn.addEventListener('click', function () { addColor(); });
+
+      function collectColorScheme() {
+        var mode = 'either';
+        var checked = form.querySelector('input[name="colorMode"]:checked');
+        if (checked) mode = checked.value;
+        var colors = [];
+        colorsWrap.querySelectorAll('input[type="color"]').forEach(function (c) {
+          colors.push(c.value.toUpperCase());
+        });
+        return {
+          mode: mode,
+          colors: colors.slice(0, MAX_COLORS),
+          notes: $('wiz-color-notes').value.trim().slice(0, 500)
+        };
+      }
+
+      /* ---------- STEP 2: files ---------- */
+      var dropBtn = $('wiz-drop'), fileInput = $('wiz-file-input'), fileList = $('wiz-files');
+      function fileExt(name) {
+        var i = name.lastIndexOf('.');
+        return i === -1 ? '' : name.slice(i + 1).toLowerCase();
+      }
+      function totalFileBytes() {
+        var t = 0;
+        for (var i = 0; i < state.files.length; i++) t += state.files[i].size;
+        return t;
+      }
+      function renderFiles() {
+        fileList.innerHTML = '';
+        state.files.forEach(function (f, idx) {
+          var li = document.createElement('li');
+          li.className = 'wiz-file';
+          var name = document.createElement('span');
+          name.className = 'wiz-file-name'; name.textContent = f.name;
+          var size = document.createElement('span');
+          size.className = 'wiz-file-size'; size.textContent = fmtSize(f.size);
+          var del = document.createElement('button');
+          del.type = 'button'; del.className = 'wiz-mini';
+          del.setAttribute('aria-label', 'Remove ' + f.name);
+          del.textContent = '×';
+          del.addEventListener('click', function () {
+            state.files.splice(idx, 1);
+            renderFiles();
+            setErr(null, 'wiz-file-err', '');
+          });
+          li.appendChild(name); li.appendChild(size); li.appendChild(del);
+          fileList.appendChild(li);
+        });
+      }
+      // Mirrors the server's sanitizeFilename: the name must survive the
+      // basename/charset/dot-collapse pass with a non-empty stem and an
+      // allowed extension, or the server rejects it at submit time.
+      function serverAcceptsName(name) {
+        var base = String(name).split(/[\\/]/).pop() || '';
+        base = base.replace(/[^a-zA-Z0-9._-]/g, '');
+        base = base.replace(/\.{2,}/g, '.').replace(/^[.\-]+/, '');
+        if (base.length > 120) base = base.slice(-120).replace(/^[.\-]+/, '');
+        var dot = base.lastIndexOf('.');
+        if (dot <= 0) return false;
+        return config.allowedExtensions.indexOf(base.slice(dot + 1).toLowerCase()) !== -1;
+      }
+      function addFiles(list) {
+        var err = '';
+        for (var i = 0; i < list.length; i++) {
+          var f = list[i];
+          if (state.files.length >= config.maxFiles) { err = 'You can attach up to ' + config.maxFiles + ' files.'; break; }
+          if (config.allowedExtensions.indexOf(fileExt(f.name)) === -1) {
+            err = '"' + f.name + '" is not an accepted file type.'; continue;
+          }
+          if (!serverAcceptsName(f.name)) {
+            err = '"' + f.name + '" has a name we can’t store — please rename it using letters or numbers and try again.'; continue;
+          }
+          if (f.size === 0) {
+            err = '"' + f.name + '" is empty.'; continue;
+          }
+          if (f.size > config.maxFileBytes) {
+            err = '"' + f.name + '" is larger than ' + fmtSize(config.maxFileBytes) + '.'; continue;
+          }
+          if (totalFileBytes() + f.size > config.maxTotalBytes) {
+            err = 'Attachments exceed the ' + fmtSize(config.maxTotalBytes) + ' total limit.'; continue;
+          }
+          var dup = state.files.some(function (x) { return x.name === f.name && x.size === f.size; });
+          if (!dup) state.files.push(f);
+        }
+        renderFiles();
+        setErr(null, 'wiz-file-err', err);
+        if (!err) announce(state.files.length + ' file' + (state.files.length === 1 ? '' : 's') + ' attached.');
+      }
+      dropBtn.addEventListener('click', function () { fileInput.click(); });
+      fileInput.addEventListener('change', function () {
+        if (fileInput.files && fileInput.files.length) addFiles(fileInput.files);
+        fileInput.value = '';
+      });
+      ['dragenter', 'dragover'].forEach(function (ev) {
+        dropBtn.addEventListener(ev, function (e) {
+          e.preventDefault(); e.stopPropagation();
+          dropBtn.classList.add('wiz-drag');
+        });
+      });
+      ['dragleave', 'drop'].forEach(function (ev) {
+        dropBtn.addEventListener(ev, function (e) {
+          e.preventDefault(); e.stopPropagation();
+          dropBtn.classList.remove('wiz-drag');
+        });
+      });
+      dropBtn.addEventListener('drop', function (e) {
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+          addFiles(e.dataTransfer.files);
+        }
+      });
+
+      /* ---------- STEP 3: clarify ---------- */
+      var questionsWrap = $('wiz-questions');
+      function briefKey() {
+        return $('wiz-title').value.trim() + '|' + $('wiz-desc').value.trim();
+      }
+      function renderQuestions(qs, ready) {
+        $('wiz-clarify-loading').hidden = true;
+        $('wiz-clarify-ready').hidden = !ready;
+        questionsWrap.innerHTML = '';
+        (qs || []).slice(0, 8).forEach(function (q, i) {
+          if (!q || !q.question) return;
+          var field = document.createElement('div');
+          field.className = 'field wiz-q';
+          field.setAttribute('data-question', String(q.question).slice(0, 500));
+          var label = document.createElement('label');
+          var qid = 'wiz-q-' + i;
+          label.setAttribute('for', qid);
+          label.textContent = String(q.question).slice(0, 500);
+          var ta = document.createElement('textarea');
+          ta.id = qid; ta.maxLength = 2000;
+          ta.placeholder = 'Your answer (optional, but it helps us scope faster)';
+          field.appendChild(label); field.appendChild(ta);
+          questionsWrap.appendChild(field);
+        });
+        announce(ready ? 'Your brief looks complete.' : 'A few clarifying questions are ready.');
+      }
+      function enterClarify() {
+        var key = briefKey();
+        if (state.clarifyKey === key) return; // already fetched for this brief
+        state.clarifyKey = key;
+        questionsWrap.innerHTML = '';
+        $('wiz-clarify-ready').hidden = true;
+        $('wiz-clarify-loading').hidden = false;
+        fetch('/api/clarify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: $('wiz-title').value.trim(),
+            description: $('wiz-desc').value.trim(),
+            references: collectRefs(),
+            colorScheme: collectColorScheme()
+          })
+        })
+          .then(function (r) { if (!r.ok) throw new Error('clarify failed'); return r.json(); })
+          .then(function (d) {
+            // Stale-response guard: if the user went back, edited the brief and
+            // re-entered step 3, a newer request owns this panel — drop ours.
+            if (state.clarifyKey !== key) return;
+            if (!d || d.ok !== true) throw new Error('clarify failed');
+            renderQuestions((d.questions || []).slice(0, 4), d.ready === true);
+          })
+          .catch(function () {
+            if (state.clarifyKey !== key) return;
+            renderQuestions(FALLBACK_QUESTIONS, false);
+          });
+      }
+      function collectClarifications() {
+        var out = [];
+        questionsWrap.querySelectorAll('.wiz-q').forEach(function (field) {
+          var ta = field.querySelector('textarea');
+          var answer = ta ? ta.value.trim() : '';
+          if (!answer) return;
+          out.push({
+            question: field.getAttribute('data-question') || '',
+            answer: answer.slice(0, 2000)
+          });
+        });
+        return out.slice(0, 8);
+      }
+
+      /* ---------- STEP 4: review ---------- */
+      function buildReview() {
+        var wrap = $('wiz-review');
+        wrap.innerHTML = '';
+        var dl = document.createElement('dl');
+        function row(label, value) {
+          if (!value) return;
+          var dt = document.createElement('dt'); dt.textContent = label;
+          var dd = document.createElement('dd'); dd.textContent = value;
+          dl.appendChild(dt); dl.appendChild(dd);
+        }
+        var desc = $('wiz-desc').value.trim();
+        row('Title', $('wiz-title').value.trim());
+        row('Description', desc.length > 320 ? desc.slice(0, 320) + '…' : desc);
+        row('Email', $('wiz-email').value.trim());
+        row('Phone', $('wiz-phone').value.trim());
+        var refs = collectRefs();
+        if (refs.length) {
+          row('References', refs.map(function (r) { return r.url + (r.note ? ' — ' + r.note : ''); }).join('\n'));
+        }
+        var cs = collectColorScheme();
+        var csParts = ['Mode: ' + cs.mode];
+        if (cs.colors.length) csParts.push('Colors: ' + cs.colors.join(', '));
+        if (cs.notes) csParts.push('Notes: ' + cs.notes);
+        row('Color scheme', csParts.join('\n'));
+        if (state.files.length) {
+          row('Files', state.files.map(function (f) { return f.name + ' (' + fmtSize(f.size) + ')'; }).join('\n'));
+        }
+        var cl = collectClarifications();
+        if (cl.length) row('Clarifications', cl.length + ' question' + (cl.length === 1 ? '' : 's') + ' answered');
+        wrap.appendChild(dl);
+      }
+
+      /* ---------- Turnstile (only when the server provides a site key) ---------- */
+      function setupTurnstile() {
+        if (!config.turnstileSiteKey || state.turnstileRequested) return;
+        state.turnstileRequested = true;
+        var render = function () {
+          if (window.turnstile && $('wiz-turnstile')) {
+            state.turnstileWidgetId = window.turnstile.render('#wiz-turnstile', {
+              sitekey: config.turnstileSiteKey,
+              theme: 'dark',
+              callback: function (token) { state.turnstileToken = token; },
+              'expired-callback': function () { state.turnstileToken = ''; },
+              'error-callback': function () { state.turnstileToken = ''; }
+            });
+          }
+        };
+        if (window.turnstile) { render(); return; }
+        window.onTurnstileLoad = render;
+        var s = document.createElement('script');
+        s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad';
+        s.async = true;
+        s.defer = true;
+        document.head.appendChild(s);
+      }
+
+      /* ---------- Submit ---------- */
+      function readFilesAsBase64(files) {
+        return Promise.all(files.map(function (f) {
+          return new Promise(function (resolve, reject) {
+            var reader = new FileReader();
+            reader.onload = function () {
+              var result = String(reader.result);
+              var comma = result.indexOf(',');
+              resolve({
+                name: f.name,
+                type: f.type || 'application/octet-stream',
+                size: f.size,
+                data: comma === -1 ? result : result.slice(comma + 1)
+              });
+            };
+            reader.onerror = function () { reject(new Error('read failed')); };
+            reader.readAsDataURL(f);
+          });
+        }));
+      }
+
+      function submitFailed(msg) {
+        state.submitting = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit brief';
+        // A Turnstile token is single-use: once the server has forwarded it to
+        // siteverify, retrying with the same token is always rejected as a
+        // duplicate. Reset the widget so the retry gets a fresh token.
+        if (window.turnstile && state.turnstileWidgetId != null) {
+          try { window.turnstile.reset(state.turnstileWidgetId); } catch (e) { /* widget gone */ }
+          state.turnstileToken = '';
+        }
+        var box = $('wiz-submit-err');
+        box.textContent = msg;
+        box.hidden = false;
+      }
+
+      function showSuccess(id) {
+        var card = $('wiz-card');
+        var email = $('wiz-email').value.trim();
+        card.innerHTML = '';
+        var panel = document.createElement('div');
+        panel.className = 'wiz-success';
+        panel.innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+          '<circle cx="12" cy="12" r="9.5"/><path d="m7.5 12.5 3 3 6-6.5"/></svg>';
+        var h = document.createElement('h3');
+        h.tabIndex = -1;
+        h.textContent = 'Brief received';
+        var p1 = document.createElement('p');
+        p1.append('Reference ');
+        var code = document.createElement('code');
+        code.textContent = id;
+        p1.appendChild(code);
+        var p2 = document.createElement('p');
+        p2.textContent = 'We’ll reply to ' + email + ' within one business day.';
+        panel.appendChild(h); panel.appendChild(p1); panel.appendChild(p2);
+        card.appendChild(panel);
+        h.focus();
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (state.step !== 4 || state.submitting) return;
+        state.submitting = true;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending your brief…';
+        $('wiz-submit-err').hidden = true;
+
+        readFilesAsBase64(state.files)
+          .then(function (fileData) {
+            var payload = {
+              email: $('wiz-email').value.trim(),
+              phone: $('wiz-phone').value.trim(),
+              title: $('wiz-title').value.trim(),
+              description: $('wiz-desc').value.trim(),
+              references: collectRefs(),
+              colorScheme: collectColorScheme(),
+              clarifications: collectClarifications(),
+              files: fileData,
+              website: $('wiz-website').value, // honeypot — humans leave this empty
+              startedAt: state.startedAt
+            };
+            if (state.turnstileToken) payload.turnstileToken = state.turnstileToken;
+            return fetch('/api/intake', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+          })
+          .then(function (r) {
+            return r.json().then(
+              function (d) { return { data: d }; },
+              function () { return { data: null }; }
+            );
+          })
+          .then(function (res) {
+            if (res.data && res.data.ok === true && res.data.id) {
+              showSuccess(res.data.id);
+            } else {
+              submitFailed((res.data && res.data.error) || 'Something went wrong — please try again.');
+            }
+          })
+          .catch(function () {
+            submitFailed('Network error — please check your connection and try again.');
+          });
+      });
     })();
   </script>
 </body>
