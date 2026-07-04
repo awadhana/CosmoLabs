@@ -138,7 +138,7 @@
       font-weight:700; letter-spacing:-.01em;
       margin:.85rem 0 .9rem;
     }
-    .sec-head p{ color:var(--text-2); font-size:1.05rem; max-width:62ch; }
+    .sec-head p{ color:#B4BED4; font-size:1.1rem; line-height:1.7; max-width:62ch; }
     .sec-head.center{ margin-inline:auto; text-align:center; }
     .sec-head.center p{ margin-inline:auto; }
 
@@ -300,6 +300,16 @@
       .hero-slide{ animation:none; opacity:0; }
       .hero-slide:first-child{ opacity:.25; }
     }
+    /* Cinematic hero video — sits at the same layer as .hero-slides; the
+       later-in-DOM .hero-slides (and its ::after scrim) paint above it, so
+       the text scrim + glows/grid still cover the video. */
+    .hero-video{
+      position:absolute; inset:0; z-index:0;
+      width:100%; height:100%; object-fit:cover;
+      opacity:0; transition:opacity 1.2s var(--ease);
+    }
+    .hero.video-on .hero-video{ opacity:.5; }
+    .hero.video-on .hero-slide{ animation-play-state:paused; opacity:0 !important; }
     .hero-orbits{
       position:absolute; top:50%; left:50%;
       width:min(120vw, 1400px); height:auto;
@@ -437,7 +447,7 @@
     }
     .svc-icon svg{ width:28px; height:28px; }
     .svc-card h3{ font-size:1.3rem; font-weight:700; letter-spacing:-.01em; }
-    .svc-card > p{ color:var(--text-2); font-size:.98rem; margin:.75rem 0 1.25rem; }
+    .svc-card > p{ color:var(--text-2); font-size:.98rem; line-height:1.65; margin:.75rem 0 1.25rem; }
     .svc-list{ margin-top:auto; display:grid; gap:.65rem; }
     .svc-list li{
       display:flex; align-items:baseline; gap:.7rem;
@@ -469,7 +479,7 @@
     }
     .why-icon svg{ width:22px; height:22px; }
     .why-card h3{ font-size:1.25rem; margin:0 0 .6rem; }
-    .why-card p{ color:var(--text-2); font-size:.98rem; }
+    .why-card p{ color:var(--text-2); font-size:.98rem; line-height:1.65; }
 
     /* ---------- Metrics ---------- */
     .metrics{
@@ -504,7 +514,7 @@
       align-items:center;
     }
     .about-copy p + p{ margin-top:1.15rem; }
-    .about-copy p{ color:var(--text-2); font-size:1.02rem; }
+    .about-copy p{ color:var(--text-2); font-size:1.05rem; line-height:1.75; }
     .about-copy p strong{ color:var(--text); }
     .about-panel{
       padding:clamp(1.75rem, 3vw, 2.5rem);
@@ -817,7 +827,7 @@
     }
     .footer-grid{
       display:grid; gap:2.75rem;
-      grid-template-columns:1.4fr 1fr 1fr 1fr;
+      grid-template-columns:1.4fr 1fr 1fr;
       padding-bottom:3rem;
     }
     .footer-brand p{
@@ -855,10 +865,135 @@
       .btn, .card{ transition:none; }
     }
 
+    /* ---------- How it works (#process) ---------- */
+    #process{ overflow:hidden; } /* section already position:relative */
+    .proc-video{
+      position:absolute; inset:0; z-index:0;
+      width:100%; height:100%; object-fit:cover;
+      opacity:0; transition:opacity 1.2s var(--ease);
+      pointer-events:none;
+    }
+    #process.video-on .proc-video{ opacity:.14; }
+    .proc-scrim{ /* dark gradient over the ambient video keeps text contrast untouched */
+      position:absolute; inset:0; z-index:0; pointer-events:none;
+      background:linear-gradient(180deg, rgba(7,11,19,.72) 0%, rgba(7,11,19,.45) 50%, rgba(7,11,19,.82) 100%);
+    }
+    .proc-content{ position:relative; z-index:1; }
+    .proc-grid{
+      display:grid; gap:1.4rem;
+      grid-template-columns:repeat(4, 1fr);
+    }
+    .proc-card{ padding:clamp(1.5rem, 2.4vw, 2rem); }
+    .proc-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; }
+    .proc-num{
+      font-family:"Sora", sans-serif; font-weight:800; font-size:.95rem;
+      letter-spacing:.18em;
+      background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .proc-icon{
+      width:46px; height:46px; border-radius:13px;
+      display:grid; place-items:center;
+      background:linear-gradient(135deg, rgba(124,108,255,.16), rgba(56,225,255,.10));
+      border:1px solid rgba(124,108,255,.35);
+      color:#A9C4FF;
+    }
+    .proc-icon svg{ width:24px; height:24px; }
+    .proc-card h3{ font-size:1.15rem; font-weight:700; margin-bottom:.55rem; }
+    .proc-card p{ color:var(--text-2); font-size:.95rem; line-height:1.65; }
+    .proc-ctas{
+      display:flex; flex-wrap:wrap; justify-content:center; gap:.9rem;
+      margin-top:clamp(2.25rem, 4vw, 3rem);
+    }
+
+    /* ---------- Wizard trust chips ---------- */
+    .wiz-trust{
+      display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem;
+      margin-top:1.4rem;
+    }
+    .wiz-trust span{
+      display:inline-flex; align-items:center; gap:.45rem;
+      font-size:.82rem; font-weight:700; letter-spacing:.04em;
+      color:#BAC6DE;
+      padding:.45rem .9rem; border-radius:999px;
+      border:1px solid var(--line); background:rgba(255,255,255,.03);
+    }
+    .wiz-trust svg{ width:14px; height:14px; color:var(--cyan); flex:none; }
+
+    /* ---------- Pre-footer conversion band (#cta) ---------- */
+    .cta-band{ padding-block:clamp(3rem, 6vw, 5rem); }
+    .cta-card{
+      padding:clamp(2.5rem, 5vw, 4rem);
+      text-align:center;
+      position:relative; overflow:hidden;
+      background:
+        radial-gradient(36rem 18rem at 30% -20%, rgba(124,108,255,.16), transparent 65%),
+        radial-gradient(30rem 16rem at 80% 120%, rgba(56,225,255,.10), transparent 65%),
+        linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.008)), var(--surface);
+    }
+    .cta-card:hover{ transform:none; }
+    .cta-card h2{
+      font-size:clamp(1.7rem, 3.6vw, 2.6rem);
+      font-weight:700; letter-spacing:-.01em;
+    }
+    .cta-card p{
+      color:#B4BED4; font-size:1.1rem; line-height:1.7;
+      max-width:52ch; margin:.9rem auto 1.9rem;
+    }
+
+    /* ---------- Scroll progress bar (motion-gated) ---------- */
+    .scroll-progress{
+      position:fixed; top:0; left:0; z-index:200;
+      width:100%; height:3px;
+      background:var(--grad);
+      transform:scaleX(0); transform-origin:left;
+      pointer-events:none;
+      display:none;
+    }
+    @media (prefers-reduced-motion: no-preference){
+      .scroll-progress{ display:block; }
+    }
+
+    /* ---------- CTA glow breathing (motion-gated) ---------- */
+    @media (prefers-reduced-motion: no-preference){
+      .hero-ctas .btn-primary,
+      .cta-card .btn-primary{
+        animation:btn-breathe 4.5s ease-in-out infinite;
+      }
+    }
+    @keyframes btn-breathe{
+      0%, 100%{ box-shadow:0 10px 32px rgba(92,120,255,.28); }
+      50%     { box-shadow:0 14px 42px rgba(92,120,255,.34); }
+    }
+
+    /* ---------- Aurora drift orbs ---------- */
+    #services, #industries{ overflow:hidden; } /* sections already position:relative */
+    .aurora{
+      position:absolute; width:480px; height:480px; border-radius:50%;
+      filter:blur(70px); pointer-events:none;
+    }
+    /* Keep section content painting above the positioned orbs. */
+    #services > .container, #industries > .container{ position:relative; z-index:1; }
+    .aurora-violet{
+      top:-140px; right:-160px;
+      background:radial-gradient(circle, rgba(124,108,255,.10), transparent 70%);
+    }
+    .aurora-cyan{
+      bottom:-160px; left:-160px;
+      background:radial-gradient(circle, rgba(56,225,255,.10), transparent 70%);
+    }
+    @media (prefers-reduced-motion: no-preference){
+      .aurora{ animation:aurora-drift 34s ease-in-out infinite alternate; }
+    }
+    @keyframes aurora-drift{
+      from{ transform:translate3d(0, 0, 0) scale(1); }
+      to  { transform:translate3d(-90px, 70px, 0) scale(1.15); }
+    }
+
     /* ============================================================
        Responsive
        ============================================================ */
     @media (max-width: 1024px){
+      .proc-grid{ grid-template-columns:1fr 1fr; }
       .services-grid{ grid-template-columns:1fr 1fr; }
       .svc-card:last-child{ grid-column:span 2; }
       .quotes-grid{ grid-template-columns:1fr; max-width:680px; margin-inline:auto; }
@@ -877,6 +1012,7 @@
     }
 
     @media (max-width: 640px){
+      .proc-grid{ grid-template-columns:1fr; }
       .services-grid{ grid-template-columns:1fr; }
       .svc-card:last-child{ grid-column:auto; }
       .why-grid{ grid-template-columns:1fr; }
@@ -921,15 +1057,6 @@
     "slogan": "Where science is standard, excellence is engineered",
     "description": "Multidisciplinary consulting firm delivering expert services in computer science, aerospace engineering, and nuclear engineering for mission-critical commercial and federal programs.",
     "email": "cosmolabshq@gmail.com",
-    "telephone": "+1-404-555-0142",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "1200 Innovation Way, Suite 400",
-      "addressLocality": "Atlanta",
-      "addressRegion": "GA",
-      "postalCode": "30309",
-      "addressCountry": "US"
-    },
     "knowsAbout": [
       "Computer Science",
       "Software Engineering",
@@ -945,6 +1072,8 @@
   </script>
 </head>
 <body>
+
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
   <a class="skip-link" href="#main">Skip to main content</a>
 
@@ -967,7 +1096,7 @@
       <nav class="primary-nav" aria-label="Primary">
         <ul class="nav-links">
           <li><a href="#home">Home</a></li>
-          <li><a href="#start">Start a Project</a></li>
+          <li><a href="#start">Start a project</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#industries">Industries</a></li>
@@ -975,7 +1104,7 @@
         </ul>
       </nav>
 
-      <a class="btn btn-primary btn-nav" href="#contact">Free Consultation</a>
+      <a class="btn btn-primary btn-nav" href="#start">Start your project</a>
 
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
         <span class="bar"></span><span class="bar"></span><span class="bar"></span>
@@ -986,14 +1115,15 @@
       <nav aria-label="Mobile">
         <ul>
           <li><a href="#home">Home</a></li>
-          <li><a href="#start">Start a Project</a></li>
+          <li><a href="#start">Start a project</a></li>
+          <li><a href="#process">How it works</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#industries">Industries</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
-      <a class="btn btn-primary" href="#contact">Free Consultation</a>
+      <a class="btn btn-primary" href="#start">Start your project</a>
     </div>
   </header>
 
@@ -1002,6 +1132,7 @@
     <!-- ================= HERO ================= -->
     <section class="hero" id="home" aria-labelledby="hero-heading">
       <div class="hero-bg" aria-hidden="true">
+        <video class="hero-video" muted loop playsinline autoplay preload="none" poster="assets/poster-orion.jpg" aria-hidden="true" tabindex="-1"></video>
         <div class="hero-slides">
           <div class="hero-slide" style="background-image:url('assets/hero-nebula.jpg')"></div>
           <div class="hero-slide" style="background-image:url('assets/hero-earth.jpg')"></div>
@@ -1026,11 +1157,11 @@
           We provide professional consulting in computing, aerospace &amp; nuclear engineering.
         </h1>
         <p class="hero-sub reveal" style="--d:.16s">
-          Take charge of your mission-critical programs with innovative engineering solutions.
+          Take charge of your mission-critical programs. Tell us what you need built — we scope it within one business day.
         </p>
         <div class="hero-ctas reveal" style="--d:.24s">
-          <a class="btn btn-primary" href="#start">Start Your Project</a>
-          <a class="btn btn-ghost" href="#services">Our Services</a>
+          <a class="btn btn-primary" href="#start">Start your project</a>
+          <a class="btn btn-ghost" href="#services">Our services</a>
         </div>
         <p class="hero-note reveal" style="--d:.32s">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
@@ -1047,7 +1178,21 @@
         <div class="sec-head center reveal">
           <span class="eyebrow">Start a Project</span>
           <h2 id="start-heading">What can we do for you?</h2>
-          <p>Tell us what you want built — a website, an app, a platform. Our AI-assisted engineering team scopes it and gets to work.</p>
+          <p>Tell us what you need built — a platform, a simulation pipeline, a mission-critical system. A senior engineer scopes it and gets to work.</p>
+          <div class="wiz-trust">
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>
+              Free to submit
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>
+              Reply within one business day
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>
+              Your files stay private
+            </span>
+          </div>
         </div>
 
         <div class="card wiz-card reveal" style="--d:.1s" id="wiz-card">
@@ -1076,7 +1221,7 @@
               <legend class="wiz-legend" tabindex="-1">The brief</legend>
               <div class="field">
                 <label for="wiz-title">Project title <span class="req" aria-hidden="true">*</span></label>
-                <input type="text" id="wiz-title" name="title" maxlength="200" placeholder="e.g. Booking website for my clinic" required aria-describedby="wiz-title-err">
+                <input type="text" id="wiz-title" name="title" maxlength="200" placeholder="e.g. Telemetry dashboard for our ground-station network" required aria-describedby="wiz-title-err">
                 <p class="wiz-err" id="wiz-title-err" role="alert"></p>
               </div>
               <div class="field">
@@ -1140,7 +1285,7 @@
               </div>
               <div class="wiz-ready" id="wiz-clarify-ready" hidden>
                 <span>Your brief looks complete — you can continue straight to review.</span>
-                <button type="button" class="btn btn-primary" id="wiz-ready-next" style="min-height:44px">Continue to review</button>
+                <button type="button" class="btn btn-ghost" id="wiz-ready-next" style="min-height:44px">Continue to review</button>
               </div>
               <div id="wiz-questions"></div>
             </fieldset>
@@ -1163,11 +1308,91 @@
       </div>
     </section>
 
+    <!-- ================= HOW IT WORKS ================= -->
+    <section id="process" class="bg-alt" aria-labelledby="process-heading">
+      <video class="proc-video" muted loop playsinline autoplay preload="none" aria-hidden="true" tabindex="-1"></video>
+      <div class="proc-scrim" aria-hidden="true"></div>
+      <div class="container proc-content">
+        <div class="sec-head center reveal">
+          <span class="eyebrow">How It Works</span>
+          <h2 id="process-heading">From idea to launch in four steps</h2>
+          <p>A senior engineer and our AI build system take you from brief to shipped product — with you in the loop the whole way.</p>
+        </div>
+
+        <div class="proc-grid">
+          <article class="card proc-card reveal">
+            <div class="proc-head">
+              <span class="proc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="M15 4h2a2 2 0 0 1 2 2v2.5M9 4H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h5"/>
+                  <rect x="9" y="2.5" width="6" height="3.5" rx="1"/>
+                  <path d="M8.5 11h5M8.5 15h3"/>
+                  <path d="m20.8 13.2-5.3 5.3-2 .7.7-2 5.3-5.3a.95.95 0 0 1 1.3 0c.37.37.37.96 0 1.3z"/>
+                </svg>
+              </span>
+              <span class="proc-num" aria-hidden="true">01</span>
+            </div>
+            <h3>Share your brief</h3>
+            <p>Two minutes in the guided form. Attach documents, reference sites, and your color preferences.</p>
+          </article>
+
+          <article class="card proc-card reveal" style="--d:.08s">
+            <div class="proc-head">
+              <span class="proc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <circle cx="12" cy="12" r="9"/>
+                  <circle cx="12" cy="12" r="5"/>
+                  <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+                </svg>
+              </span>
+              <span class="proc-num" aria-hidden="true">02</span>
+            </div>
+            <h3>We scope it</h3>
+            <p>Our AI clarifies the details; a senior engineer reviews and replies with a plan within one business day.</p>
+          </article>
+
+          <article class="card proc-card reveal" style="--d:.16s">
+            <div class="proc-head">
+              <span class="proc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.5 4.5l-3 15"/>
+                </svg>
+              </span>
+              <span class="proc-num" aria-hidden="true">03</span>
+            </div>
+            <h3>We build</h3>
+            <p>AI-accelerated engineering with senior oversight. You see weekly progress demos, not a black box.</p>
+          </article>
+
+          <article class="card proc-card reveal" style="--d:.24s">
+            <div class="proc-head">
+              <span class="proc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                  <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+                  <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+                  <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+                  <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+                </svg>
+              </span>
+              <span class="proc-num" aria-hidden="true">04</span>
+            </div>
+            <h3>You launch</h3>
+            <p>You own the code, the repo, and the deployment. We stay on for support and iteration.</p>
+          </article>
+        </div>
+
+        <div class="proc-ctas reveal" style="--d:.3s">
+          <a class="btn btn-primary" href="#start">Start your brief</a>
+          <a class="btn btn-ghost" href="#contact">Ask a question</a>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= TRUSTED PARTNERS ================= -->
     <section class="partners bg-alt" aria-labelledby="partners-heading">
       <div class="container sec-head center">
-        <span class="eyebrow">Client Wall</span>
-        <h2 id="partners-heading">Trusted Partners</h2>
+        <span class="eyebrow">Client wall</span>
+        <h2 id="partners-heading">Trusted partners</h2>
       </div>
 
       <div class="marquee">
@@ -1234,10 +1459,11 @@
 
     <!-- ================= SERVICES ================= -->
     <section id="services" aria-labelledby="services-heading">
+      <div class="aurora aurora-violet" aria-hidden="true"></div>
       <div class="container">
         <div class="sec-head reveal">
           <span class="eyebrow">What We Do</span>
-          <h2 id="services-heading">Three disciplines. One standard of excellence.</h2>
+          <h2 id="services-heading">Three disciplines, one standard of excellence</h2>
           <p>Senior consultants who have shipped production software, flown hardware, and licensed reactors — embedded directly into your program.</p>
         </div>
 
@@ -1379,19 +1605,19 @@
         <div class="metrics-grid">
           <div class="stat reveal">
             <span class="stat-num" data-count="10" data-suffix="">10</span>
-            <span class="stat-label">Years Proven Track Record</span>
+            <span class="stat-label">Years proven track record</span>
           </div>
           <div class="stat reveal" style="--d:.08s">
             <span class="stat-num" data-count="98" data-suffix="%">98%</span>
-            <span class="stat-label">Client Satisfaction</span>
+            <span class="stat-label">Client satisfaction</span>
           </div>
           <div class="stat reveal" style="--d:.16s">
             <span class="stat-num" data-count="30" data-suffix="+">30+</span>
-            <span class="stat-label">PhD &amp; Senior Engineers</span>
+            <span class="stat-label">PhD &amp; senior engineers</span>
           </div>
           <div class="stat reveal" style="--d:.24s">
             <span class="stat-num" data-count="120" data-suffix="+">120+</span>
-            <span class="stat-label">Projects Delivered</span>
+            <span class="stat-label">Projects delivered</span>
           </div>
         </div>
       </div>
@@ -1403,7 +1629,7 @@
         <div class="about-copy reveal">
           <span class="eyebrow">About CosmoLabs</span>
           <div class="sec-head" style="margin-bottom:1.5rem">
-            <h2 id="about-heading">Founded by engineers. Run like a mission.</h2>
+            <h2 id="about-heading">Founded by engineers, run like a mission</h2>
           </div>
           <p><strong>CosmoLabs was founded by engineers</strong> who spent their careers inside demanding programs — shipping cloud platforms at global scale, integrating flight hardware, and defending reactor safety cases. We started the firm with a simple conviction: mission-critical work deserves consultants who have actually done the work.</p>
           <p>We combine <strong>startup agility with national-laboratory rigor</strong>. Our teams move in weeks, not quarters — yet every deliverable, whether an architecture review, a GNC simulation campaign, or a licensing submittal, is engineered to withstand board-level and regulator-level scrutiny.</p>
@@ -1501,10 +1727,11 @@
 
     <!-- ================= INDUSTRIES ================= -->
     <section id="industries" aria-labelledby="industries-heading">
+      <div class="aurora aurora-cyan" aria-hidden="true"></div>
       <div class="container">
         <div class="sec-head reveal">
           <span class="eyebrow">Industries We Serve</span>
-          <h2 id="industries-heading">Deep expertise across regulated, high-stakes sectors.</h2>
+          <h2 id="industries-heading">Deep expertise across regulated, high-stakes sectors</h2>
         </div>
 
         <div class="ind-grid">
@@ -1568,12 +1795,23 @@
       </div>
     </section>
 
+    <!-- ================= CTA BAND ================= -->
+    <section id="cta" class="cta-band" aria-labelledby="cta-heading">
+      <div class="container">
+        <div class="card cta-card reveal">
+          <h2 id="cta-heading">Ready to build something excellent?</h2>
+          <p>Start your brief now — a senior engineer will scope it within one business day.</p>
+          <a class="btn btn-primary" href="#start">Start your project</a>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= CONTACT ================= -->
     <section id="contact" class="bg-alt" aria-labelledby="contact-heading">
       <div class="container contact-grid">
         <div class="contact-info reveal">
           <span class="eyebrow">Contact</span>
-          <h2 id="contact-heading">Get a Free Consultation</h2>
+          <h2 id="contact-heading">Get a free consultation</h2>
           <p>Tell us about your program. A senior engineer — not a salesperson — will respond within one business day.</p>
 
           <div class="contact-rows">
@@ -1591,23 +1829,23 @@
             <div class="contact-row">
               <span class="ico" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                  <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.25a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7a2 2 0 0 1 1.7 2z"/>
+                  <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>
                 </svg>
               </span>
               <div>
-                <span class="lbl">Phone</span>
-                <a href="tel:+14045550142">+1 (404) 555-0142</a>
+                <span class="lbl">Response time</span>
+                <span class="val">Within one business day</span>
               </div>
             </div>
             <div class="contact-row">
               <span class="ico" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                  <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/>
+                  <path d="M5 12h14M13 6l6 6-6 6"/>
                 </svg>
               </span>
               <div>
-                <span class="lbl">Office</span>
-                <span class="val">1200 Innovation Way, Suite 400,<br>Atlanta, GA 30309</span>
+                <span class="lbl">Have a project in mind?</span>
+                <a href="#start">Start a structured brief &rarr;</a>
               </div>
             </div>
           </div>
@@ -1627,12 +1865,13 @@
             <label for="cf-msg">How can we help? <span class="req" aria-hidden="true">*</span></label>
             <textarea id="cf-msg" name="message" placeholder="Briefly describe your program, timeline, and goals…" required></textarea>
           </div>
-          <button class="btn btn-primary" type="submit">Request Free Consultation</button>
+          <button class="btn btn-primary" type="submit">Request a free consultation</button>
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
-          <p class="form-hint">Submitting opens a pre-filled email in your mail app — nothing is stored on this site.</p>
+          <p class="form-hint">Submitting opens a pre-filled email in your mail app — this form itself stores nothing.</p>
         </form>
       </div>
     </section>
+
   </main>
 
   <!-- ================= FOOTER ================= -->
@@ -1656,10 +1895,11 @@
         </div>
 
         <nav class="footer-col" aria-label="Quick links">
-          <h3>Quick Links</h3>
+          <h3>Quick links</h3>
           <ul>
             <li><a href="#home">Home</a></li>
-            <li><a href="#start">Start a Project</a></li>
+            <li><a href="#start">Start a project</a></li>
+            <li><a href="#process">How it works</a></li>
             <li><a href="#services">Services</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#industries">Industries</a></li>
@@ -1673,18 +1913,10 @@
             <li><a href="#services">Computer Science &amp; Software</a></li>
             <li><a href="#services">Aerospace Engineering</a></li>
             <li><a href="#services">Nuclear Engineering</a></li>
-            <li><a href="#contact">Free Consultation</a></li>
+            <li><a href="#contact">Free consultation</a></li>
           </ul>
         </nav>
 
-        <nav class="footer-col" aria-label="Information">
-          <h3>Information</h3>
-          <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms &amp; Conditions</a></li>
-            <li><a href="#">FAQs</a></li>
-          </ul>
-        </nav>
       </div>
 
       <div class="footer-bottom">
@@ -2435,6 +2667,93 @@
             submitFailed('Network error — please check your connection and try again.');
           });
       });
+    })();
+
+    /* ============================================================
+       Ambient videos (hero + #process) — desktop, motion- and
+       data-friendly contexts only. Photo slideshow stays the
+       fallback everywhere else.
+       ============================================================ */
+    (function () {
+      'use strict';
+
+      if (!document.documentElement.classList.contains('js')) return;
+      if (!window.matchMedia) return;
+      if (!window.matchMedia('(min-width: 981px)').matches) return;
+      if (!window.matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+      if (window.matchMedia('(prefers-reduced-data: reduce)').matches) return;
+
+      function safePlay(video) {
+        var p = video.play();
+        if (p && typeof p.catch === 'function') p.catch(function () { /* autoplay blocked */ });
+      }
+
+      function activate(video, host, src, markClass) {
+        if (!video || !host) return;
+        video.src = src;
+        // Reveal on any successful 'playing' event — not just the initial
+        // play() promise. The IntersectionObserver below may pause() an
+        // offscreen video before the first play() resolves (aborting it),
+        // so gating the class on the promise would leave the video playing
+        // invisibly at opacity:0 once it scrolls into view. The photo
+        // fallback remains if autoplay is blocked and playback never starts.
+        video.addEventListener('playing', function () {
+          host.classList.add(markClass);
+        });
+        safePlay(video);
+        // Pause when the section is (almost) offscreen; resume when back.
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) {
+              if (en.intersectionRatio < 0.1) video.pause();
+              else safePlay(video);
+            });
+          }, { threshold: [0, 0.1] });
+          io.observe(host);
+        }
+      }
+
+      activate(
+        document.querySelector('.hero-video'),
+        document.querySelector('.hero'),
+        'assets/hero-orion.mp4',
+        'video-on'
+      );
+      activate(
+        document.querySelector('.proc-video'),
+        document.getElementById('process'),
+        'assets/ambient-orion.mp4',
+        'video-on'
+      );
+    })();
+
+    /* ============================================================
+       Scroll progress bar — motion-gated, rAF-throttled.
+       ============================================================ */
+    (function () {
+      'use strict';
+
+      var bar = document.getElementById('scroll-progress');
+      if (!bar || !window.matchMedia) return;
+      if (!window.matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+
+      var ticking = false;
+      function update() {
+        ticking = false;
+        var doc = document.documentElement;
+        var max = doc.scrollHeight - window.innerHeight;
+        var p = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+        bar.style.transform = 'scaleX(' + p + ')';
+      }
+      function request() {
+        if (!ticking) {
+          ticking = true;
+          window.requestAnimationFrame(update);
+        }
+      }
+      window.addEventListener('scroll', request, { passive: true });
+      window.addEventListener('resize', request, { passive: true });
+      update();
     })();
   </script>
 </body>
