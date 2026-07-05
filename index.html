@@ -6,7 +6,7 @@
   <title>CosmoLabs — Computing, Aerospace &amp; Nuclear Engineering Consulting</title>
   <meta name="description" content="CosmoLabs is a multidisciplinary consulting firm delivering expert services in computer science, aerospace engineering, and nuclear engineering for mission-critical commercial and federal programs.">
   <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#05070D">
+  <meta name="theme-color" content="#0E1430">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -25,7 +25,7 @@
   <link rel="canonical" href="https://cosmolabs-nu.vercel.app/">
 
   <!-- Favicon: inline SVG data URI -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237C6CFF'/%3E%3Cstop offset='1' stop-color='%2338E1FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2305070D'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='10' fill='none' stroke='url(%23g)' stroke-width='3' transform='rotate(-25 32 32)'/%3E%3Ccircle cx='32' cy='32' r='10' fill='url(%23g)'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238B7BFF'/%3E%3Cstop offset='1' stop-color='%2345E6FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%230E1430'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='10' fill='none' stroke='url(%23g)' stroke-width='3' transform='rotate(-25 32 32)'/%3E%3Ccircle cx='32' cy='32' r='10' fill='url(%23g)'/%3E%3C/svg%3E">
 
   <!-- Google Fonts (only allowed external request) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,26 +40,27 @@
 
   <style>
     /* ============================================================
-       CosmoLabs — Bold Modern Enterprise
-       Palette: base #05070D · alt #070B13 · surface #0B101D
-                accent gradient #7C6CFF → #38E1FF
+       CosmoLabs — Bold Modern Enterprise · Twilight Indigo
+       Palette: base #0E1430 · alt #131A3D · surface #1A2148
+                accent gradient #8B7BFF → #45E6FF
        Type:    Sora (display) · Manrope (body)
        ============================================================ */
 
     :root{
-      --bg:        #05070D;
-      --bg-alt:    #070B13;
-      --bg-deep:   #04060B;
-      --surface:   #0B101D;
-      --surface-2: #0E1424;
-      --line:      rgba(148,163,196,.14);
-      --line-soft: rgba(148,163,196,.09);
-      --text:      #EDF1F9;
-      --text-2:    #A6B0C6;
-      --text-3:    #8B96AD;
-      --violet:    #7C6CFF;
-      --cyan:      #38E1FF;
-      --grad:      linear-gradient(92deg, #7C6CFF 0%, #38E1FF 100%);
+      --bg:        #0E1430;
+      --bg-alt:    #131A3D;
+      --bg-deep:   #0A0F26;
+      --surface:   #1A2148;
+      --surface-2: #212A58;
+      --line:      rgba(168,180,220,.22);
+      --line-soft: rgba(168,180,220,.13);
+      --line-strong: rgba(168,180,220,.5); /* form-control boundaries: >=3:1 vs surrounding surface (WCAG 1.4.11) */
+      --text:      #F2F5FF;
+      --text-2:    #C3CCEA;
+      --text-3:    #9FABD3;
+      --violet:    #8B7BFF;
+      --cyan:      #45E6FF;
+      --grad:      linear-gradient(92deg, #8B7BFF 0%, #45E6FF 100%);
       --radius:    20px;
       --header-h:  72px;
       --container: 1180px;
@@ -76,7 +77,8 @@
       html{ scroll-behavior:smooth; }
     }
     body{
-      background:var(--bg);
+      background-color:var(--bg);
+      background-image:linear-gradient(180deg, #101638 0%, #0E1430 40%, #0B1130 100%);
       color:var(--text);
       font-family:"Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
       font-size:1rem;
@@ -117,9 +119,22 @@
     h1, h2, h3{ font-family:"Sora", "Manrope", sans-serif; line-height:1.15; }
     .grad-text{
       background:var(--grad);
+      background-size:200% 100%;
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
+    }
+    @media (prefers-reduced-motion: no-preference){
+      .grad-text, .brand-name em{ animation:grad-sweep 6s ease-in-out infinite alternate; }
+      .eyebrow::before{ transform-origin:left center; animation:eyebrow-pulse 3s ease-in-out infinite alternate; }
+    }
+    @keyframes grad-sweep{
+      from{ background-position:0% 50%; }
+      to  { background-position:100% 50%; }
+    }
+    @keyframes eyebrow-pulse{
+      from{ transform:scaleX(.8); }
+      to  { transform:scaleX(1); }
     }
     .eyebrow{
       display:inline-flex; align-items:center; gap:.6rem;
@@ -138,12 +153,12 @@
       font-weight:700; letter-spacing:-.01em;
       margin:.85rem 0 .9rem;
     }
-    .sec-head p{ color:#B4BED4; font-size:1.1rem; line-height:1.7; max-width:62ch; }
+    .sec-head p{ color:#C3CCEA; font-size:1.1rem; line-height:1.7; max-width:62ch; }
     .sec-head.center{ margin-inline:auto; text-align:center; }
     .sec-head.center p{ margin-inline:auto; }
 
     section{ padding-block:var(--sec-pad); position:relative; }
-    .bg-alt{ background:var(--bg-alt); border-block:1px solid var(--line-soft); }
+    .bg-alt{ background:rgba(19,26,61,.6); border-block:1px solid var(--line-soft); }
 
     /* ---------- Buttons ---------- */
     .btn{
@@ -157,29 +172,29 @@
     }
     .btn-primary{
       background:var(--grad);
-      color:#04060B;
+      color:#0A0F26;
       box-shadow:0 10px 32px rgba(92,120,255,.28);
     }
     .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 14px 40px rgba(92,140,255,.4); }
     .btn-primary:active{ transform:translateY(0); }
     .btn-ghost{
-      background:rgba(255,255,255,.04);
-      border-color:rgba(148,163,196,.3);
+      background:rgba(255,255,255,.06);
+      border-color:rgba(168,180,220,.3);
       color:var(--text);
     }
-    .btn-ghost:hover{ background:rgba(255,255,255,.08); border-color:rgba(148,163,196,.5); transform:translateY(-2px); }
+    .btn-ghost:hover{ background:rgba(255,255,255,.12); border-color:rgba(168,180,220,.5); transform:translateY(-2px); }
     .btn-ghost:active{ transform:translateY(0); }
 
     /* ---------- Header / nav ---------- */
     .site-header{
       position:sticky; top:0; z-index:100;
-      background:rgba(5,7,13,.72);
+      background:rgba(14,20,48,.78);
       -webkit-backdrop-filter:blur(14px);
       backdrop-filter:blur(14px);
       border-bottom:1px solid var(--line-soft);
       transition:background-color .25s var(--ease);
     }
-    .site-header.is-scrolled{ background:rgba(5,7,13,.92); }
+    .site-header.is-scrolled{ background:rgba(14,20,48,.95); }
     .nav-wrap{
       display:flex; align-items:center; gap:2rem;
       height:var(--header-h);
@@ -193,7 +208,7 @@
       font-family:"Sora", sans-serif; font-weight:800; font-size:1.3rem;
       letter-spacing:-.02em; color:var(--text);
     }
-    .brand-name em{ font-style:normal; background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .brand-name em{ font-style:normal; background:var(--grad); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; }
 
     .nav-links{ display:flex; align-items:center; gap:.25rem; }
     .nav-links a{
@@ -203,7 +218,7 @@
       text-decoration:none;
       transition:color .18s var(--ease), background-color .18s var(--ease);
     }
-    .nav-links a:hover{ color:var(--text); background:rgba(255,255,255,.05); }
+    .nav-links a:hover{ color:var(--text); background:rgba(255,255,255,.08); }
 
     .btn-nav{ min-height:44px; padding:.55rem 1.25rem; font-size:.9rem; }
 
@@ -211,7 +226,7 @@
       display:none; flex-direction:column; justify-content:center; gap:5px;
       width:48px; height:48px; align-items:center;
       border-radius:12px; border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
+      background:rgba(255,255,255,.05);
     }
     .nav-toggle .bar{
       width:20px; height:2px; border-radius:2px; background:var(--text);
@@ -223,7 +238,7 @@
 
     .mobile-menu{
       border-top:1px solid var(--line-soft);
-      background:#080C15;
+      background:rgba(16,23,64,.97);
       padding:1rem var(--pad-x) 1.5rem;
       max-height:calc(100vh - var(--header-h));
       max-height:calc(100dvh - var(--header-h));
@@ -257,14 +272,14 @@
     .hero-bg::before{
       content:""; position:absolute; inset:0;
       background:
-        radial-gradient(52rem 32rem at 18% -8%, rgba(124,108,255,.18), transparent 60%),
-        radial-gradient(46rem 30rem at 88% 108%, rgba(56,225,255,.12), transparent 60%);
+        radial-gradient(52rem 32rem at 18% -8%, rgba(139,123,255,.22), transparent 60%),
+        radial-gradient(46rem 30rem at 88% 108%, rgba(69,230,255,.16), transparent 60%);
     }
     .hero-bg::after{ /* engineering grid, faded at edges */
       content:""; position:absolute; inset:0;
       background:
-        linear-gradient(rgba(148,163,196,.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(148,163,196,.055) 1px, transparent 1px);
+        linear-gradient(rgba(168,180,220,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168,180,220,.08) 1px, transparent 1px);
       background-size:56px 56px;
       -webkit-mask-image:radial-gradient(75% 65% at 50% 40%, #000 30%, transparent 100%);
       mask-image:radial-gradient(75% 65% at 50% 40%, #000 30%, transparent 100%);
@@ -279,7 +294,7 @@
     }
     .hero-slides::after{ /* darkening scrim keeps hero text at AA contrast */
       content:""; position:absolute; inset:0;
-      background:linear-gradient(180deg, rgba(5,7,13,.55) 0%, rgba(5,7,13,.95) 100%);
+      background:linear-gradient(180deg, rgba(14,20,48,.6) 0%, rgba(14,20,48,.92) 100%);
     }
     @media (prefers-reduced-motion: no-preference){
       .hero-slide{
@@ -339,7 +354,7 @@
       margin-top:1.5rem;
       font-size:clamp(1.2rem, 2.4vw, 1.6rem);
       font-weight:600;
-      color:#CBD4E6;
+      color:#D7DEF5;
       max-width:44ch;
       text-wrap:balance;
     }
@@ -393,11 +408,11 @@
     .marquee-toggle{
       min-height:44px; padding:.5rem 1.2rem;
       border:1px solid var(--line); border-radius:999px;
-      background:rgba(255,255,255,.03);
+      background:rgba(255,255,255,.05);
       font-size:.85rem; font-weight:600; color:var(--text-2);
       transition:color .18s var(--ease), background-color .18s var(--ease);
     }
-    .marquee-toggle:hover{ color:var(--text); background:rgba(255,255,255,.06); }
+    .marquee-toggle:hover{ color:var(--text); background:rgba(255,255,255,.09); }
     @media (prefers-reduced-motion: reduce){
       .marquee{ flex-wrap:wrap; -webkit-mask-image:none; mask-image:none; }
       .marquee-track{ flex-wrap:wrap; justify-content:center; min-width:0; row-gap:1.25rem; }
@@ -420,15 +435,15 @@
 
     /* ---------- Cards (shared) ---------- */
     .card{
-      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.008)) , var(--surface);
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)) , rgba(26,33,72,.92);
       border:1px solid var(--line);
       border-radius:var(--radius);
       transition:transform .25s var(--ease), border-color .25s var(--ease), box-shadow .3s var(--ease);
     }
     .card:hover{
-      transform:translateY(-4px);
-      border-color:rgba(124,108,255,.45);
-      box-shadow:0 18px 48px rgba(3,6,20,.6), 0 0 0 1px rgba(124,108,255,.12);
+      transform:translateY(-6px);
+      border-color:rgba(139,123,255,.55);
+      box-shadow:0 18px 48px rgba(6,10,34,.5), 0 0 0 1px rgba(139,123,255,.22), 0 0 28px rgba(139,123,255,.14);
     }
 
     /* ---------- Services ---------- */
@@ -440,8 +455,8 @@
     .svc-icon{
       width:58px; height:58px; border-radius:16px;
       display:grid; place-items:center;
-      background:linear-gradient(135deg, rgba(124,108,255,.16), rgba(56,225,255,.10));
-      border:1px solid rgba(124,108,255,.35);
+      background:linear-gradient(135deg, rgba(139,123,255,.24), rgba(69,230,255,.15));
+      border:1px solid rgba(139,123,255,.35);
       color:#A9C4FF;
       margin-bottom:1.5rem;
     }
@@ -451,7 +466,7 @@
     .svc-list{ margin-top:auto; display:grid; gap:.65rem; }
     .svc-list li{
       display:flex; align-items:baseline; gap:.7rem;
-      color:#C3CCDF; font-weight:500; font-size:.95rem;
+      color:#CDD6EF; font-weight:500; font-size:.95rem;
     }
     .svc-list li::before{
       content:""; flex:none; width:7px; height:7px; border-radius:50%;
@@ -473,8 +488,8 @@
     .why-icon{
       width:46px; height:46px; border-radius:13px;
       display:grid; place-items:center;
-      background:linear-gradient(135deg, rgba(124,108,255,.16), rgba(56,225,255,.10));
-      border:1px solid rgba(124,108,255,.35);
+      background:linear-gradient(135deg, rgba(139,123,255,.24), rgba(69,230,255,.15));
+      border:1px solid rgba(139,123,255,.35);
       color:#A9C4FF;
     }
     .why-icon svg{ width:22px; height:22px; }
@@ -484,8 +499,8 @@
     /* ---------- Metrics ---------- */
     .metrics{
       background:
-        radial-gradient(60rem 24rem at 50% 120%, rgba(124,108,255,.16), transparent 65%),
-        var(--bg-deep);
+        radial-gradient(60rem 24rem at 50% 120%, rgba(139,123,255,.2), transparent 65%),
+        rgba(10,15,38,.65);
       border-block:1px solid var(--line-soft);
       padding-block:clamp(3.5rem, 7vw, 5.5rem);
     }
@@ -501,6 +516,7 @@
       font-variant-numeric:tabular-nums;
       background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;
       display:block; line-height:1.1;
+      filter:drop-shadow(0 0 14px rgba(139,123,255,.38)); /* soft glow, both motion modes */
     }
     .stat-label{
       display:block; margin-top:.5rem;
@@ -525,9 +541,9 @@
     .about-chips{ display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem; }
     .about-chips span{
       font-size:.82rem; font-weight:700; letter-spacing:.04em;
-      color:#BAC6DE;
+      color:#C7D1EC;
       padding:.45rem .9rem; border-radius:999px;
-      border:1px solid var(--line); background:rgba(255,255,255,.03);
+      border:1px solid var(--line); background:rgba(255,255,255,.05);
     }
 
     /* ---------- Testimonials ---------- */
@@ -541,7 +557,7 @@
     }
     .quote-mark{ width:34px; height:34px; color:var(--violet); margin-bottom:1.1rem; }
     .quote-card blockquote p{
-      color:#C9D2E4; font-size:.99rem; line-height:1.7;
+      color:#D0D9F0; font-size:.99rem; line-height:1.7;
     }
     .quote-card figcaption{
       margin-top:1.5rem; padding-top:1.1rem;
@@ -567,7 +583,7 @@
     .ind-tile::after{ /* faint corner glow */
       content:""; position:absolute; top:-40%; right:-25%;
       width:60%; aspect-ratio:1; border-radius:50%;
-      background:radial-gradient(circle, rgba(56,225,255,.10), transparent 70%);
+      background:radial-gradient(circle, rgba(69,230,255,.10), transparent 70%);
       pointer-events:none;
     }
     .ind-tile svg{
@@ -596,7 +612,7 @@
     .contact-row .ico{
       width:46px; height:46px; flex:none; border-radius:12px;
       display:grid; place-items:center;
-      background:rgba(124,108,255,.12); border:1px solid rgba(124,108,255,.3);
+      background:rgba(139,123,255,.12); border:1px solid rgba(139,123,255,.3);
       color:#A9C4FF;
     }
     .contact-row .ico svg{ width:21px; height:21px; }
@@ -613,13 +629,13 @@
     .field{ margin-bottom:1.15rem; }
     .field label{
       display:block; font-weight:700; font-size:.9rem; margin-bottom:.45rem;
-      color:#C9D2E4;
+      color:#D0D9F0;
     }
     .field label .req{ color:var(--cyan); }
     .field input, .field textarea{
       width:100%; min-height:50px;
-      background:rgba(255,255,255,.035);
-      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line-strong);
       border-radius:12px;
       padding:.8rem 1rem;
       color:var(--text);
@@ -631,7 +647,7 @@
     .field input:focus, .field textarea:focus{
       outline:2px solid var(--cyan); outline-offset:0;
       border-color:transparent;
-      background:rgba(255,255,255,.05);
+      background:rgba(255,255,255,.08);
     }
     .contact-form .btn{ width:100%; margin-top:.5rem; }
     .form-status{ margin-top:.9rem; font-size:.9rem; color:var(--cyan); min-height:1.4em; }
@@ -642,7 +658,7 @@
     .wiz-card:hover{ transform:none; } /* form card shouldn't lift while typing */
     .wiz-noscript{
       padding:1rem 1.2rem; border:1px solid var(--line); border-radius:12px;
-      color:var(--text-2); background:rgba(255,255,255,.03);
+      color:var(--text-2); background:rgba(255,255,255,.05);
     }
     .wiz-noscript a{ color:var(--cyan); }
     .wiz-steps{
@@ -664,9 +680,9 @@
       font-size:.75rem; font-weight:700;
     }
     .wiz-steps li[aria-current="step"]{ color:var(--text); border-color:var(--cyan); }
-    .wiz-steps li[aria-current="step"] .n{ background:var(--grad); color:#04060B; border-color:transparent; }
-    .wiz-steps li.wiz-done{ color:var(--text-2); border-color:rgba(124,108,255,.55); }
-    .wiz-steps li.wiz-done .n{ border-color:rgba(124,108,255,.55); color:#A9C4FF; }
+    .wiz-steps li[aria-current="step"] .n{ background:var(--grad); color:#0A0F26; border-color:transparent; }
+    .wiz-steps li.wiz-done{ color:var(--text-2); border-color:rgba(139,123,255,.55); }
+    .wiz-steps li.wiz-done .n{ border-color:rgba(139,123,255,.55); color:#A9C4FF; }
 
     .wiz-panel{ border:0; padding:0; margin:0; min-width:0; }
     .wiz-legend{
@@ -676,7 +692,7 @@
     .wiz-legend:focus{ outline:none; }
     .wiz-sub{
       font-family:"Sora", sans-serif; font-size:1rem; font-weight:700;
-      color:#C9D2E4; margin:1.8rem 0 .8rem;
+      color:#D0D9F0; margin:1.8rem 0 .8rem;
     }
     .wiz-sub:first-of-type{ margin-top:0; }
     .wiz-opt{ font-family:"Manrope", sans-serif; font-weight:500; font-size:.85rem; color:var(--text-3); }
@@ -689,13 +705,13 @@
 
     .wiz-in{ /* bare input matching .field inputs, for dynamic rows */
       width:100%; min-height:50px;
-      background:rgba(255,255,255,.035);
-      border:1px solid var(--line); border-radius:12px;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line-strong); border-radius:12px;
       padding:.8rem 1rem; color:var(--text); font:inherit;
       transition:border-color .2s var(--ease), background-color .2s var(--ease);
     }
     .wiz-in::placeholder{ color:var(--text-3); opacity:1; }
-    .wiz-in:focus{ outline:2px solid var(--cyan); outline-offset:0; border-color:transparent; background:rgba(255,255,255,.05); }
+    .wiz-in:focus{ outline:2px solid var(--cyan); outline-offset:0; border-color:transparent; background:rgba(255,255,255,.08); }
 
     .wiz-ref-row{
       display:grid; grid-template-columns:1.2fr 1fr auto; gap:.6rem;
@@ -705,7 +721,7 @@
       min-width:44px; min-height:44px; align-self:center;
       display:inline-grid; place-items:center;
       border:1px solid var(--line); border-radius:10px;
-      background:rgba(255,255,255,.04); color:var(--text-2);
+      background:rgba(255,255,255,.06); color:var(--text-2);
       font-size:1.1rem; font-weight:700; line-height:1;
       transition:color .18s var(--ease), border-color .18s var(--ease);
     }
@@ -713,7 +729,7 @@
     .wiz-add{
       display:inline-flex; align-items:center; gap:.45rem;
       min-height:44px; padding:.5rem 1.15rem; margin-top:.2rem;
-      border:1px dashed rgba(148,163,196,.4); border-radius:10px;
+      border:1px dashed rgba(168,180,220,.4); border-radius:10px;
       color:var(--text-2); font-weight:600; font-size:.9rem;
       transition:color .18s var(--ease), border-color .18s var(--ease);
     }
@@ -721,8 +737,8 @@
     .wiz-add[disabled]{ opacity:.45; cursor:not-allowed; }
 
     .wiz-seg{
-      display:inline-flex; border:1px solid var(--line); border-radius:12px;
-      overflow:hidden; background:rgba(255,255,255,.03); margin-bottom:1rem;
+      display:inline-flex; border:1px solid var(--line-strong); border-radius:12px;
+      overflow:hidden; background:rgba(255,255,255,.05); margin-bottom:1rem;
     }
     .wiz-seg label{ position:relative; }
     .wiz-seg label + label{ border-left:1px solid var(--line-soft); }
@@ -733,7 +749,7 @@
       font-weight:600; font-size:.92rem; color:var(--text-2);
     }
     .wiz-seg input:checked + span{
-      background:linear-gradient(135deg, rgba(124,108,255,.28), rgba(56,225,255,.18));
+      background:linear-gradient(135deg, rgba(139,123,255,.28), rgba(69,230,255,.18));
       color:var(--text);
     }
     .wiz-seg input:focus-visible + span{ outline:2px solid var(--cyan); outline-offset:-2px; border-radius:10px; }
@@ -742,7 +758,7 @@
     .wiz-swatch{
       display:flex; align-items:center; gap:.5rem;
       border:1px solid var(--line); border-radius:12px;
-      padding:.35rem .45rem; background:rgba(255,255,255,.03);
+      padding:.35rem .45rem; background:rgba(255,255,255,.05);
     }
     .wiz-swatch input[type="color"]{
       width:44px; height:44px; padding:0; border:none; border-radius:9px;
@@ -752,20 +768,20 @@
 
     .wiz-drop{
       display:block; width:100%; text-align:center;
-      border:1.5px dashed rgba(148,163,196,.4); border-radius:14px;
-      padding:1.8rem 1.4rem; background:rgba(255,255,255,.02);
+      border:1.5px dashed rgba(168,180,220,.4); border-radius:14px;
+      padding:1.8rem 1.4rem; background:rgba(255,255,255,.04);
       color:var(--text-2); font-size:.95rem; line-height:1.6;
       transition:border-color .2s var(--ease), background-color .2s var(--ease);
     }
     .wiz-drop strong{ color:var(--text); }
-    .wiz-drop:hover, .wiz-drop.wiz-drag{ border-color:var(--cyan); background:rgba(56,225,255,.05); }
+    .wiz-drop:hover, .wiz-drop.wiz-drag{ border-color:var(--cyan); background:rgba(69,230,255,.05); }
     .wiz-drop-hint{ display:block; margin-top:.35rem; font-size:.82rem; color:var(--text-3); }
     .wiz-files{ margin-top:.8rem; display:grid; gap:.5rem; }
     .wiz-file{
       display:flex; align-items:center; gap:.75rem;
       padding:.45rem .45rem .45rem .9rem;
       border:1px solid var(--line); border-radius:10px;
-      background:rgba(255,255,255,.03); font-size:.9rem;
+      background:rgba(255,255,255,.05); font-size:.9rem;
     }
     .wiz-file .wiz-file-name{ overflow-wrap:anywhere; }
     .wiz-file .wiz-file-size{ color:var(--text-3); margin-left:auto; white-space:nowrap; }
@@ -773,7 +789,7 @@
     .wiz-loading{ display:flex; align-items:center; gap:.7rem; color:var(--text-2); }
     .wiz-spin{
       width:20px; height:20px; flex:none; border-radius:50%;
-      border:2px solid rgba(148,163,196,.3); border-top-color:var(--cyan);
+      border:2px solid rgba(168,180,220,.3); border-top-color:var(--cyan);
       animation:wiz-spin .8s linear infinite;
     }
     @keyframes wiz-spin{ to{ transform:rotate(360deg); } }
@@ -783,8 +799,8 @@
     .wiz-ready{
       display:flex; flex-wrap:wrap; align-items:center; gap:.9rem;
       padding:.9rem 1.1rem; margin-bottom:1.2rem;
-      border:1px solid rgba(56,225,255,.35); border-radius:12px;
-      background:rgba(56,225,255,.06); color:var(--text);
+      border:1px solid rgba(69,230,255,.35); border-radius:12px;
+      background:rgba(69,230,255,.06); color:var(--text);
     }
     .wiz-clarify-note{ color:var(--text-2); font-size:.95rem; margin-bottom:1.2rem; }
 
@@ -815,13 +831,13 @@
     .wiz-success p + p{ margin-top:.5rem; }
     .wiz-success code{
       font-size:.95rem; color:var(--cyan);
-      background:rgba(56,225,255,.08); border:1px solid rgba(56,225,255,.3);
+      background:rgba(69,230,255,.08); border:1px solid rgba(69,230,255,.3);
       border-radius:8px; padding:.15rem .5rem;
     }
 
     /* ---------- Footer ---------- */
     .site-footer{
-      background:var(--bg-deep);
+      background:rgba(10,15,38,.7);
       border-top:1px solid var(--line-soft);
       padding-top:clamp(3.5rem, 6vw, 5rem);
     }
@@ -876,7 +892,7 @@
     #process.video-on .proc-video{ opacity:.14; }
     .proc-scrim{ /* dark gradient over the ambient video keeps text contrast untouched */
       position:absolute; inset:0; z-index:0; pointer-events:none;
-      background:linear-gradient(180deg, rgba(7,11,19,.72) 0%, rgba(7,11,19,.45) 50%, rgba(7,11,19,.82) 100%);
+      background:linear-gradient(180deg, rgba(14,20,48,.72) 0%, rgba(14,20,48,.45) 50%, rgba(14,20,48,.82) 100%);
     }
     .proc-content{ position:relative; z-index:1; }
     .proc-grid{
@@ -893,8 +909,8 @@
     .proc-icon{
       width:46px; height:46px; border-radius:13px;
       display:grid; place-items:center;
-      background:linear-gradient(135deg, rgba(124,108,255,.16), rgba(56,225,255,.10));
-      border:1px solid rgba(124,108,255,.35);
+      background:linear-gradient(135deg, rgba(139,123,255,.24), rgba(69,230,255,.15));
+      border:1px solid rgba(139,123,255,.35);
       color:#A9C4FF;
     }
     .proc-icon svg{ width:24px; height:24px; }
@@ -913,9 +929,9 @@
     .wiz-trust span{
       display:inline-flex; align-items:center; gap:.45rem;
       font-size:.82rem; font-weight:700; letter-spacing:.04em;
-      color:#BAC6DE;
+      color:#C7D1EC;
       padding:.45rem .9rem; border-radius:999px;
-      border:1px solid var(--line); background:rgba(255,255,255,.03);
+      border:1px solid var(--line); background:rgba(255,255,255,.05);
     }
     .wiz-trust svg{ width:14px; height:14px; color:var(--cyan); flex:none; }
 
@@ -926,9 +942,9 @@
       text-align:center;
       position:relative; overflow:hidden;
       background:
-        radial-gradient(36rem 18rem at 30% -20%, rgba(124,108,255,.16), transparent 65%),
-        radial-gradient(30rem 16rem at 80% 120%, rgba(56,225,255,.10), transparent 65%),
-        linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.008)), var(--surface);
+        radial-gradient(36rem 18rem at 30% -20%, rgba(139,123,255,.22), transparent 65%),
+        radial-gradient(30rem 16rem at 80% 120%, rgba(69,230,255,.16), transparent 65%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)), rgba(26,33,72,.92);
     }
     .cta-card:hover{ transform:none; }
     .cta-card h2{
@@ -936,7 +952,7 @@
       font-weight:700; letter-spacing:-.01em;
     }
     .cta-card p{
-      color:#B4BED4; font-size:1.1rem; line-height:1.7;
+      color:#C3CCEA; font-size:1.1rem; line-height:1.7;
       max-width:52ch; margin:.9rem auto 1.9rem;
     }
 
@@ -975,11 +991,11 @@
     #services > .container, #industries > .container{ position:relative; z-index:1; }
     .aurora-violet{
       top:-140px; right:-160px;
-      background:radial-gradient(circle, rgba(124,108,255,.10), transparent 70%);
+      background:radial-gradient(circle, rgba(139,123,255,.10), transparent 70%);
     }
     .aurora-cyan{
       bottom:-160px; left:-160px;
-      background:radial-gradient(circle, rgba(56,225,255,.10), transparent 70%);
+      background:radial-gradient(circle, rgba(69,230,255,.10), transparent 70%);
     }
     @media (prefers-reduced-motion: no-preference){
       .aurora{ animation:aurora-drift 34s ease-in-out infinite alternate; }
@@ -987,6 +1003,50 @@
     @keyframes aurora-drift{
       from{ transform:translate3d(0, 0, 0) scale(1); }
       to  { transform:translate3d(-90px, 70px, 0) scale(1.15); }
+    }
+
+    /* ---------- Page-wide starfield + falling stars ---------- */
+    #starfield{
+      position:fixed; inset:0; z-index:0;
+      pointer-events:none; overflow:hidden;
+    }
+    /* Keep page content stacked above the fixed starfield layer
+       (scroll progress stays on top at z-index:200, header at 100). */
+    main, .site-footer{ position:relative; z-index:1; }
+    .star{
+      position:absolute; border-radius:50%;
+      background:#fff;
+      opacity:var(--o, .45); /* capped ≤.55 so stars can't wash out text in transparent sections */
+    }
+    @media (prefers-reduced-motion: no-preference){
+      .star{ animation:star-twinkle var(--tw, 4s) ease-in-out var(--td, 0s) infinite alternate; }
+    }
+    @keyframes star-twinkle{
+      from{ opacity:var(--o, .6); }
+      to  { opacity:.12; }
+    }
+    .meteor{
+      position:absolute;
+      width:140px; height:2px; border-radius:2px;
+      background:linear-gradient(90deg, transparent, rgba(139,123,255,.5), rgba(255,255,255,.75));
+      opacity:0;
+      display:none;
+    }
+    .meteor::after{ /* bright 2px head with glow, leads the streak */
+      content:""; position:absolute; right:-1px; top:50%;
+      width:4px; height:4px; margin-top:-2px; border-radius:50%;
+      background:#fff;
+      box-shadow:0 0 10px 2px rgba(255,255,255,.75), 0 0 18px 4px rgba(139,123,255,.5);
+    }
+    @media (prefers-reduced-motion: no-preference){
+      .meteor{ display:block; animation:meteor-fall var(--mdur, 16s) linear var(--mdel, 0s) infinite; }
+    }
+    @keyframes meteor-fall{ /* streak lives in the first ~16% of each cycle → occasional, not rain */
+      0%   { transform:translate3d(0, 0, 0) rotate(135deg); opacity:0; }
+      1%   { opacity:.7; }  /* sub-full opacity keeps streaks from erasing text contrast mid-sweep */
+      13%  { opacity:.7; }
+      16%  { transform:translate3d(-72vw, 72vh, 0) rotate(135deg); opacity:0; }
+      100% { transform:translate3d(-72vw, 72vh, 0) rotate(135deg); opacity:0; }
     }
 
     /* ============================================================
@@ -1073,6 +1133,8 @@
 </head>
 <body>
 
+  <div id="starfield" aria-hidden="true"></div>
+
   <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -1084,7 +1146,7 @@
         <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
           <defs>
             <linearGradient id="lg-brand" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#7C6CFF"/><stop offset="1" stop-color="#38E1FF"/>
+              <stop offset="0" stop-color="#8B7BFF"/><stop offset="1" stop-color="#45E6FF"/>
             </linearGradient>
           </defs>
           <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="url(#lg-brand)" stroke-width="4" transform="rotate(-25 32 32)"/>
@@ -1140,10 +1202,10 @@
         </div>
         <svg class="hero-orbits" viewBox="0 0 1200 600" fill="none" focusable="false">
           <g>
-            <ellipse cx="600" cy="300" rx="520" ry="180" stroke="rgba(124,108,255,.14)" stroke-width="1.5" transform="rotate(-12 600 300)"/>
-            <ellipse cx="600" cy="300" rx="400" ry="130" stroke="rgba(56,225,255,.10)" stroke-width="1.5" transform="rotate(14 600 300)"/>
-            <circle cx="140" cy="220" r="4" fill="#7C6CFF" opacity=".7"/>
-            <circle cx="1010" cy="410" r="3" fill="#38E1FF" opacity=".7"/>
+            <ellipse cx="600" cy="300" rx="520" ry="180" stroke="rgba(139,123,255,.14)" stroke-width="1.5" transform="rotate(-12 600 300)"/>
+            <ellipse cx="600" cy="300" rx="400" ry="130" stroke="rgba(69,230,255,.10)" stroke-width="1.5" transform="rotate(14 600 300)"/>
+            <circle cx="140" cy="220" r="4" fill="#8B7BFF" opacity=".7"/>
+            <circle cx="1010" cy="410" r="3" fill="#45E6FF" opacity=".7"/>
           </g>
         </svg>
       </div>
@@ -1640,16 +1702,16 @@
           <svg viewBox="0 0 300 220" fill="none" aria-hidden="true" focusable="false">
             <defs>
               <linearGradient id="lg-about" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#7C6CFF"/><stop offset="1" stop-color="#38E1FF"/>
+                <stop offset="0" stop-color="#8B7BFF"/><stop offset="1" stop-color="#45E6FF"/>
               </linearGradient>
             </defs>
             <ellipse cx="150" cy="110" rx="130" ry="46" stroke="url(#lg-about)" stroke-opacity=".5" stroke-width="1.5" transform="rotate(-18 150 110)"/>
             <ellipse cx="150" cy="110" rx="100" ry="34" stroke="url(#lg-about)" stroke-opacity=".3" stroke-width="1.5" transform="rotate(22 150 110)"/>
             <circle cx="150" cy="110" r="30" fill="url(#lg-about)" fill-opacity=".16" stroke="url(#lg-about)" stroke-width="1.5"/>
             <circle cx="150" cy="110" r="9" fill="url(#lg-about)"/>
-            <circle cx="46" cy="76" r="5" fill="#38E1FF"/>
-            <circle cx="252" cy="152" r="4" fill="#7C6CFF"/>
-            <path d="M60 190h180" stroke="rgba(148,163,196,.25)" stroke-dasharray="3 6"/>
+            <circle cx="46" cy="76" r="5" fill="#45E6FF"/>
+            <circle cx="252" cy="152" r="4" fill="#8B7BFF"/>
+            <path d="M60 190h180" stroke="rgba(168,180,220,.25)" stroke-dasharray="3 6"/>
           </svg>
           <div class="about-chips">
             <span>Commercial</span><span>Federal</span><span>R&amp;D</span>
@@ -1883,7 +1945,7 @@
             <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
               <defs>
                 <linearGradient id="lg-foot" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#7C6CFF"/><stop offset="1" stop-color="#38E1FF"/>
+                  <stop offset="0" stop-color="#8B7BFF"/><stop offset="1" stop-color="#45E6FF"/>
                 </linearGradient>
               </defs>
               <ellipse cx="32" cy="32" rx="26" ry="11" fill="none" stroke="url(#lg-foot)" stroke-width="4" transform="rotate(-25 32 32)"/>
@@ -2754,6 +2816,55 @@
       window.addEventListener('scroll', request, { passive: true });
       window.addEventListener('resize', request, { passive: true });
       update();
+    })();
+
+    /* ============================================================
+       Starfield — ambient star dots + occasional falling stars.
+       Stars render in BOTH motion modes (twinkle is CSS-gated to
+       no-preference, so they sit static under reduced motion);
+       meteors are skipped entirely under prefers-reduced-motion
+       (and their CSS is display:none there as a belt-and-braces).
+       ============================================================ */
+    (function () {
+      'use strict';
+
+      var host = document.getElementById('starfield');
+      if (!host) return;
+
+      var frag = document.createDocumentFragment();
+      var i, size;
+
+      for (i = 0; i < 90; i++) {
+        var s = document.createElement('span');
+        s.className = 'star';
+        size = 1 + Math.random() * 1.5; /* 1–2.5px */
+        s.style.left = (Math.random() * 100).toFixed(2) + '%';
+        s.style.top = (Math.random() * 100).toFixed(2) + '%';
+        s.style.width = size.toFixed(2) + 'px';
+        s.style.height = size.toFixed(2) + 'px';
+        s.style.setProperty('--o', (0.25 + Math.random() * 0.3).toFixed(2));      /* opacity .25–.55 (capped for text legibility) */
+        s.style.setProperty('--tw', (2.5 + Math.random() * 3.5).toFixed(2) + 's'); /* twinkle 2.5–6s */
+        s.style.setProperty('--td', (Math.random() * 6).toFixed(2) + 's');         /* random delay */
+        frag.appendChild(s);
+      }
+
+      /* Meteors are always in the DOM; the reduced-motion CSS gate
+         (.meteor{display:none} outside no-preference) shows/hides them
+         live in BOTH directions if the OS preference changes mid-session. */
+      var delays = [0, 4, 9, 14]; /* staggered over the ~16s cycle */
+      for (i = 0; i < delays.length; i++) {
+        var m = document.createElement('div');
+        m.className = 'meteor';
+        m.style.left = (25 + Math.random() * 70).toFixed(2) + '%';
+        m.style.top = (Math.random() * 30).toFixed(2) + '%';
+        m.style.width = Math.round(120 + Math.random() * 40) + 'px'; /* 120–160px streak */
+        /* travel occupies 16% of the cycle → ~2.2–3.2s per streak */
+        m.style.setProperty('--mdur', (14 + Math.random() * 6).toFixed(1) + 's');
+        m.style.setProperty('--mdel', delays[i] + 's');
+        frag.appendChild(m);
+      }
+
+      host.appendChild(frag);
     })();
   </script>
 </body>
