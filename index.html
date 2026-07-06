@@ -30,7 +30,7 @@
   <!-- Google Fonts (only allowed external request) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Preload first hero slide -->
   <link rel="preload" as="image" href="assets/hero-nebula.jpg">
@@ -108,7 +108,7 @@
       padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
     }
     .skip-link{
-      position:absolute; left:1rem; top:-4rem; z-index:1000;
+      position:absolute; inset-inline-start:1rem; top:-4rem; z-index:1000;
       background:var(--surface-2); color:var(--text);
       padding:.75rem 1.25rem; border-radius:10px; border:1px solid var(--line);
       font-weight:700; text-decoration:none; transition:top .2s var(--ease);
@@ -196,12 +196,12 @@
     }
     .site-header.is-scrolled{ background:rgba(14,20,48,.95); }
     .nav-wrap{
-      display:flex; align-items:center; gap:2rem;
+      display:flex; align-items:center; gap:clamp(.7rem, 1.6vw, 2rem);
       height:var(--header-h);
     }
     .brand{
       display:inline-flex; align-items:center; gap:.65rem;
-      text-decoration:none; margin-right:auto;
+      text-decoration:none; margin-inline-end:auto;
     }
     .brand-mark{ width:34px; height:34px; flex:none; }
     .brand-name{
@@ -213,14 +213,70 @@
     .nav-links{ display:flex; align-items:center; gap:.25rem; }
     .nav-links a{
       display:inline-flex; align-items:center;
-      padding:.65rem .95rem; border-radius:10px;
+      padding:.65rem clamp(.55rem, 1vw, .95rem); border-radius:10px;
       font-weight:600; font-size:.95rem; color:var(--text-2);
-      text-decoration:none;
+      text-decoration:none; white-space:nowrap;
       transition:color .18s var(--ease), background-color .18s var(--ease);
     }
     .nav-links a:hover{ color:var(--text); background:rgba(255,255,255,.08); }
 
-    .btn-nav{ min-height:44px; padding:.55rem 1.25rem; font-size:.9rem; }
+    .btn-nav{ min-height:44px; padding:.55rem 1.25rem; font-size:.9rem; white-space:nowrap; }
+
+    /* ---------- Language switcher ---------- */
+    .lang-switch{ position:relative; }
+    .lang-btn{
+      display:inline-flex; align-items:center; gap:.45rem;
+      min-height:44px; padding:.5rem .75rem;
+      border:1px solid var(--line); border-radius:12px;
+      background:rgba(255,255,255,.05);
+      font-family:"Sora", sans-serif; font-weight:600; font-size:.85rem;
+      letter-spacing:.06em;
+      color:var(--text-2);
+      transition:color .18s var(--ease), background-color .18s var(--ease), border-color .18s var(--ease);
+    }
+    .lang-btn:hover{ color:var(--text); background:rgba(255,255,255,.1); border-color:rgba(168,180,220,.4); }
+    .lang-btn .lang-globe{ width:17px; height:17px; flex:none; }
+    .lang-btn .lang-chev{ width:12px; height:12px; flex:none; transition:transform .2s var(--ease); }
+    .lang-btn[aria-expanded="true"] .lang-chev{ transform:rotate(180deg); }
+    .lang-menu{
+      position:absolute; top:calc(100% + 10px); inset-inline-end:0; z-index:150;
+      min-width:172px; margin:0; padding:.4rem;
+      background:var(--surface-2); border:1px solid var(--line); border-radius:14px;
+      box-shadow:0 18px 48px rgba(6,10,34,.55);
+      list-style:none;
+    }
+    .lang-menu[hidden]{ display:none; }
+    @media (prefers-reduced-motion: no-preference){
+      .lang-menu:not([hidden]){ animation:menu-in .22s var(--ease); }
+    }
+    .lang-opt{
+      display:flex; align-items:center; gap:.6rem;
+      min-height:44px; padding:.5rem .75rem;
+      border-radius:9px; cursor:pointer;
+      font-weight:600; font-size:.92rem; color:var(--text-2);
+    }
+    .lang-opt:hover{ background:rgba(255,255,255,.08); color:var(--text); }
+    .lang-opt[aria-selected="true"]{ color:var(--text); }
+    .lang-opt .lang-tick{
+      width:15px; height:15px; flex:none; margin-inline-start:auto;
+      color:var(--cyan); visibility:hidden;
+    }
+    .lang-opt[aria-selected="true"] .lang-tick{ visibility:visible; }
+
+    /* ---------- Arabic (RTL) typography ---------- */
+    html[lang="ar"] body{ font-family:"Cairo", "Manrope", system-ui, sans-serif; }
+    html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3,
+    html[lang="ar"] .brand-name, html[lang="ar"] .eyebrow, html[lang="ar"] .btn,
+    html[lang="ar"] .hero-tagline, html[lang="ar"] .wiz-legend, html[lang="ar"] .wiz-sub,
+    html[lang="ar"] .wiz-steps li, html[lang="ar"] .stat-num, html[lang="ar"] .lang-btn,
+    html[lang="ar"] .footer-bottom .tag, html[lang="ar"] .quote-card figcaption{
+      font-family:"Cairo", "Sora", sans-serif;
+    }
+    html[lang="ar"] .eyebrow, html[lang="ar"] .hero-tagline, html[lang="ar"] .footer-col h3,
+    html[lang="ar"] .contact-row .lbl, html[lang="ar"] .wiz-review dt, html[lang="ar"] .lang-btn,
+    html[lang="ar"] .footer-bottom .tag, html[lang="ar"] .about-chips span,
+    html[lang="ar"] .wiz-trust span{ letter-spacing:0; }
+    html[dir="rtl"] .eyebrow::before{ transform-origin:right center; }
 
     .nav-toggle{
       display:none; flex-direction:column; justify-content:center; gap:5px;
@@ -741,7 +797,7 @@
       overflow:hidden; background:rgba(255,255,255,.05); margin-bottom:1rem;
     }
     .wiz-seg label{ position:relative; }
-    .wiz-seg label + label{ border-left:1px solid var(--line-soft); }
+    .wiz-seg label + label{ border-inline-start:1px solid var(--line-soft); }
     .wiz-seg input{ position:absolute; inset:0; opacity:0; cursor:pointer; }
     .wiz-seg span{
       display:inline-flex; align-items:center; justify-content:center;
@@ -779,12 +835,12 @@
     .wiz-files{ margin-top:.8rem; display:grid; gap:.5rem; }
     .wiz-file{
       display:flex; align-items:center; gap:.75rem;
-      padding:.45rem .45rem .45rem .9rem;
+      padding-block:.45rem; padding-inline:.9rem .45rem;
       border:1px solid var(--line); border-radius:10px;
       background:rgba(255,255,255,.05); font-size:.9rem;
     }
     .wiz-file .wiz-file-name{ overflow-wrap:anywhere; }
-    .wiz-file .wiz-file-size{ color:var(--text-3); margin-left:auto; white-space:nowrap; }
+    .wiz-file .wiz-file-size{ color:var(--text-3); margin-inline-start:auto; white-space:nowrap; }
 
     .wiz-loading{ display:flex; align-items:center; gap:.7rem; color:var(--text-2); }
     .wiz-spin{
@@ -1137,12 +1193,12 @@
 
   <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
-  <a class="skip-link" href="#main">Skip to main content</a>
+  <a class="skip-link" href="#main" data-i18n="a11y.skip">Skip to main content</a>
 
   <!-- ================= HEADER ================= -->
   <header class="site-header">
     <div class="container nav-wrap">
-      <a class="brand" href="#home" aria-label="CosmoLabs — back to top">
+      <a class="brand" href="#home" aria-label="CosmoLabs — back to top" data-i18n-aria="nav.brandAria">
         <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
           <defs>
             <linearGradient id="lg-brand" x1="0" y1="0" x2="1" y2="1">
@@ -1155,18 +1211,45 @@
         <span class="brand-name">Cosmo<em>Labs</em></span>
       </a>
 
-      <nav class="primary-nav" aria-label="Primary">
+      <nav class="primary-nav" aria-label="Primary" data-i18n-aria="nav.primaryAria">
         <ul class="nav-links">
-          <li><a href="#home">Home</a></li>
-          <li><a href="#start">Start a project</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#industries">Industries</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#home" data-i18n="nav.home">Home</a></li>
+          <li><a href="#start" data-i18n="nav.start">Start a project</a></li>
+          <li><a href="#services" data-i18n="nav.services">Services</a></li>
+          <li><a href="#about" data-i18n="nav.about">About</a></li>
+          <li><a href="#industries" data-i18n="nav.industries">Industries</a></li>
+          <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
         </ul>
       </nav>
 
-      <a class="btn btn-primary btn-nav" href="#start">Start your project</a>
+      <div class="lang-switch">
+        <button class="lang-btn" type="button" id="lang-btn" aria-haspopup="listbox" aria-expanded="false"
+                aria-label="Language" data-i18n-aria="lang.label">
+          <svg class="lang-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18"/>
+          </svg>
+          <span id="lang-current">EN</span>
+          <svg class="lang-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
+        </button>
+        <ul class="lang-menu" id="lang-menu" role="listbox" aria-label="Language" data-i18n-aria="lang.label" hidden>
+          <li class="lang-opt" role="option" data-lang="en" lang="en" tabindex="-1" aria-selected="true">
+            English
+            <svg class="lang-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>
+          </li>
+          <li class="lang-opt" role="option" data-lang="ar" lang="ar" dir="rtl" tabindex="-1" aria-selected="false">
+            العربية
+            <svg class="lang-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>
+          </li>
+          <li class="lang-opt" role="option" data-lang="fr" lang="fr" tabindex="-1" aria-selected="false">
+            Français
+            <svg class="lang-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>
+          </li>
+        </ul>
+      </div>
+
+      <a class="btn btn-primary btn-nav" href="#start" data-i18n="nav.cta">Start your project</a>
 
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
         <span class="bar"></span><span class="bar"></span><span class="bar"></span>
@@ -1174,18 +1257,18 @@
     </div>
 
     <div class="mobile-menu" id="mobile-menu" hidden>
-      <nav aria-label="Mobile">
+      <nav aria-label="Mobile" data-i18n-aria="nav.mobileAria">
         <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#start">Start a project</a></li>
-          <li><a href="#process">How it works</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#industries">Industries</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#home" data-i18n="nav.home">Home</a></li>
+          <li><a href="#start" data-i18n="nav.start">Start a project</a></li>
+          <li><a href="#process" data-i18n="nav.process">How it works</a></li>
+          <li><a href="#services" data-i18n="nav.services">Services</a></li>
+          <li><a href="#about" data-i18n="nav.about">About</a></li>
+          <li><a href="#industries" data-i18n="nav.industries">Industries</a></li>
+          <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
         </ul>
       </nav>
-      <a class="btn btn-primary" href="#start">Start your project</a>
+      <a class="btn btn-primary" href="#start" data-i18n="nav.cta">Start your project</a>
     </div>
   </header>
 
@@ -1211,25 +1294,25 @@
       </div>
 
       <div class="container hero-inner">
-        <p class="hero-tagline reveal">
+        <p class="hero-tagline reveal" data-i18n-html="hero.tagline">
           Where <span class="grad-text">science</span> is standard,<br>
           excellence is <span class="grad-text">engineered</span>
         </p>
-        <h1 id="hero-heading" class="reveal" style="--d:.08s">
+        <h1 id="hero-heading" class="reveal" style="--d:.08s" data-i18n="hero.h1">
           We provide professional consulting in computing, aerospace &amp; nuclear engineering.
         </h1>
-        <p class="hero-sub reveal" style="--d:.16s">
+        <p class="hero-sub reveal" style="--d:.16s" data-i18n="hero.sub">
           Take charge of your mission-critical programs. Tell us what you need built — we scope it within one business day.
         </p>
         <div class="hero-ctas reveal" style="--d:.24s">
-          <a class="btn btn-primary" href="#start">Start your project</a>
-          <a class="btn btn-ghost" href="#services">Our services</a>
+          <a class="btn btn-primary" href="#start" data-i18n="nav.cta">Start your project</a>
+          <a class="btn btn-ghost" href="#services" data-i18n="hero.ctaServices">Our services</a>
         </div>
         <p class="hero-note reveal" style="--d:.32s">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
             <path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/>
           </svg>
-          Trusted by Fortune 500 engineering teams and federal programs alike.
+          <span data-i18n="hero.note">Trusted by Fortune 500 engineering teams and federal programs alike.</span>
         </p>
       </div>
     </section>
@@ -1238,21 +1321,21 @@
     <section id="start" aria-labelledby="start-heading">
       <div class="container">
         <div class="sec-head center reveal">
-          <span class="eyebrow">Start a Project</span>
-          <h2 id="start-heading">What can we do for you?</h2>
-          <p>Tell us what you need built — a platform, a simulation pipeline, a mission-critical system. A senior engineer scopes it and gets to work.</p>
+          <span class="eyebrow" data-i18n="start.eyebrow">Start a Project</span>
+          <h2 id="start-heading" data-i18n="start.h2">What can we do for you?</h2>
+          <p data-i18n="start.p">Tell us what you need built — a platform, a simulation pipeline, a mission-critical system. A senior engineer scopes it and gets to work.</p>
           <div class="wiz-trust">
             <span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>
-              Free to submit
+              <span data-i18n="start.trustFree">Free to submit</span>
             </span>
             <span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>
-              Reply within one business day
+              <span data-i18n="start.trustReply">Reply within one business day</span>
             </span>
             <span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>
-              Your files stay private
+              <span data-i18n="start.trustPrivate">Your files stay private</span>
             </span>
           </div>
         </div>
@@ -1263,11 +1346,11 @@
           </noscript>
 
           <form id="wiz-form" novalidate>
-            <ol class="wiz-steps" id="wiz-steps" aria-label="Form progress">
-              <li aria-current="step"><span class="n" aria-hidden="true">1</span> Brief</li>
-              <li><span class="n" aria-hidden="true">2</span> Details</li>
-              <li><span class="n" aria-hidden="true">3</span> Clarify</li>
-              <li><span class="n" aria-hidden="true">4</span> Review</li>
+            <ol class="wiz-steps" id="wiz-steps" aria-label="Form progress" data-i18n-aria="wiz.progressAria">
+              <li aria-current="step"><span class="n" aria-hidden="true">1</span> <span data-i18n="wiz.step1">Brief</span></li>
+              <li><span class="n" aria-hidden="true">2</span> <span data-i18n="wiz.step2">Details</span></li>
+              <li><span class="n" aria-hidden="true">3</span> <span data-i18n="wiz.step3">Clarify</span></li>
+              <li><span class="n" aria-hidden="true">4</span> <span data-i18n="wiz.step4">Review</span></li>
             </ol>
 
             <p class="wiz-status sr-only" id="wiz-status" role="status" aria-live="polite"></p>
@@ -1280,26 +1363,26 @@
 
             <!-- STEP 1: The brief -->
             <fieldset class="wiz-panel" id="wiz-p1">
-              <legend class="wiz-legend" tabindex="-1">The brief</legend>
+              <legend class="wiz-legend" tabindex="-1" data-i18n="wiz.p1.legend">The brief</legend>
               <div class="field">
-                <label for="wiz-title">Project title <span class="req" aria-hidden="true">*</span></label>
-                <input type="text" id="wiz-title" name="title" maxlength="200" placeholder="e.g. Telemetry dashboard for our ground-station network" required aria-describedby="wiz-title-err">
+                <label for="wiz-title"><span data-i18n="wiz.title.label">Project title</span> <span class="req" aria-hidden="true">*</span></label>
+                <input type="text" id="wiz-title" name="title" maxlength="200" placeholder="e.g. Telemetry dashboard for our ground-station network" data-i18n-ph="wiz.title.ph" required aria-describedby="wiz-title-err">
                 <p class="wiz-err" id="wiz-title-err" role="alert"></p>
               </div>
               <div class="field">
-                <label for="wiz-desc">What do you want built? <span class="req" aria-hidden="true">*</span></label>
-                <textarea id="wiz-desc" name="description" maxlength="5000" placeholder="Describe the project, its goals, the features you already know you need, and anything else that matters…" required aria-describedby="wiz-desc-err"></textarea>
+                <label for="wiz-desc"><span data-i18n="wiz.desc.label">What do you want built?</span> <span class="req" aria-hidden="true">*</span></label>
+                <textarea id="wiz-desc" name="description" maxlength="5000" placeholder="Describe the project, its goals, the features you already know you need, and anything else that matters…" data-i18n-ph="wiz.desc.ph" required aria-describedby="wiz-desc-err"></textarea>
                 <p class="wiz-err" id="wiz-desc-err" role="alert"></p>
               </div>
               <div class="wiz-row2">
                 <div class="field">
-                  <label for="wiz-email">Work email <span class="req" aria-hidden="true">*</span></label>
-                  <input type="email" id="wiz-email" name="email" maxlength="254" autocomplete="email" placeholder="jane@company.com" required aria-describedby="wiz-email-err">
+                  <label for="wiz-email"><span data-i18n="wiz.email.label">Work email</span> <span class="req" aria-hidden="true">*</span></label>
+                  <input type="email" id="wiz-email" name="email" maxlength="254" autocomplete="email" placeholder="jane@company.com" data-i18n-ph="wiz.email.ph" required aria-describedby="wiz-email-err">
                   <p class="wiz-err" id="wiz-email-err" role="alert"></p>
                 </div>
                 <div class="field">
-                  <label for="wiz-phone">Phone <span class="req" aria-hidden="true">*</span></label>
-                  <input type="tel" id="wiz-phone" name="phone" maxlength="25" autocomplete="tel" placeholder="+1 (404) 555-0100" required aria-describedby="wiz-phone-err">
+                  <label for="wiz-phone"><span data-i18n="wiz.phone.label">Phone</span> <span class="req" aria-hidden="true">*</span></label>
+                  <input type="tel" id="wiz-phone" name="phone" maxlength="25" autocomplete="tel" placeholder="+1 (404) 555-0100" data-i18n-ph="wiz.phone.ph" required aria-describedby="wiz-phone-err">
                   <p class="wiz-err" id="wiz-phone-err" role="alert"></p>
                 </div>
               </div>
@@ -1307,31 +1390,31 @@
 
             <!-- STEP 2: Design & references -->
             <fieldset class="wiz-panel" id="wiz-p2" hidden>
-              <legend class="wiz-legend" tabindex="-1">Design &amp; references</legend>
+              <legend class="wiz-legend" tabindex="-1" data-i18n="wiz.p2.legend">Design &amp; references</legend>
 
-              <h3 class="wiz-sub">Reference websites or apps <span class="wiz-opt">(optional, up to 5)</span></h3>
+              <h3 class="wiz-sub"><span data-i18n="wiz.refs.h">Reference websites or apps</span> <span class="wiz-opt" data-i18n="wiz.refs.opt">(optional, up to 5)</span></h3>
               <div id="wiz-refs"></div>
               <p class="wiz-err" id="wiz-ref-err" role="alert"></p>
-              <button type="button" class="wiz-add" id="wiz-ref-add">+ Add a reference</button>
+              <button type="button" class="wiz-add" id="wiz-ref-add" data-i18n="wiz.refs.add">+ Add a reference</button>
 
-              <h3 class="wiz-sub">Color scheme</h3>
-              <div class="wiz-seg" role="group" aria-label="Light or dark interface preference">
-                <label><input type="radio" name="colorMode" value="light"><span>Light</span></label>
-                <label><input type="radio" name="colorMode" value="dark"><span>Dark</span></label>
-                <label><input type="radio" name="colorMode" value="either" checked><span>Either</span></label>
+              <h3 class="wiz-sub" data-i18n="wiz.colors.h">Color scheme</h3>
+              <div class="wiz-seg" role="group" aria-label="Light or dark interface preference" data-i18n-aria="wiz.colorModeAria">
+                <label><input type="radio" name="colorMode" value="light"><span data-i18n="wiz.mode.light">Light</span></label>
+                <label><input type="radio" name="colorMode" value="dark"><span data-i18n="wiz.mode.dark">Dark</span></label>
+                <label><input type="radio" name="colorMode" value="either" checked><span data-i18n="wiz.mode.either">Either</span></label>
               </div>
               <div class="wiz-colors" id="wiz-colors"></div>
-              <button type="button" class="wiz-add" id="wiz-color-add">+ Add a brand color</button>
+              <button type="button" class="wiz-add" id="wiz-color-add" data-i18n="wiz.colors.add">+ Add a brand color</button>
               <div class="field" style="margin-top:1.1rem">
-                <label for="wiz-color-notes">Color notes <span class="wiz-opt">(optional)</span></label>
-                <input type="text" id="wiz-color-notes" maxlength="500" placeholder="e.g. Match our existing logo; avoid bright red">
+                <label for="wiz-color-notes"><span data-i18n="wiz.colorNotes.label">Color notes</span> <span class="wiz-opt" data-i18n="wiz.opt">(optional)</span></label>
+                <input type="text" id="wiz-color-notes" maxlength="500" placeholder="e.g. Match our existing logo; avoid bright red" data-i18n-ph="wiz.colorNotes.ph">
               </div>
 
-              <h3 class="wiz-sub">Documents <span class="wiz-opt">(optional)</span></h3>
+              <h3 class="wiz-sub"><span data-i18n="wiz.docs.h">Documents</span> <span class="wiz-opt" data-i18n="wiz.opt">(optional)</span></h3>
               <input type="file" id="wiz-file-input" class="sr-only" multiple tabindex="-1" aria-hidden="true"
                      accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.md,.docx,.xlsx,.csv">
               <button type="button" class="wiz-drop" id="wiz-drop">
-                <strong>Drag &amp; drop files here</strong> or click to browse
+                <span data-i18n-html="wiz.drop.main"><strong>Drag &amp; drop files here</strong> or click to browse</span>
                 <span class="wiz-drop-hint" id="wiz-drop-hint">PDF, PNG, JPG, JPEG, WEBP, TXT, MD, DOCX, XLSX, CSV — up to 3 files, 1.5 MB each, 3 MB total.</span>
               </button>
               <ul class="wiz-files" id="wiz-files"></ul>
@@ -1340,29 +1423,29 @@
 
             <!-- STEP 3: Clarify -->
             <fieldset class="wiz-panel" id="wiz-p3" hidden>
-              <legend class="wiz-legend" tabindex="-1">Clarify</legend>
-              <p class="wiz-clarify-note">A few quick questions help us scope your project accurately. Answers are optional, but the more you share the better our first response will be.</p>
+              <legend class="wiz-legend" tabindex="-1" data-i18n="wiz.p3.legend">Clarify</legend>
+              <p class="wiz-clarify-note" data-i18n="wiz.clarify.note">A few quick questions help us scope your project accurately. Answers are optional, but the more you share the better our first response will be.</p>
               <div class="wiz-loading" id="wiz-clarify-loading" hidden>
-                <span class="wiz-spin" aria-hidden="true"></span> Reviewing your brief…
+                <span class="wiz-spin" aria-hidden="true"></span> <span data-i18n="wiz.clarify.loading">Reviewing your brief…</span>
               </div>
               <div class="wiz-ready" id="wiz-clarify-ready" hidden>
-                <span>Your brief looks complete — you can continue straight to review.</span>
-                <button type="button" class="btn btn-ghost" id="wiz-ready-next" style="min-height:44px">Continue to review</button>
+                <span data-i18n="wiz.clarify.ready">Your brief looks complete — you can continue straight to review.</span>
+                <button type="button" class="btn btn-ghost" id="wiz-ready-next" style="min-height:44px" data-i18n="wiz.clarify.readyBtn">Continue to review</button>
               </div>
               <div id="wiz-questions"></div>
             </fieldset>
 
             <!-- STEP 4: Review & submit -->
             <fieldset class="wiz-panel" id="wiz-p4" hidden>
-              <legend class="wiz-legend" tabindex="-1">Review &amp; submit</legend>
+              <legend class="wiz-legend" tabindex="-1" data-i18n="wiz.p4.legend">Review &amp; submit</legend>
               <div class="wiz-review" id="wiz-review"></div>
               <div class="wiz-turnstile" id="wiz-turnstile"></div>
               <div class="wiz-errorbox" id="wiz-submit-err" role="alert" hidden></div>
             </fieldset>
 
             <div class="wiz-actions">
-              <button type="button" class="btn btn-ghost" id="wiz-back" style="visibility:hidden">Back</button>
-              <button type="button" class="btn btn-primary" id="wiz-next">Next</button>
+              <button type="button" class="btn btn-ghost" id="wiz-back" style="visibility:hidden" data-i18n="wiz.back">Back</button>
+              <button type="button" class="btn btn-primary" id="wiz-next" data-i18n="wiz.next">Next</button>
               <button type="submit" class="btn btn-primary" id="wiz-submit" hidden>Submit brief</button>
             </div>
           </form>
@@ -1376,9 +1459,9 @@
       <div class="proc-scrim" aria-hidden="true"></div>
       <div class="container proc-content">
         <div class="sec-head center reveal">
-          <span class="eyebrow">How It Works</span>
-          <h2 id="process-heading">From idea to launch in four steps</h2>
-          <p>A senior engineer and our AI build system take you from brief to shipped product — with you in the loop the whole way.</p>
+          <span class="eyebrow" data-i18n="proc.eyebrow">How It Works</span>
+          <h2 id="process-heading" data-i18n="proc.h2">From idea to launch in four steps</h2>
+          <p data-i18n="proc.p">A senior engineer and our AI build system take you from brief to shipped product — with you in the loop the whole way.</p>
         </div>
 
         <div class="proc-grid">
@@ -1394,8 +1477,8 @@
               </span>
               <span class="proc-num" aria-hidden="true">01</span>
             </div>
-            <h3>Share your brief</h3>
-            <p>Two minutes in the guided form. Attach documents, reference sites, and your color preferences.</p>
+            <h3 data-i18n="proc.s1.h">Share your brief</h3>
+            <p data-i18n="proc.s1.p">Two minutes in the guided form. Attach documents, reference sites, and your color preferences.</p>
           </article>
 
           <article class="card proc-card reveal" style="--d:.08s">
@@ -1409,8 +1492,8 @@
               </span>
               <span class="proc-num" aria-hidden="true">02</span>
             </div>
-            <h3>We scope it</h3>
-            <p>Our AI clarifies the details; a senior engineer reviews and replies with a plan within one business day.</p>
+            <h3 data-i18n="proc.s2.h">We scope it</h3>
+            <p data-i18n="proc.s2.p">Our AI clarifies the details; a senior engineer reviews and replies with a plan within one business day.</p>
           </article>
 
           <article class="card proc-card reveal" style="--d:.16s">
@@ -1422,8 +1505,8 @@
               </span>
               <span class="proc-num" aria-hidden="true">03</span>
             </div>
-            <h3>We build</h3>
-            <p>AI-accelerated engineering with senior oversight. You see weekly progress demos, not a black box.</p>
+            <h3 data-i18n="proc.s3.h">We build</h3>
+            <p data-i18n="proc.s3.p">AI-accelerated engineering with senior oversight. You see weekly progress demos, not a black box.</p>
           </article>
 
           <article class="card proc-card reveal" style="--d:.24s">
@@ -1438,14 +1521,14 @@
               </span>
               <span class="proc-num" aria-hidden="true">04</span>
             </div>
-            <h3>You launch</h3>
-            <p>You own the code, the repo, and the deployment. We stay on for support and iteration.</p>
+            <h3 data-i18n="proc.s4.h">You launch</h3>
+            <p data-i18n="proc.s4.p">You own the code, the repo, and the deployment. We stay on for support and iteration.</p>
           </article>
         </div>
 
         <div class="proc-ctas reveal" style="--d:.3s">
-          <a class="btn btn-primary" href="#start">Start your brief</a>
-          <a class="btn btn-ghost" href="#contact">Ask a question</a>
+          <a class="btn btn-primary" href="#start" data-i18n="proc.ctaBrief">Start your brief</a>
+          <a class="btn btn-ghost" href="#contact" data-i18n="proc.ctaAsk">Ask a question</a>
         </div>
       </div>
     </section>
@@ -1453,8 +1536,8 @@
     <!-- ================= TRUSTED PARTNERS ================= -->
     <section class="partners bg-alt" aria-labelledby="partners-heading">
       <div class="container sec-head center">
-        <span class="eyebrow">Client wall</span>
-        <h2 id="partners-heading">Trusted partners</h2>
+        <span class="eyebrow" data-i18n="partners.eyebrow">Client wall</span>
+        <h2 id="partners-heading" data-i18n="partners.h2">Trusted partners</h2>
       </div>
 
       <div class="marquee">
@@ -1524,9 +1607,9 @@
       <div class="aurora aurora-violet" aria-hidden="true"></div>
       <div class="container">
         <div class="sec-head reveal">
-          <span class="eyebrow">What We Do</span>
-          <h2 id="services-heading">Three disciplines, one standard of excellence</h2>
-          <p>Senior consultants who have shipped production software, flown hardware, and licensed reactors — embedded directly into your program.</p>
+          <span class="eyebrow" data-i18n="svc.eyebrow">What We Do</span>
+          <h2 id="services-heading" data-i18n="svc.h2">Three disciplines, one standard of excellence</h2>
+          <p data-i18n="svc.p">Senior consultants who have shipped production software, flown hardware, and licensed reactors — embedded directly into your program.</p>
         </div>
 
         <div class="services-grid">
@@ -1539,14 +1622,14 @@
                 <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>
               </svg>
             </div>
-            <h3>Computer Science &amp; Software</h3>
-            <p>Full-lifecycle software consulting — from architecture reviews to production-grade platforms that scale under real-world load.</p>
+            <h3 data-i18n="svc.cs.h">Computer Science &amp; Software</h3>
+            <p data-i18n="svc.cs.p">Full-lifecycle software consulting — from architecture reviews to production-grade platforms that scale under real-world load.</p>
             <ul class="svc-list">
-              <li>Software engineering &amp; architecture</li>
-              <li>Cloud &amp; DevOps transformation</li>
-              <li>AI / ML systems</li>
-              <li>Cybersecurity &amp; zero-trust</li>
-              <li>Data engineering &amp; analytics</li>
+              <li data-i18n="svc.cs.l1">Software engineering &amp; architecture</li>
+              <li data-i18n="svc.cs.l2">Cloud &amp; DevOps transformation</li>
+              <li data-i18n="svc.cs.l3">AI / ML systems</li>
+              <li data-i18n="svc.cs.l4">Cybersecurity &amp; zero-trust</li>
+              <li data-i18n="svc.cs.l5">Data engineering &amp; analytics</li>
             </ul>
           </article>
 
@@ -1560,14 +1643,14 @@
                 <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
               </svg>
             </div>
-            <h3>Aerospace Engineering</h3>
-            <p>Mission-grade engineering support across the full flight-vehicle lifecycle, from concept studies to certification.</p>
+            <h3 data-i18n="svc.aero.h">Aerospace Engineering</h3>
+            <p data-i18n="svc.aero.p">Mission-grade engineering support across the full flight-vehicle lifecycle, from concept studies to certification.</p>
             <ul class="svc-list">
-              <li>Mission &amp; systems engineering</li>
-              <li>Guidance, navigation &amp; control (GNC)</li>
-              <li>Propulsion &amp; structures analysis</li>
-              <li>Avionics &amp; flight software</li>
-              <li>Test &amp; certification support</li>
+              <li data-i18n="svc.aero.l1">Mission &amp; systems engineering</li>
+              <li data-i18n="svc.aero.l2">Guidance, navigation &amp; control (GNC)</li>
+              <li data-i18n="svc.aero.l3">Propulsion &amp; structures analysis</li>
+              <li data-i18n="svc.aero.l4">Avionics &amp; flight software</li>
+              <li data-i18n="svc.aero.l5">Test &amp; certification support</li>
             </ul>
           </article>
 
@@ -1581,14 +1664,14 @@
                 <ellipse cx="12" cy="12" rx="9.5" ry="4" transform="rotate(120 12 12)"/>
               </svg>
             </div>
-            <h3>Nuclear Engineering</h3>
-            <p>Safety-first nuclear consulting grounded in regulatory rigor, validated codes, and advanced simulation.</p>
+            <h3 data-i18n="svc.nuc.h">Nuclear Engineering</h3>
+            <p data-i18n="svc.nuc.p">Safety-first nuclear consulting grounded in regulatory rigor, validated codes, and advanced simulation.</p>
             <ul class="svc-list">
-              <li>Reactor safety analysis</li>
-              <li>Licensing &amp; regulatory support (NRC)</li>
-              <li>Thermal-hydraulics &amp; criticality</li>
-              <li>Radiation shielding</li>
-              <li>Decommissioning planning</li>
+              <li data-i18n="svc.nuc.l1">Reactor safety analysis</li>
+              <li data-i18n="svc.nuc.l2">Licensing &amp; regulatory support (NRC)</li>
+              <li data-i18n="svc.nuc.l3">Thermal-hydraulics &amp; criticality</li>
+              <li data-i18n="svc.nuc.l4">Radiation shielding</li>
+              <li data-i18n="svc.nuc.l5">Decommissioning planning</li>
             </ul>
           </article>
         </div>
@@ -1599,8 +1682,8 @@
     <section class="bg-alt" aria-labelledby="why-heading">
       <div class="container">
         <div class="sec-head reveal">
-          <span class="eyebrow">Why Choose Us</span>
-          <h2 id="why-heading">Built for programs where failure is not an option.</h2>
+          <span class="eyebrow" data-i18n="why.eyebrow">Why Choose Us</span>
+          <h2 id="why-heading" data-i18n="why.h2">Built for programs where failure is not an option.</h2>
         </div>
 
         <div class="why-grid">
@@ -1614,8 +1697,8 @@
               </span>
               <span class="why-num" aria-hidden="true">01</span>
             </div>
-            <h3>Cost-Effectiveness</h3>
-            <p>Senior-level expertise without big-consultancy overhead. We scope lean, deliver fast, and tie every engagement to measurable engineering outcomes.</p>
+            <h3 data-i18n="why.1.h">Cost-Effectiveness</h3>
+            <p data-i18n="why.1.p">Senior-level expertise without big-consultancy overhead. We scope lean, deliver fast, and tie every engagement to measurable engineering outcomes.</p>
           </article>
           <article class="card why-card reveal" style="--d:.08s">
             <div class="why-head">
@@ -1627,8 +1710,8 @@
               </span>
               <span class="why-num" aria-hidden="true">02</span>
             </div>
-            <h3>Innovative Technology</h3>
-            <p>From cloud-native platforms and applied AI to model-based systems engineering, we bring the modern toolchain to legacy-bound programs.</p>
+            <h3 data-i18n="why.2.h">Innovative Technology</h3>
+            <p data-i18n="why.2.p">From cloud-native platforms and applied AI to model-based systems engineering, we bring the modern toolchain to legacy-bound programs.</p>
           </article>
           <article class="card why-card reveal" style="--d:.16s">
             <div class="why-head">
@@ -1640,8 +1723,8 @@
               </span>
               <span class="why-num" aria-hidden="true">03</span>
             </div>
-            <h3>Deep Domain Expertise</h3>
-            <p>PhD-level engineers who have shipped flight software, licensed reactors, and secured critical infrastructure — not generalists reading from a playbook.</p>
+            <h3 data-i18n="why.3.h">Deep Domain Expertise</h3>
+            <p data-i18n="why.3.p">PhD-level engineers who have shipped flight software, licensed reactors, and secured critical infrastructure — not generalists reading from a playbook.</p>
           </article>
           <article class="card why-card reveal" style="--d:.24s">
             <div class="why-head">
@@ -1654,32 +1737,32 @@
               </span>
               <span class="why-num" aria-hidden="true">04</span>
             </div>
-            <h3>Scalability</h3>
-            <p>Engage a single specialist or a full multidisciplinary team. We scale with your program from feasibility study through sustained operations.</p>
+            <h3 data-i18n="why.4.h">Scalability</h3>
+            <p data-i18n="why.4.p">Engage a single specialist or a full multidisciplinary team. We scale with your program from feasibility study through sustained operations.</p>
           </article>
         </div>
       </div>
     </section>
 
     <!-- ================= METRICS ================= -->
-    <section class="metrics" aria-label="Company metrics">
+    <section class="metrics" aria-label="Company metrics" data-i18n-aria="metrics.aria">
       <div class="container">
         <div class="metrics-grid">
           <div class="stat reveal">
             <span class="stat-num" data-count="10" data-suffix="">10</span>
-            <span class="stat-label">Years proven track record</span>
+            <span class="stat-label" data-i18n="metrics.years">Years proven track record</span>
           </div>
           <div class="stat reveal" style="--d:.08s">
             <span class="stat-num" data-count="98" data-suffix="%">98%</span>
-            <span class="stat-label">Client satisfaction</span>
+            <span class="stat-label" data-i18n="metrics.satisfaction">Client satisfaction</span>
           </div>
           <div class="stat reveal" style="--d:.16s">
             <span class="stat-num" data-count="30" data-suffix="+">30+</span>
-            <span class="stat-label">PhD &amp; senior engineers</span>
+            <span class="stat-label" data-i18n="metrics.engineers">PhD &amp; senior engineers</span>
           </div>
           <div class="stat reveal" style="--d:.24s">
             <span class="stat-num" data-count="120" data-suffix="+">120+</span>
-            <span class="stat-label">Projects delivered</span>
+            <span class="stat-label" data-i18n="metrics.projects">Projects delivered</span>
           </div>
         </div>
       </div>
@@ -1689,13 +1772,13 @@
     <section id="about" aria-labelledby="about-heading">
       <div class="container about-grid">
         <div class="about-copy reveal">
-          <span class="eyebrow">About CosmoLabs</span>
+          <span class="eyebrow" data-i18n="about.eyebrow">About CosmoLabs</span>
           <div class="sec-head" style="margin-bottom:1.5rem">
-            <h2 id="about-heading">Founded by engineers, run like a mission</h2>
+            <h2 id="about-heading" data-i18n="about.h2">Founded by engineers, run like a mission</h2>
           </div>
-          <p><strong>CosmoLabs was founded by engineers</strong> who spent their careers inside demanding programs — shipping cloud platforms at global scale, integrating flight hardware, and defending reactor safety cases. We started the firm with a simple conviction: mission-critical work deserves consultants who have actually done the work.</p>
-          <p>We combine <strong>startup agility with national-laboratory rigor</strong>. Our teams move in weeks, not quarters — yet every deliverable, whether an architecture review, a GNC simulation campaign, or a licensing submittal, is engineered to withstand board-level and regulator-level scrutiny.</p>
-          <p>Today CosmoLabs serves <strong>CTOs, CIOs, and program managers</strong> across commercial and federal programs, acting as the trusted technical bridge between ambitious roadmaps and the engineering reality required to deliver them.</p>
+          <p data-i18n-html="about.p1"><strong>CosmoLabs was founded by engineers</strong> who spent their careers inside demanding programs — shipping cloud platforms at global scale, integrating flight hardware, and defending reactor safety cases. We started the firm with a simple conviction: mission-critical work deserves consultants who have actually done the work.</p>
+          <p data-i18n-html="about.p2">We combine <strong>startup agility with national-laboratory rigor</strong>. Our teams move in weeks, not quarters — yet every deliverable, whether an architecture review, a GNC simulation campaign, or a licensing submittal, is engineered to withstand board-level and regulator-level scrutiny.</p>
+          <p data-i18n-html="about.p3">Today CosmoLabs serves <strong>CTOs, CIOs, and program managers</strong> across commercial and federal programs, acting as the trusted technical bridge between ambitious roadmaps and the engineering reality required to deliver them.</p>
         </div>
 
         <div class="card about-panel reveal" style="--d:.12s">
@@ -1714,8 +1797,8 @@
             <path d="M60 190h180" stroke="rgba(168,180,220,.25)" stroke-dasharray="3 6"/>
           </svg>
           <div class="about-chips">
-            <span>Commercial</span><span>Federal</span><span>R&amp;D</span>
-            <span>Cleared Staff</span><span>ISO-Grade Process</span>
+            <span data-i18n="about.chipCommercial">Commercial</span><span data-i18n="about.chipFederal">Federal</span><span data-i18n="about.chipRnd">R&amp;D</span>
+            <span data-i18n="about.chipCleared">Cleared Staff</span><span data-i18n="about.chipIso">ISO-Grade Process</span>
           </div>
         </div>
       </div>
@@ -1725,8 +1808,8 @@
     <section class="bg-alt" aria-labelledby="quotes-heading">
       <div class="container">
         <div class="sec-head center reveal">
-          <span class="eyebrow">Testimonials</span>
-          <h2 id="quotes-heading">What our partners say</h2>
+          <span class="eyebrow" data-i18n="q.eyebrow">Testimonials</span>
+          <h2 id="quotes-heading" data-i18n="q.h2">What our partners say</h2>
         </div>
 
         <div class="quotes-grid">
@@ -1735,7 +1818,7 @@
               <path d="M4 12.5C4 8.4 6.6 5.5 10.2 4.5l.8 1.8c-2.1.8-3.4 2.3-3.7 4.2.3-.1.7-.2 1.1-.2 1.8 0 3.1 1.3 3.1 3.2 0 1.9-1.5 3.3-3.4 3.3-2.4 0-4.1-1.8-4.1-4.3zm9.5 0c0-4.1 2.6-7 6.2-8l.8 1.8c-2.1.8-3.4 2.3-3.7 4.2.3-.1.7-.2 1.1-.2 1.8 0 3.1 1.3 3.1 3.2 0 1.9-1.5 3.3-3.4 3.3-2.4 0-4.1-1.8-4.1-4.3z"/>
             </svg>
             <blockquote>
-              <p>CosmoLabs re-architected our multi-region cloud migration and cut infrastructure spend by double digits while hardening security across hundreds of services. They operate like an extension of our own engineering org.</p>
+              <p data-i18n="q.1.text">CosmoLabs re-architected our multi-region cloud migration and cut infrastructure spend by double digits while hardening security across hundreds of services. They operate like an extension of our own engineering org.</p>
             </blockquote>
             <div class="stars" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
@@ -1744,8 +1827,8 @@
               <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
               <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
             </div>
-            <span class="sr-only">Rated 5 out of 5 stars</span>
-            <figcaption><span class="sr-only">— </span><strong>Director of Infrastructure</strong><span class="sr-only">,</span> Amazon</figcaption>
+            <span class="sr-only" data-i18n="q.rated">Rated 5 out of 5 stars</span>
+            <figcaption><span class="sr-only">— </span><strong data-i18n="q.1.role">Director of Infrastructure</strong><span class="sr-only">,</span> Amazon</figcaption>
           </figure>
 
           <figure class="card quote-card reveal" style="--d:.1s">
@@ -1753,7 +1836,7 @@
               <path d="M4 12.5C4 8.4 6.6 5.5 10.2 4.5l.8 1.8c-2.1.8-3.4 2.3-3.7 4.2.3-.1.7-.2 1.1-.2 1.8 0 3.1 1.3 3.1 3.2 0 1.9-1.5 3.3-3.4 3.3-2.4 0-4.1-1.8-4.1-4.3zm9.5 0c0-4.1 2.6-7 6.2-8l.8 1.8c-2.1.8-3.4 2.3-3.7 4.2.3-.1.7-.2 1.1-.2 1.8 0 3.1 1.3 3.1 3.2 0 1.9-1.5 3.3-3.4 3.3-2.4 0-4.1-1.8-4.1-4.3z"/>
             </svg>
             <blockquote>
-              <p>Their team modernized the data backbone of our supply-chain platform — from demand forecasting models to store-level telemetry. Delivery was on schedule, on budget, and rigorously documented.</p>
+              <p data-i18n="q.2.text">Their team modernized the data backbone of our supply-chain platform — from demand forecasting models to store-level telemetry. Delivery was on schedule, on budget, and rigorously documented.</p>
             </blockquote>
             <div class="stars" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
@@ -1762,8 +1845,8 @@
               <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
               <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
             </div>
-            <span class="sr-only">Rated 5 out of 5 stars</span>
-            <figcaption><span class="sr-only">— </span><strong>VP of Technology</strong><span class="sr-only">,</span> The Home Depot</figcaption>
+            <span class="sr-only" data-i18n="q.rated">Rated 5 out of 5 stars</span>
+            <figcaption><span class="sr-only">— </span><strong data-i18n="q.2.role">VP of Technology</strong><span class="sr-only">,</span> The Home Depot</figcaption>
           </figure>
 
           <figure class="card quote-card reveal" style="--d:.2s">
@@ -1771,7 +1854,7 @@
               <path d="M4 12.5C4 8.4 6.6 5.5 10.2 4.5l.8 1.8c-2.1.8-3.4 2.3-3.7 4.2.3-.1.7-.2 1.1-.2 1.8 0 3.1 1.3 3.1 3.2 0 1.9-1.5 3.3-3.4 3.3-2.4 0-4.1-1.8-4.1-4.3zm9.5 0c0-4.1 2.6-7 6.2-8l.8 1.8c-2.1.8-3.4 2.3-3.7 4.2.3-.1.7-.2 1.1-.2 1.8 0 3.1 1.3 3.1 3.2 0 1.9-1.5 3.3-3.4 3.3-2.4 0-4.1-1.8-4.1-4.3z"/>
             </svg>
             <blockquote>
-              <p>The avionics software audit CosmoLabs performed ahead of our certification cycle was the most thorough we have seen. Findings were precise, prioritized, and immediately actionable.</p>
+              <p data-i18n="q.3.text">The avionics software audit CosmoLabs performed ahead of our certification cycle was the most thorough we have seen. Findings were precise, prioritized, and immediately actionable.</p>
             </blockquote>
             <div class="stars" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
@@ -1780,8 +1863,8 @@
               <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
               <svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9L12 2.6z"/></svg>
             </div>
-            <span class="sr-only">Rated 5 out of 5 stars</span>
-            <figcaption><span class="sr-only">— </span><strong>Engineering Manager</strong><span class="sr-only">,</span> Delta Air Lines</figcaption>
+            <span class="sr-only" data-i18n="q.rated">Rated 5 out of 5 stars</span>
+            <figcaption><span class="sr-only">— </span><strong data-i18n="q.3.role">Engineering Manager</strong><span class="sr-only">,</span> Delta Air Lines</figcaption>
           </figure>
         </div>
       </div>
@@ -1792,8 +1875,8 @@
       <div class="aurora aurora-cyan" aria-hidden="true"></div>
       <div class="container">
         <div class="sec-head reveal">
-          <span class="eyebrow">Industries We Serve</span>
-          <h2 id="industries-heading">Deep expertise across regulated, high-stakes sectors</h2>
+          <span class="eyebrow" data-i18n="ind.eyebrow">Industries We Serve</span>
+          <h2 id="industries-heading" data-i18n="ind.h2">Deep expertise across regulated, high-stakes sectors</h2>
         </div>
 
         <div class="ind-grid">
@@ -1801,57 +1884,57 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"/>
             </svg>
-            <h3>Aerospace &amp; Defense</h3>
-            <p>Flight systems, satellite programs &amp; defense platforms.</p>
+            <h3 data-i18n="ind.1.h">Aerospace &amp; Defense</h3>
+            <p data-i18n="ind.1.p">Flight systems, satellite programs &amp; defense platforms.</p>
           </article>
           <article class="card ind-tile reveal" style="--d:.06s">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <path d="M13 2 4.5 13.5H11L9.5 22 18 10.5h-6.5L13 2z"/>
             </svg>
-            <h3>Energy &amp; Utilities</h3>
-            <p>Grid modernization &amp; nuclear generation.</p>
+            <h3 data-i18n="ind.2.h">Energy &amp; Utilities</h3>
+            <p data-i18n="ind.2.p">Grid modernization &amp; nuclear generation.</p>
           </article>
           <article class="card ind-tile reveal" style="--d:.12s">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <path d="M3 21h18M5 21v-11M9.5 21v-11M14.5 21v-11M19 21v-11M12 3 3 8h18l-9-5z"/>
             </svg>
-            <h3>Government &amp; Federal</h3>
-            <p>FedRAMP, NRC &amp; mission-system delivery.</p>
+            <h3 data-i18n="ind.3.h">Government &amp; Federal</h3>
+            <p data-i18n="ind.3.p">FedRAMP, NRC &amp; mission-system delivery.</p>
           </article>
           <article class="card ind-tile reveal">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <path d="M12 21S5 16.6 2.7 12A5.4 5.4 0 0 1 12 6.3 5.4 5.4 0 0 1 21.3 12C19 16.6 12 21 12 21z"/>
             </svg>
-            <h3>Healthcare</h3>
-            <p>Secure data platforms &amp; compliance engineering.</p>
+            <h3 data-i18n="ind.4.h">Healthcare</h3>
+            <p data-i18n="ind.4.p">Secure data platforms &amp; compliance engineering.</p>
           </article>
           <article class="card ind-tile reveal" style="--d:.06s">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>
             </svg>
-            <h3>Finance &amp; Fintech</h3>
-            <p>Resilient, low-latency trading infrastructure.</p>
+            <h3 data-i18n="ind.5.h">Finance &amp; Fintech</h3>
+            <p data-i18n="ind.5.p">Resilient, low-latency trading infrastructure.</p>
           </article>
           <article class="card ind-tile span-2 reveal" style="--d:.12s">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <path d="M3 21h18M4 21V11l5 3v-3l5 3v-3l6 3.5V21"/>
             </svg>
-            <h3>Manufacturing</h3>
-            <p>Automation, digital twins &amp; industrial IoT.</p>
+            <h3 data-i18n="ind.6.h">Manufacturing</h3>
+            <p data-i18n="ind.6.p">Automation, digital twins &amp; industrial IoT.</p>
           </article>
           <article class="card ind-tile span-2 reveal">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <path d="M2 8h11v8H2zM13 10h4.5l3.5 3.5V16h-8z"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="16.5" cy="18" r="1.8"/>
             </svg>
-            <h3>Transportation &amp; Logistics</h3>
-            <p>Routing optimization, telemetry &amp; fleet platforms.</p>
+            <h3 data-i18n="ind.7.h">Transportation &amp; Logistics</h3>
+            <p data-i18n="ind.7.p">Routing optimization, telemetry &amp; fleet platforms.</p>
           </article>
           <article class="card ind-tile span-2 reveal" style="--d:.06s">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <path d="M9.5 3v6L4.7 17.4a2 2 0 0 0 1.7 3.1h11.2a2 2 0 0 0 1.7-3.1L14.5 9V3"/><path d="M8 3h8"/><path d="M7.5 14h9"/>
             </svg>
-            <h3>Research &amp; Academia</h3>
-            <p>HPC, simulation campaigns &amp; laboratory partnerships.</p>
+            <h3 data-i18n="ind.8.h">Research &amp; Academia</h3>
+            <p data-i18n="ind.8.p">HPC, simulation campaigns &amp; laboratory partnerships.</p>
           </article>
         </div>
       </div>
@@ -1861,9 +1944,9 @@
     <section id="cta" class="cta-band" aria-labelledby="cta-heading">
       <div class="container">
         <div class="card cta-card reveal">
-          <h2 id="cta-heading">Ready to build something excellent?</h2>
-          <p>Start your brief now — a senior engineer will scope it within one business day.</p>
-          <a class="btn btn-primary" href="#start">Start your project</a>
+          <h2 id="cta-heading" data-i18n="cta.h2">Ready to build something excellent?</h2>
+          <p data-i18n="cta.p">Start your brief now — a senior engineer will scope it within one business day.</p>
+          <a class="btn btn-primary" href="#start" data-i18n="nav.cta">Start your project</a>
         </div>
       </div>
     </section>
@@ -1872,9 +1955,9 @@
     <section id="contact" class="bg-alt" aria-labelledby="contact-heading">
       <div class="container contact-grid">
         <div class="contact-info reveal">
-          <span class="eyebrow">Contact</span>
-          <h2 id="contact-heading">Get a free consultation</h2>
-          <p>Tell us about your program. A senior engineer — not a salesperson — will respond within one business day.</p>
+          <span class="eyebrow" data-i18n="c.eyebrow">Contact</span>
+          <h2 id="contact-heading" data-i18n="c.h2">Get a free consultation</h2>
+          <p data-i18n="c.p">Tell us about your program. A senior engineer — not a salesperson — will respond within one business day.</p>
 
           <div class="contact-rows">
             <div class="contact-row">
@@ -1884,7 +1967,7 @@
                 </svg>
               </span>
               <div>
-                <span class="lbl">Email</span>
+                <span class="lbl" data-i18n="c.emailLbl">Email</span>
                 <a href="mailto:cosmolabshq@gmail.com">cosmolabshq@gmail.com</a>
               </div>
             </div>
@@ -1895,8 +1978,8 @@
                 </svg>
               </span>
               <div>
-                <span class="lbl">Response time</span>
-                <span class="val">Within one business day</span>
+                <span class="lbl" data-i18n="c.respLbl">Response time</span>
+                <span class="val" data-i18n="c.respVal">Within one business day</span>
               </div>
             </div>
             <div class="contact-row">
@@ -1906,30 +1989,30 @@
                 </svg>
               </span>
               <div>
-                <span class="lbl">Have a project in mind?</span>
-                <a href="#start">Start a structured brief &rarr;</a>
+                <span class="lbl" data-i18n="c.projLbl">Have a project in mind?</span>
+                <a href="#start" data-i18n="c.projLink">Start a structured brief &rarr;</a>
               </div>
             </div>
           </div>
         </div>
 
         <form class="card contact-form reveal" id="contact-form" style="--d:.12s" novalidate>
-          <h3>Start the conversation</h3>
+          <h3 data-i18n="c.form.h">Start the conversation</h3>
           <div class="field">
-            <label for="cf-name">Full name <span class="req" aria-hidden="true">*</span></label>
-            <input type="text" id="cf-name" name="name" autocomplete="name" placeholder="Jane Doe" required>
+            <label for="cf-name"><span data-i18n="c.name.label">Full name</span> <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="cf-name" name="name" autocomplete="name" placeholder="Jane Doe" data-i18n-ph="c.name.ph" required>
           </div>
           <div class="field">
-            <label for="cf-email">Work email <span class="req" aria-hidden="true">*</span></label>
-            <input type="email" id="cf-email" name="email" autocomplete="email" placeholder="jane@company.com" required>
+            <label for="cf-email"><span data-i18n="wiz.email.label">Work email</span> <span class="req" aria-hidden="true">*</span></label>
+            <input type="email" id="cf-email" name="email" autocomplete="email" placeholder="jane@company.com" data-i18n-ph="wiz.email.ph" required>
           </div>
           <div class="field">
-            <label for="cf-msg">How can we help? <span class="req" aria-hidden="true">*</span></label>
-            <textarea id="cf-msg" name="message" placeholder="Briefly describe your program, timeline, and goals…" required></textarea>
+            <label for="cf-msg"><span data-i18n="c.msg.label">How can we help?</span> <span class="req" aria-hidden="true">*</span></label>
+            <textarea id="cf-msg" name="message" placeholder="Briefly describe your program, timeline, and goals…" data-i18n-ph="c.msg.ph" required></textarea>
           </div>
-          <button class="btn btn-primary" type="submit">Request a free consultation</button>
+          <button class="btn btn-primary" type="submit" data-i18n="c.btn">Request a free consultation</button>
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
-          <p class="form-hint">Submitting opens a pre-filled email in your mail app — this form itself stores nothing.</p>
+          <p class="form-hint" data-i18n="c.hint">Submitting opens a pre-filled email in your mail app — this form itself stores nothing.</p>
         </form>
       </div>
     </section>
@@ -1941,7 +2024,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a class="brand" href="#home" aria-label="CosmoLabs — back to top">
+          <a class="brand" href="#home" aria-label="CosmoLabs — back to top" data-i18n-aria="nav.brandAria">
             <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
               <defs>
                 <linearGradient id="lg-foot" x1="0" y1="0" x2="1" y2="1">
@@ -1953,40 +2036,883 @@
             </svg>
             <span class="brand-name">Cosmo<em>Labs</em></span>
           </a>
-          <p>Multidisciplinary consulting in computer science, aerospace engineering, and nuclear engineering — for programs where excellence is engineered.</p>
+          <p data-i18n="f.blurb">Multidisciplinary consulting in computer science, aerospace engineering, and nuclear engineering — for programs where excellence is engineered.</p>
         </div>
 
-        <nav class="footer-col" aria-label="Quick links">
-          <h3>Quick links</h3>
+        <nav class="footer-col" aria-label="Quick links" data-i18n-aria="f.quick">
+          <h3 data-i18n="f.quick">Quick links</h3>
           <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#start">Start a project</a></li>
-            <li><a href="#process">How it works</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#industries">Industries</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#home" data-i18n="nav.home">Home</a></li>
+            <li><a href="#start" data-i18n="nav.start">Start a project</a></li>
+            <li><a href="#process" data-i18n="nav.process">How it works</a></li>
+            <li><a href="#services" data-i18n="nav.services">Services</a></li>
+            <li><a href="#about" data-i18n="nav.about">About</a></li>
+            <li><a href="#industries" data-i18n="nav.industries">Industries</a></li>
+            <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
           </ul>
         </nav>
 
-        <nav class="footer-col" aria-label="Services">
-          <h3>Services</h3>
+        <nav class="footer-col" aria-label="Services" data-i18n-aria="nav.services">
+          <h3 data-i18n="nav.services">Services</h3>
           <ul>
-            <li><a href="#services">Computer Science &amp; Software</a></li>
-            <li><a href="#services">Aerospace Engineering</a></li>
-            <li><a href="#services">Nuclear Engineering</a></li>
-            <li><a href="#contact">Free consultation</a></li>
+            <li><a href="#services" data-i18n="svc.cs.h">Computer Science &amp; Software</a></li>
+            <li><a href="#services" data-i18n="svc.aero.h">Aerospace Engineering</a></li>
+            <li><a href="#services" data-i18n="svc.nuc.h">Nuclear Engineering</a></li>
+            <li><a href="#contact" data-i18n="f.consult">Free consultation</a></li>
           </ul>
         </nav>
 
       </div>
 
       <div class="footer-bottom">
-        <span>© 2026 CosmoLabs. All rights reserved.</span>
-        <span class="tag">Where science is standard, excellence is engineered</span>
+        <span data-i18n="f.copyright">© 2026 CosmoLabs. All rights reserved.</span>
+        <span class="tag" data-i18n="f.tagline">Where science is standard, excellence is engineered</span>
       </div>
     </div>
   </footer>
+
+  <!-- ============================================================
+       i18n — language dictionaries + switcher engine.
+       Defined BEFORE the main script so window.i18n.t is available
+       to the wizard/contact code; init() runs at the very end of
+       the main script, after all langchange listeners exist.
+       ============================================================ -->
+  <script>
+    window.i18n = (function () {
+      'use strict';
+
+      var STORAGE_KEY = 'cosmolabs-lang';
+      var LANG_META = {
+        en: { code: 'EN', dir: 'ltr' },
+        ar: { code: 'AR', dir: 'rtl' },
+        fr: { code: 'FR', dir: 'ltr' }
+      };
+
+      var I18N = {
+        en: {
+          "meta.title": "CosmoLabs — Computing, Aerospace & Nuclear Engineering Consulting",
+          "meta.desc": "CosmoLabs is a multidisciplinary consulting firm delivering expert services in computer science, aerospace engineering, and nuclear engineering for mission-critical commercial and federal programs.",
+          "a11y.skip": "Skip to main content",
+          "nav.brandAria": "CosmoLabs — back to top",
+          "nav.primaryAria": "Primary",
+          "nav.mobileAria": "Mobile",
+          "nav.openMenu": "Open menu",
+          "nav.closeMenu": "Close menu",
+          "nav.home": "Home",
+          "nav.start": "Start a project",
+          "nav.process": "How it works",
+          "nav.services": "Services",
+          "nav.about": "About",
+          "nav.industries": "Industries",
+          "nav.contact": "Contact",
+          "nav.cta": "Start your project",
+          "lang.label": "Language",
+          "hero.tagline": "Where <span class=\"grad-text\">science</span> is standard,<br> excellence is <span class=\"grad-text\">engineered</span>",
+          "hero.h1": "We provide professional consulting in computing, aerospace & nuclear engineering.",
+          "hero.sub": "Take charge of your mission-critical programs. Tell us what you need built — we scope it within one business day.",
+          "hero.ctaServices": "Our services",
+          "hero.note": "Trusted by Fortune 500 engineering teams and federal programs alike.",
+          "cta.h2": "Ready to build something excellent?",
+          "cta.p": "Start your brief now — a senior engineer will scope it within one business day.",
+          "f.blurb": "Multidisciplinary consulting in computer science, aerospace engineering, and nuclear engineering — for programs where excellence is engineered.",
+          "f.quick": "Quick links",
+          "f.consult": "Free consultation",
+          "f.copyright": "© 2026 CosmoLabs. All rights reserved.",
+          "f.tagline": "Where science is standard, excellence is engineered",
+          "start.eyebrow": "Start a Project",
+          "start.h2": "What can we do for you?",
+          "start.p": "Tell us what you need built — a platform, a simulation pipeline, a mission-critical system. A senior engineer scopes it and gets to work.",
+          "start.trustFree": "Free to submit",
+          "start.trustReply": "Reply within one business day",
+          "start.trustPrivate": "Your files stay private",
+          "wiz.progressAria": "Form progress",
+          "wiz.step1": "Brief",
+          "wiz.step2": "Details",
+          "wiz.step3": "Clarify",
+          "wiz.step4": "Review",
+          "wiz.p1.legend": "The brief",
+          "wiz.title.label": "Project title",
+          "wiz.title.ph": "e.g. Telemetry dashboard for our ground-station network",
+          "wiz.desc.label": "What do you want built?",
+          "wiz.desc.ph": "Describe the project, its goals, the features you already know you need, and anything else that matters…",
+          "wiz.email.label": "Work email",
+          "wiz.email.ph": "jane@company.com",
+          "wiz.phone.label": "Phone",
+          "wiz.phone.ph": "+1 (404) 555-0100",
+          "wiz.p2.legend": "Design & references",
+          "wiz.refs.h": "Reference websites or apps",
+          "wiz.refs.opt": "(optional, up to 5)",
+          "wiz.refs.add": "+ Add a reference",
+          "wiz.ref.urlAria": "Reference URL",
+          "wiz.ref.notePh": "What do you like about it? (optional)",
+          "wiz.ref.noteAria": "Reference note",
+          "wiz.ref.removeAria": "Remove this reference",
+          "wiz.colors.h": "Color scheme",
+          "wiz.colorModeAria": "Light or dark interface preference",
+          "wiz.mode.light": "Light",
+          "wiz.mode.dark": "Dark",
+          "wiz.mode.either": "Either",
+          "wiz.colors.add": "+ Add a brand color",
+          "wiz.color.aria": "Brand color {n}",
+          "wiz.color.removeAria": "Remove this color",
+          "wiz.colorNotes.label": "Color notes",
+          "wiz.opt": "(optional)",
+          "wiz.colorNotes.ph": "e.g. Match our existing logo; avoid bright red",
+          "wiz.docs.h": "Documents",
+          "wiz.drop.main": "<strong>Drag &amp; drop files here</strong> or click to browse",
+          "wiz.drop.hint": "{types} — up to {files} files, {size} each, {total} total.",
+          "wiz.p3.legend": "Clarify",
+          "wiz.clarify.note": "A few quick questions help us scope your project accurately. Answers are optional, but the more you share the better our first response will be.",
+          "wiz.clarify.loading": "Reviewing your brief…",
+          "wiz.clarify.ready": "Your brief looks complete — you can continue straight to review.",
+          "wiz.clarify.readyBtn": "Continue to review",
+          "wiz.q.ph": "Your answer (optional, but it helps us scope faster)",
+          "wiz.q1": "Who is the primary audience or user of this project, and what is the single most important thing they should be able to do?",
+          "wiz.q2": "Do you have existing branding, content, or accounts (domain, logins, copy, images) we should build with, or are we starting from scratch?",
+          "wiz.q3": "What is your ideal timeline and budget range for this project?",
+          "wiz.p4.legend": "Review & submit",
+          "wiz.back": "Back",
+          "wiz.next": "Next",
+          "wiz.submit": "Submit brief",
+          "wiz.submitting": "Sending your brief…",
+          "wiz.stepAnnounce": "Step {n} of 4: {name}",
+          "wiz.err.title": "Please give your project a title (3–200 characters).",
+          "wiz.err.desc": "Please describe your project in at least 10 characters (max 5,000).",
+          "wiz.err.email": "Please enter a valid email address.",
+          "wiz.err.phone": "Please enter a valid phone number (7–25 characters; digits, spaces, +, -, parentheses).",
+          "wiz.err.fix": "Please fix the highlighted fields.",
+          "wiz.err.ref": "Reference links must start with http:// or https:// (max 500 characters). Leave the row blank to skip it.",
+          "wiz.err.maxFiles": "You can attach up to {n} files.",
+          "wiz.err.fileType": "\"{name}\" is not an accepted file type.",
+          "wiz.err.fileName": "\"{name}\" has a name we can’t store — please rename it using letters or numbers and try again.",
+          "wiz.err.fileEmpty": "\"{name}\" is empty.",
+          "wiz.err.fileSize": "\"{name}\" is larger than {size}.",
+          "wiz.err.fileTotal": "Attachments exceed the {size} total limit.",
+          "wiz.file.removeAria": "Remove {name}",
+          "wiz.filesOne": "1 file attached.",
+          "wiz.filesMany": "{n} files attached.",
+          "wiz.announceReady": "Your brief looks complete.",
+          "wiz.announceQuestions": "A few clarifying questions are ready.",
+          "wiz.rv.title": "Title",
+          "wiz.rv.desc": "Description",
+          "wiz.rv.email": "Email",
+          "wiz.rv.phone": "Phone",
+          "wiz.rv.refs": "References",
+          "wiz.rv.colors": "Color scheme",
+          "wiz.rv.files": "Files",
+          "wiz.rv.clar": "Clarifications",
+          "wiz.rv.mode": "Mode",
+          "wiz.rv.colorsLbl": "Colors",
+          "wiz.rv.notes": "Notes",
+          "wiz.rv.answeredOne": "1 question answered",
+          "wiz.rv.answeredMany": "{n} questions answered",
+          "wiz.err.generic": "Something went wrong — please try again.",
+          "wiz.err.network": "Network error — please check your connection and try again.",
+          "wiz.done.h": "Brief received",
+          "wiz.done.ref": "Reference",
+          "wiz.done.reply": "We’ll reply to {email} within one business day.",
+          "proc.eyebrow": "How It Works",
+          "proc.h2": "From idea to launch in four steps",
+          "proc.p": "A senior engineer and our AI build system take you from brief to shipped product — with you in the loop the whole way.",
+          "proc.s1.h": "Share your brief",
+          "proc.s1.p": "Two minutes in the guided form. Attach documents, reference sites, and your color preferences.",
+          "proc.s2.h": "We scope it",
+          "proc.s2.p": "Our AI clarifies the details; a senior engineer reviews and replies with a plan within one business day.",
+          "proc.s3.h": "We build",
+          "proc.s3.p": "AI-accelerated engineering with senior oversight. You see weekly progress demos, not a black box.",
+          "proc.s4.h": "You launch",
+          "proc.s4.p": "You own the code, the repo, and the deployment. We stay on for support and iteration.",
+          "proc.ctaBrief": "Start your brief",
+          "proc.ctaAsk": "Ask a question",
+          "partners.eyebrow": "Client wall",
+          "partners.h2": "Trusted partners",
+          "marquee.pause": "Pause logo animation",
+          "marquee.play": "Play logo animation",
+          "svc.eyebrow": "What We Do",
+          "svc.h2": "Three disciplines, one standard of excellence",
+          "svc.p": "Senior consultants who have shipped production software, flown hardware, and licensed reactors — embedded directly into your program.",
+          "svc.cs.h": "Computer Science & Software",
+          "svc.cs.p": "Full-lifecycle software consulting — from architecture reviews to production-grade platforms that scale under real-world load.",
+          "svc.cs.l1": "Software engineering & architecture",
+          "svc.cs.l2": "Cloud & DevOps transformation",
+          "svc.cs.l3": "AI / ML systems",
+          "svc.cs.l4": "Cybersecurity & zero-trust",
+          "svc.cs.l5": "Data engineering & analytics",
+          "svc.aero.h": "Aerospace Engineering",
+          "svc.aero.p": "Mission-grade engineering support across the full flight-vehicle lifecycle, from concept studies to certification.",
+          "svc.aero.l1": "Mission & systems engineering",
+          "svc.aero.l2": "Guidance, navigation & control (GNC)",
+          "svc.aero.l3": "Propulsion & structures analysis",
+          "svc.aero.l4": "Avionics & flight software",
+          "svc.aero.l5": "Test & certification support",
+          "svc.nuc.h": "Nuclear Engineering",
+          "svc.nuc.p": "Safety-first nuclear consulting grounded in regulatory rigor, validated codes, and advanced simulation.",
+          "svc.nuc.l1": "Reactor safety analysis",
+          "svc.nuc.l2": "Licensing & regulatory support (NRC)",
+          "svc.nuc.l3": "Thermal-hydraulics & criticality",
+          "svc.nuc.l4": "Radiation shielding",
+          "svc.nuc.l5": "Decommissioning planning",
+          "why.eyebrow": "Why Choose Us",
+          "why.h2": "Built for programs where failure is not an option.",
+          "why.1.h": "Cost-Effectiveness",
+          "why.1.p": "Senior-level expertise without big-consultancy overhead. We scope lean, deliver fast, and tie every engagement to measurable engineering outcomes.",
+          "why.2.h": "Innovative Technology",
+          "why.2.p": "From cloud-native platforms and applied AI to model-based systems engineering, we bring the modern toolchain to legacy-bound programs.",
+          "why.3.h": "Deep Domain Expertise",
+          "why.3.p": "PhD-level engineers who have shipped flight software, licensed reactors, and secured critical infrastructure — not generalists reading from a playbook.",
+          "why.4.h": "Scalability",
+          "why.4.p": "Engage a single specialist or a full multidisciplinary team. We scale with your program from feasibility study through sustained operations.",
+          "metrics.aria": "Company metrics",
+          "metrics.years": "Years proven track record",
+          "metrics.satisfaction": "Client satisfaction",
+          "metrics.engineers": "PhD & senior engineers",
+          "metrics.projects": "Projects delivered",
+          "about.eyebrow": "About CosmoLabs",
+          "about.h2": "Founded by engineers, run like a mission",
+          "about.p1": "<strong>CosmoLabs was founded by engineers</strong> who spent their careers inside demanding programs — shipping cloud platforms at global scale, integrating flight hardware, and defending reactor safety cases. We started the firm with a simple conviction: mission-critical work deserves consultants who have actually done the work.",
+          "about.p2": "We combine <strong>startup agility with national-laboratory rigor</strong>. Our teams move in weeks, not quarters — yet every deliverable, whether an architecture review, a GNC simulation campaign, or a licensing submittal, is engineered to withstand board-level and regulator-level scrutiny.",
+          "about.p3": "Today CosmoLabs serves <strong>CTOs, CIOs, and program managers</strong> across commercial and federal programs, acting as the trusted technical bridge between ambitious roadmaps and the engineering reality required to deliver them.",
+          "about.chipCommercial": "Commercial",
+          "about.chipFederal": "Federal",
+          "about.chipRnd": "R&D",
+          "about.chipCleared": "Cleared Staff",
+          "about.chipIso": "ISO-Grade Process",
+          "q.eyebrow": "Testimonials",
+          "q.h2": "What our partners say",
+          "q.1.text": "CosmoLabs re-architected our multi-region cloud migration and cut infrastructure spend by double digits while hardening security across hundreds of services. They operate like an extension of our own engineering org.",
+          "q.1.role": "Director of Infrastructure",
+          "q.2.text": "Their team modernized the data backbone of our supply-chain platform — from demand forecasting models to store-level telemetry. Delivery was on schedule, on budget, and rigorously documented.",
+          "q.2.role": "VP of Technology",
+          "q.3.text": "The avionics software audit CosmoLabs performed ahead of our certification cycle was the most thorough we have seen. Findings were precise, prioritized, and immediately actionable.",
+          "q.3.role": "Engineering Manager",
+          "q.rated": "Rated 5 out of 5 stars",
+          "ind.eyebrow": "Industries We Serve",
+          "ind.h2": "Deep expertise across regulated, high-stakes sectors",
+          "ind.1.h": "Aerospace & Defense",
+          "ind.1.p": "Flight systems, satellite programs & defense platforms.",
+          "ind.2.h": "Energy & Utilities",
+          "ind.2.p": "Grid modernization & nuclear generation.",
+          "ind.3.h": "Government & Federal",
+          "ind.3.p": "FedRAMP, NRC & mission-system delivery.",
+          "ind.4.h": "Healthcare",
+          "ind.4.p": "Secure data platforms & compliance engineering.",
+          "ind.5.h": "Finance & Fintech",
+          "ind.5.p": "Resilient, low-latency trading infrastructure.",
+          "ind.6.h": "Manufacturing",
+          "ind.6.p": "Automation, digital twins & industrial IoT.",
+          "ind.7.h": "Transportation & Logistics",
+          "ind.7.p": "Routing optimization, telemetry & fleet platforms.",
+          "ind.8.h": "Research & Academia",
+          "ind.8.p": "HPC, simulation campaigns & laboratory partnerships.",
+          "c.eyebrow": "Contact",
+          "c.h2": "Get a free consultation",
+          "c.p": "Tell us about your program. A senior engineer — not a salesperson — will respond within one business day.",
+          "c.emailLbl": "Email",
+          "c.respLbl": "Response time",
+          "c.respVal": "Within one business day",
+          "c.projLbl": "Have a project in mind?",
+          "c.projLink": "Start a structured brief →",
+          "c.form.h": "Start the conversation",
+          "c.name.label": "Full name",
+          "c.name.ph": "Jane Doe",
+          "c.msg.label": "How can we help?",
+          "c.msg.ph": "Briefly describe your program, timeline, and goals…",
+          "c.btn": "Request a free consultation",
+          "c.hint": "Submitting opens a pre-filled email in your mail app — this form itself stores nothing.",
+          "c.subject": "Free consultation request — {name}",
+          "c.status": "Opening your email app — your message is ready to send."
+        },
+        ar: {
+          "meta.title": "CosmoLabs — استشارات الحوسبة وهندسة الطيران والفضاء والهندسة النووية",
+          "meta.desc": "CosmoLabs شركة استشارية متعددة التخصصات تقدم خدمات متخصصة رفيعة المستوى في علوم الحاسوب وهندسة الطيران والفضاء والهندسة النووية للبرامج التجارية والفيدرالية البالغة الأهمية.",
+          "a11y.skip": "الانتقال إلى المحتوى الرئيسي",
+          "nav.brandAria": "CosmoLabs — العودة إلى الأعلى",
+          "nav.primaryAria": "التنقل الرئيسي",
+          "nav.mobileAria": "قائمة الجوال",
+          "nav.openMenu": "فتح القائمة",
+          "nav.closeMenu": "إغلاق القائمة",
+          "nav.home": "الرئيسية",
+          "nav.start": "ابدأ مشروعًا",
+          "nav.process": "كيف نعمل",
+          "nav.services": "الخدمات",
+          "nav.about": "من نحن",
+          "nav.industries": "القطاعات",
+          "nav.contact": "تواصل معنا",
+          "nav.cta": "ابدأ مشروعك",
+          "lang.label": "اللغة",
+          "hero.tagline": "حيث <span class=\"grad-text\">العلم</span> هو المعيار،<br> والتميّز صنيع <span class=\"grad-text\">الهندسة</span>",
+          "hero.h1": "نقدم استشارات احترافية في الحوسبة وهندسة الطيران والفضاء والهندسة النووية.",
+          "hero.sub": "تولَّ زمام برامجك البالغة الأهمية. أخبرنا بما تحتاج إلى بنائه — وسنحدد نطاقه خلال يوم عمل واحد.",
+          "hero.ctaServices": "خدماتنا",
+          "hero.note": "محل ثقة فرق الهندسة في شركات Fortune 500 والبرامج الفيدرالية على حد سواء.",
+          "cta.h2": "هل أنت مستعد لبناء شيء استثنائي؟",
+          "cta.p": "ابدأ موجز مشروعك الآن — وسيتولى مهندس أول تحديد نطاقه خلال يوم عمل واحد.",
+          "f.blurb": "استشارات متعددة التخصصات في علوم الحاسوب وهندسة الطيران والفضاء والهندسة النووية — لبرامج يكون فيها التميّز صنيع الهندسة.",
+          "f.quick": "روابط سريعة",
+          "f.consult": "استشارة مجانية",
+          "f.copyright": "© 2026 CosmoLabs. جميع الحقوق محفوظة.",
+          "f.tagline": "حيث العلم هو المعيار، والتميّز صنيع الهندسة",
+          "start.eyebrow": "ابدأ مشروعًا",
+          "start.h2": "ما الذي يمكننا فعله من أجلك؟",
+          "start.p": "أخبرنا بما تحتاج إلى بنائه — منصة، أو خط معالجة للمحاكاة، أو نظام بالغ الأهمية. سيتولى مهندس أول تحديد نطاقه والشروع في العمل.",
+          "start.trustFree": "الإرسال مجاني",
+          "start.trustReply": "رد خلال يوم عمل واحد",
+          "start.trustPrivate": "ملفاتك تبقى خاصة",
+          "wiz.progressAria": "تقدم النموذج",
+          "wiz.step1": "الموجز",
+          "wiz.step2": "التفاصيل",
+          "wiz.step3": "توضيح",
+          "wiz.step4": "مراجعة",
+          "wiz.p1.legend": "الموجز",
+          "wiz.title.label": "عنوان المشروع",
+          "wiz.title.ph": "مثال: لوحة بيانات القياس عن بُعد لشبكة محطاتنا الأرضية",
+          "wiz.desc.label": "ما الذي تريد بناءه؟",
+          "wiz.desc.ph": "صِف المشروع وأهدافه والميزات التي تعلم أنك بحاجة إليها، وأي أمر آخر ذي أهمية…",
+          "wiz.email.label": "البريد الإلكتروني للعمل",
+          "wiz.email.ph": "sara@example.com",
+          "wiz.phone.label": "الهاتف",
+          "wiz.phone.ph": "+1 (404) 555-0100",
+          "wiz.p2.legend": "التصميم والمراجع",
+          "wiz.refs.h": "مواقع أو تطبيقات مرجعية",
+          "wiz.refs.opt": "(اختياري، بحد أقصى 5)",
+          "wiz.refs.add": "+ إضافة مرجع",
+          "wiz.ref.urlAria": "رابط المرجع",
+          "wiz.ref.notePh": "ما الذي يعجبك فيه؟ (اختياري)",
+          "wiz.ref.noteAria": "ملاحظة المرجع",
+          "wiz.ref.removeAria": "إزالة هذا المرجع",
+          "wiz.colors.h": "نظام الألوان",
+          "wiz.colorModeAria": "تفضيل الواجهة الفاتحة أو الداكنة",
+          "wiz.mode.light": "فاتح",
+          "wiz.mode.dark": "داكن",
+          "wiz.mode.either": "أيّ منهما",
+          "wiz.colors.add": "+ إضافة لون للعلامة التجارية",
+          "wiz.color.aria": "لون العلامة التجارية {n}",
+          "wiz.color.removeAria": "إزالة هذا اللون",
+          "wiz.colorNotes.label": "ملاحظات الألوان",
+          "wiz.opt": "(اختياري)",
+          "wiz.colorNotes.ph": "مثال: مطابقة شعارنا الحالي؛ تجنُّب الأحمر الفاقع",
+          "wiz.docs.h": "المستندات",
+          "wiz.drop.main": "<strong>اسحب الملفات وأفلتها هنا</strong> أو انقر للتصفح",
+          "wiz.drop.hint": "{types} — حتى {files} ملفات، بحدّ أقصى {size} لكل ملف، و{total} إجمالًا.",
+          "wiz.p3.legend": "توضيح",
+          "wiz.clarify.note": "بضعة أسئلة سريعة تساعدنا على تحديد نطاق مشروعك بدقة. الإجابات اختيارية، لكن كلما شاركتنا المزيد كان ردّنا الأول أفضل.",
+          "wiz.clarify.loading": "جارٍ مراجعة موجزك…",
+          "wiz.clarify.ready": "يبدو موجزك مكتملًا — يمكنك المتابعة مباشرةً إلى المراجعة.",
+          "wiz.clarify.readyBtn": "المتابعة إلى المراجعة",
+          "wiz.q.ph": "إجابتك (اختيارية، لكنها تساعدنا على تحديد النطاق بشكل أسرع)",
+          "wiz.q1": "من هو الجمهور أو المستخدم الرئيسي لهذا المشروع، وما أهمّ شيء واحد ينبغي أن يتمكّن من القيام به؟",
+          "wiz.q2": "هل لديك هوية بصرية أو محتوى أو حسابات قائمة (نطاق، بيانات دخول، نصوص، صور) ينبغي أن نبني عليها، أم سنبدأ من الصفر؟",
+          "wiz.q3": "ما الإطار الزمني المثالي ونطاق الميزانية المتوقّع لهذا المشروع؟",
+          "wiz.p4.legend": "المراجعة والإرسال",
+          "wiz.back": "السابق",
+          "wiz.next": "التالي",
+          "wiz.submit": "إرسال الموجز",
+          "wiz.submitting": "جارٍ إرسال موجزك…",
+          "wiz.stepAnnounce": "الخطوة {n} من 4: {name}",
+          "wiz.err.title": "يُرجى إدخال عنوان لمشروعك (من 3 إلى 200 حرف).",
+          "wiz.err.desc": "يُرجى وصف مشروعك بما لا يقلّ عن 10 أحرف (بحدّ أقصى 5,000).",
+          "wiz.err.email": "يُرجى إدخال عنوان بريد إلكتروني صحيح.",
+          "wiz.err.phone": "يُرجى إدخال رقم هاتف صحيح (من 7 إلى 25 حرفًا؛ أرقام ومسافات و+ و- وأقواس).",
+          "wiz.err.fix": "يُرجى تصحيح الحقول المميَّزة.",
+          "wiz.err.ref": "يجب أن تبدأ الروابط المرجعية بـ http:// أو https:// (بحدّ أقصى 500 حرف). اترك الصفّ فارغًا لتخطّيه.",
+          "wiz.err.maxFiles": "يمكنك إرفاق ما يصل إلى {n} من الملفات.",
+          "wiz.err.fileType": "الملف \"{name}\" ليس من أنواع الملفات المقبولة.",
+          "wiz.err.fileName": "يتعذّر علينا تخزين اسم الملف \"{name}\" — يُرجى إعادة تسميته باستخدام أحرف أو أرقام ثم المحاولة مرة أخرى.",
+          "wiz.err.fileEmpty": "الملف \"{name}\" فارغ.",
+          "wiz.err.fileSize": "حجم الملف \"{name}\" يتجاوز {size}.",
+          "wiz.err.fileTotal": "تتجاوز المرفقات الحدّ الإجمالي البالغ {size}.",
+          "wiz.file.removeAria": "إزالة {name}",
+          "wiz.filesOne": "تم إرفاق ملف واحد.",
+          "wiz.filesMany": "تم إرفاق {n} من الملفات.",
+          "wiz.announceReady": "يبدو موجزك مكتملًا.",
+          "wiz.announceQuestions": "أصبحت بضعة أسئلة توضيحية جاهزة لك.",
+          "wiz.rv.title": "العنوان",
+          "wiz.rv.desc": "الوصف",
+          "wiz.rv.email": "البريد الإلكتروني",
+          "wiz.rv.phone": "الهاتف",
+          "wiz.rv.refs": "المراجع",
+          "wiz.rv.colors": "نظام الألوان",
+          "wiz.rv.files": "الملفات",
+          "wiz.rv.clar": "التوضيحات",
+          "wiz.rv.mode": "الوضع",
+          "wiz.rv.colorsLbl": "الألوان",
+          "wiz.rv.notes": "ملاحظات",
+          "wiz.rv.answeredOne": "تمت الإجابة عن سؤال واحد",
+          "wiz.rv.answeredMany": "تمت الإجابة عن {n} من الأسئلة",
+          "wiz.err.generic": "حدث خطأ ما — يُرجى المحاولة مرة أخرى.",
+          "wiz.err.network": "خطأ في الشبكة — يُرجى التحقق من اتصالك ثم المحاولة مرة أخرى.",
+          "wiz.done.h": "تم استلام الموجز",
+          "wiz.done.ref": "الرقم المرجعي",
+          "wiz.done.reply": "سنوافيك بالرد على {email} خلال يوم عمل واحد.",
+          "proc.eyebrow": "آلية العمل",
+          "proc.h2": "من الفكرة إلى الإطلاق في أربع خطوات",
+          "proc.p": "مهندس أول ومنظومتنا للبناء بالذكاء الاصطناعي يأخذانك من الموجز إلى منتج جاهز — وأنت في صميم العملية في كل مرحلة.",
+          "proc.s1.h": "شاركنا موجزك",
+          "proc.s1.p": "دقيقتان في النموذج الموجَّه. أرفق المستندات والمواقع المرجعية وتفضيلاتك اللونية.",
+          "proc.s2.h": "نحدّد النطاق",
+          "proc.s2.p": "يستوضح الذكاء الاصطناعي لدينا التفاصيل؛ ثم يراجعها مهندس أول ويوافيك بخطة خلال يوم عمل واحد.",
+          "proc.s3.h": "نبني",
+          "proc.s3.p": "هندسة مسرَّعة بالذكاء الاصطناعي وبإشراف خبراء كبار. تشاهد عروضًا أسبوعية للتقدّم المحرز، لا صندوقًا أسود.",
+          "proc.s4.h": "تُطلق منتجك",
+          "proc.s4.p": "تمتلك الشيفرة والمستودع والنشر بالكامل. ونبقى إلى جانبك للدعم والتطوير المستمر.",
+          "proc.ctaBrief": "ابدأ موجزك",
+          "proc.ctaAsk": "اطرح سؤالًا",
+          "partners.eyebrow": "جدار العملاء",
+          "partners.h2": "شركاء موثوقون",
+          "marquee.pause": "إيقاف حركة الشعارات مؤقتًا",
+          "marquee.play": "تشغيل حركة الشعارات",
+          "svc.eyebrow": "مجالات عملنا",
+          "svc.h2": "ثلاثة تخصصات، ومعيار واحد للتميّز",
+          "svc.p": "مستشارون كبار سبق أن أطلقوا برمجيات إلى بيئة الإنتاج، وأوصلوا عتادًا إلى التحليق الفعلي، ورخّصوا مفاعلات نووية — ينخرطون مباشرةً في صميم برنامجك.",
+          "svc.cs.h": "علوم الحاسوب والبرمجيات",
+          "svc.cs.p": "استشارات برمجية تغطي دورة الحياة كاملةً — من مراجعات البنية المعمارية إلى منصات بجاهزية الإنتاج تتوسّع بثبات تحت أحمال التشغيل الفعلية.",
+          "svc.cs.l1": "هندسة البرمجيات ومعماريتها",
+          "svc.cs.l2": "التحوّل السحابي وDevOps",
+          "svc.cs.l3": "أنظمة AI / ML",
+          "svc.cs.l4": "الأمن السيبراني ونموذج انعدام الثقة",
+          "svc.cs.l5": "هندسة البيانات وتحليلاتها",
+          "svc.aero.h": "هندسة الطيران والفضاء",
+          "svc.aero.p": "دعم هندسي بمستوى المهام الحرجة عبر دورة حياة المركبة الطائرة كاملةً، من دراسات المفهوم إلى شهادات الاعتماد.",
+          "svc.aero.l1": "هندسة المهام والأنظمة",
+          "svc.aero.l2": "التوجيه والملاحة والتحكم (GNC)",
+          "svc.aero.l3": "تحليل الدفع والهياكل",
+          "svc.aero.l4": "إلكترونيات وبرمجيات الطيران",
+          "svc.aero.l5": "دعم الاختبارات والاعتماد",
+          "svc.nuc.h": "الهندسة النووية",
+          "svc.nuc.p": "استشارات نووية تضع السلامة في المقام الأول، وتستند إلى صرامة تنظيمية، وشيفرات حسابية مُتحقَّق من صحتها، ومحاكاة متقدمة.",
+          "svc.nuc.l1": "تحليل أمان المفاعلات",
+          "svc.nuc.l2": "دعم الترخيص والشؤون التنظيمية (NRC)",
+          "svc.nuc.l3": "الهيدروليكا الحرارية والحرجيّة",
+          "svc.nuc.l4": "التدريع الإشعاعي",
+          "svc.nuc.l5": "التخطيط للإخراج من الخدمة",
+          "why.eyebrow": "لماذا تختارنا",
+          "why.h2": "صُمِّمنا لبرامج لا يكون فيها الفشل خيارًا.",
+          "why.1.h": "فعالية التكلفة",
+          "why.1.p": "خبرة رفيعة المستوى دون الأعباء الإدارية للشركات الاستشارية الكبرى. نحدّد نطاق العمل برشاقة، وننفّذ بسرعة، ونربط كل مهمة استشارية بنتائج هندسية قابلة للقياس.",
+          "why.2.h": "تقنيات مبتكرة",
+          "why.2.p": "من المنصات السحابية الأصيلة والذكاء الاصطناعي التطبيقي إلى هندسة الأنظمة القائمة على النماذج، ننقل منظومة الأدوات الحديثة إلى البرامج المكبَّلة بالأنظمة القديمة.",
+          "why.3.h": "خبرة تخصصية عميقة",
+          "why.3.p": "مهندسون من حملة الدكتوراه أطلقوا برمجيات طيران، ورخّصوا مفاعلات، وأمّنوا بنى تحتية حرجة — لا مجرد ممارسين عموميين يقرؤون من دليل جاهز.",
+          "why.4.h": "قابلية التوسّع",
+          "why.4.p": "استعن بمتخصص واحد أو بفريق متكامل متعدد التخصصات. نتوسّع مع برنامجك من دراسة الجدوى وحتى التشغيل المستدام.",
+          "metrics.aria": "مؤشرات الشركة",
+          "metrics.years": "سنوات من سجل حافل بالإنجازات",
+          "metrics.satisfaction": "رضا العملاء",
+          "metrics.engineers": "من كبار المهندسين وحملة الدكتوراه",
+          "metrics.projects": "مشروعًا مُنجَزًا",
+          "about.eyebrow": "عن CosmoLabs",
+          "about.h2": "أسّسها مهندسون، وتُدار بعقلية المهمات",
+          "about.p1": "<strong>تأسست CosmoLabs على يد مهندسين</strong> أمضوا مسيرتهم المهنية داخل برامج شديدة المتطلبات — من إطلاق منصات سحابية على نطاق عالمي، إلى دمج عتاد الطيران، والدفاع عن ملفات أمان المفاعلات. أنشأنا الشركة انطلاقًا من قناعة بسيطة: الأعمال البالغة الأهمية تستحق مستشارين مارسوا هذا العمل بأنفسهم.",
+          "about.p2": "نجمع بين <strong>رشاقة الشركات الناشئة وصرامة المختبرات الوطنية</strong>. تتحرك فرقنا في أسابيع لا في أرباع سنوية — ومع ذلك، فإن كل مُخرَج، سواء أكان مراجعة معمارية، أم حملة محاكاة GNC، أم ملف ترخيص، مصمَّم بإتقان ليصمد أمام تدقيق مجالس الإدارة والجهات التنظيمية.",
+          "about.p3": "تخدم CosmoLabs اليوم <strong>مديري التقنية (CTO) ومديري المعلومات (CIO) ومديري البرامج</strong> عبر البرامج التجارية والفيدرالية، بوصفها الجسر التقني الموثوق بين خرائط الطريق الطموحة والواقع الهندسي المطلوب لتحقيقها.",
+          "about.chipCommercial": "تجاري",
+          "about.chipFederal": "فيدرالي",
+          "about.chipRnd": "البحث والتطوير",
+          "about.chipCleared": "كوادر بتصاريح أمنية",
+          "about.chipIso": "عمليات بمستوى ISO",
+          "q.eyebrow": "شهادات العملاء",
+          "q.h2": "ماذا يقول شركاؤنا",
+          "q.1.text": "أعادت CosmoLabs تصميم معمارية هجرتنا السحابية المتعددة المناطق، وخفّضت إنفاق البنية التحتية بنسبة من خانتين، مع تعزيز الأمن عبر مئات الخدمات. إنهم يعملون وكأنهم امتداد لفريقنا الهندسي.",
+          "q.1.role": "مدير البنية التحتية",
+          "q.2.text": "حدّث فريقهم العمود الفقري للبيانات في منصة سلسلة الإمداد لدينا — من نماذج التنبؤ بالطلب إلى بيانات القياس عن بُعد على مستوى المتاجر. جاء التسليم في موعده، وضمن الميزانية، وبتوثيق دقيق.",
+          "q.2.role": "نائب الرئيس للتكنولوجيا",
+          "q.3.text": "كان تدقيق برمجيات إلكترونيات الطيران الذي أجرته CosmoLabs قبيل دورة الاعتماد لدينا هو الأشمل الذي شهدناه على الإطلاق. جاءت النتائج دقيقة، ومرتّبة بحسب الأولوية، وقابلة للتنفيذ الفوري.",
+          "q.3.role": "مدير الهندسة",
+          "q.rated": "تقييم 5 من 5 نجوم",
+          "ind.eyebrow": "القطاعات التي نخدمها",
+          "ind.h2": "خبرة عميقة في القطاعات الخاضعة للتنظيم وذات المخاطر العالية",
+          "ind.1.h": "الطيران والفضاء والدفاع",
+          "ind.1.p": "أنظمة الطيران وبرامج الأقمار الصناعية والمنصات الدفاعية.",
+          "ind.2.h": "الطاقة والمرافق",
+          "ind.2.p": "تحديث الشبكات الكهربائية والتوليد النووي.",
+          "ind.3.h": "القطاع الحكومي والفيدرالي",
+          "ind.3.p": "FedRAMP وNRC وتسليم أنظمة المهام.",
+          "ind.4.h": "الرعاية الصحية",
+          "ind.4.p": "منصات بيانات آمنة وهندسة الامتثال.",
+          "ind.5.h": "المالية والتقنية المالية",
+          "ind.5.p": "بنية تحتية للتداول تتميز بالمرونة وزمن استجابة منخفض.",
+          "ind.6.h": "التصنيع",
+          "ind.6.p": "الأتمتة والتوائم الرقمية وإنترنت الأشياء الصناعي (IoT).",
+          "ind.7.h": "النقل والخدمات اللوجستية",
+          "ind.7.p": "تحسين المسارات والقياس عن بُعد ومنصات إدارة الأساطيل.",
+          "ind.8.h": "البحوث والأوساط الأكاديمية",
+          "ind.8.p": "الحوسبة عالية الأداء (HPC) وحملات المحاكاة والشراكات المخبرية.",
+          "c.eyebrow": "تواصل معنا",
+          "c.h2": "احصل على استشارة مجانية",
+          "c.p": "حدّثنا عن برنامجك؛ وسيردّ عليك مهندس أول — لا مندوب مبيعات — خلال يوم عمل واحد.",
+          "c.emailLbl": "البريد الإلكتروني",
+          "c.respLbl": "مدة الرد",
+          "c.respVal": "خلال يوم عمل واحد",
+          "c.projLbl": "هل لديك مشروع تفكّر فيه؟",
+          "c.projLink": "ابدأ موجزًا منظّمًا ←",
+          "c.form.h": "ابدأ الحوار",
+          "c.name.label": "الاسم الكامل",
+          "c.name.ph": "سارة الأحمد",
+          "c.msg.label": "كيف يمكننا مساعدتك؟",
+          "c.msg.ph": "صف برنامجك وجدوله الزمني وأهدافك بإيجاز…",
+          "c.btn": "اطلب استشارة مجانية",
+          "c.hint": "عند الإرسال تُفتح رسالة بريد إلكتروني معبّأة مسبقًا في تطبيق البريد لديك — وهذا النموذج نفسه لا يخزّن أي بيانات.",
+          "c.subject": "طلب استشارة مجانية — {name}",
+          "c.status": "جارٍ فتح تطبيق البريد الإلكتروني لديك — رسالتك جاهزة للإرسال."
+        },
+        fr: {
+          "meta.title": "CosmoLabs — Conseil en informatique, ingénierie aérospatiale & nucléaire",
+          "meta.desc": "CosmoLabs est un cabinet de conseil pluridisciplinaire qui fournit des services experts en informatique, en ingénierie aérospatiale et en ingénierie nucléaire pour les programmes critiques, commerciaux comme fédéraux.",
+          "a11y.skip": "Aller au contenu principal",
+          "nav.brandAria": "CosmoLabs — retour en haut de page",
+          "nav.primaryAria": "Principale",
+          "nav.mobileAria": "Mobile",
+          "nav.openMenu": "Ouvrir le menu",
+          "nav.closeMenu": "Fermer le menu",
+          "nav.home": "Accueil",
+          "nav.start": "Démarrer un projet",
+          "nav.process": "Notre méthode",
+          "nav.services": "Services",
+          "nav.about": "À propos",
+          "nav.industries": "Secteurs",
+          "nav.contact": "Contact",
+          "nav.cta": "Lancer votre projet",
+          "lang.label": "Langue",
+          "hero.tagline": "Là où la <span class=\"grad-text\">science</span> est la norme,<br> l'excellence est affaire d'<span class=\"grad-text\">ingénierie</span>",
+          "hero.h1": "Nous proposons des services de conseil professionnels en informatique, en ingénierie aérospatiale et en ingénierie nucléaire.",
+          "hero.sub": "Reprenez la main sur vos programmes critiques. Dites-nous ce que vous devez construire — nous en définissons le périmètre sous un jour ouvré.",
+          "hero.ctaServices": "Nos services",
+          "hero.note": "Les équipes d'ingénierie du Fortune 500 comme les programmes fédéraux nous font confiance.",
+          "cta.h2": "Prêt à bâtir quelque chose d'exceptionnel ?",
+          "cta.p": "Rédigez votre brief dès maintenant — un ingénieur senior en définira le périmètre sous un jour ouvré.",
+          "f.blurb": "Conseil pluridisciplinaire en informatique, en ingénierie aérospatiale et en ingénierie nucléaire — pour les programmes où l'excellence est affaire d'ingénierie.",
+          "f.quick": "Liens rapides",
+          "f.consult": "Consultation gratuite",
+          "f.copyright": "© 2026 CosmoLabs. Tous droits réservés.",
+          "f.tagline": "Là où la science est la norme, l'excellence est affaire d'ingénierie",
+          "start.eyebrow": "Démarrer un projet",
+          "start.h2": "Que pouvons-nous faire pour vous ?",
+          "start.p": "Dites-nous ce que vous devez construire — une plateforme, un pipeline de simulation, un système critique. Un ingénieur senior en définit le périmètre et se met au travail.",
+          "start.trustFree": "Gratuit et sans engagement",
+          "start.trustReply": "Réponse sous un jour ouvré",
+          "start.trustPrivate": "Vos fichiers restent confidentiels",
+          "wiz.progressAria": "Progression du formulaire",
+          "wiz.step1": "Brief",
+          "wiz.step2": "Détails",
+          "wiz.step3": "Précisions",
+          "wiz.step4": "Récapitulatif",
+          "wiz.p1.legend": "Le brief",
+          "wiz.title.label": "Titre du projet",
+          "wiz.title.ph": "ex. Tableau de bord de télémétrie pour notre réseau de stations sol",
+          "wiz.desc.label": "Que souhaitez-vous faire développer ?",
+          "wiz.desc.ph": "Décrivez le projet, ses objectifs, les fonctionnalités dont vous savez déjà avoir besoin, et tout autre élément important…",
+          "wiz.email.label": "E-mail professionnel",
+          "wiz.email.ph": "camille@entreprise.fr",
+          "wiz.phone.label": "Téléphone",
+          "wiz.phone.ph": "+33 1 23 45 67 89",
+          "wiz.p2.legend": "Design & références",
+          "wiz.refs.h": "Sites web ou applications de référence",
+          "wiz.refs.opt": "(facultatif, jusqu'à 5)",
+          "wiz.refs.add": "+ Ajouter une référence",
+          "wiz.ref.urlAria": "URL de la référence",
+          "wiz.ref.notePh": "Qu'est-ce qui vous plaît ? (facultatif)",
+          "wiz.ref.noteAria": "Note sur la référence",
+          "wiz.ref.removeAria": "Supprimer cette référence",
+          "wiz.colors.h": "Palette de couleurs",
+          "wiz.colorModeAria": "Préférence d'interface claire ou sombre",
+          "wiz.mode.light": "Clair",
+          "wiz.mode.dark": "Sombre",
+          "wiz.mode.either": "Indifférent",
+          "wiz.colors.add": "+ Ajouter une couleur de marque",
+          "wiz.color.aria": "Couleur de marque {n}",
+          "wiz.color.removeAria": "Supprimer cette couleur",
+          "wiz.colorNotes.label": "Notes sur les couleurs",
+          "wiz.opt": "(facultatif)",
+          "wiz.colorNotes.ph": "ex. En harmonie avec notre logo existant ; éviter le rouge vif",
+          "wiz.docs.h": "Documents",
+          "wiz.drop.main": "<strong>Glissez-déposez vos fichiers ici</strong> ou cliquez pour parcourir",
+          "wiz.drop.hint": "{types} — jusqu'à {files} fichiers, {size} chacun, {total} au total.",
+          "wiz.p3.legend": "Précisions",
+          "wiz.clarify.note": "Quelques questions rapides nous aident à cadrer votre projet avec précision. Les réponses sont facultatives, mais plus vous nous en dites, plus notre première réponse sera pertinente.",
+          "wiz.clarify.loading": "Analyse de votre brief…",
+          "wiz.clarify.ready": "Votre brief semble complet — vous pouvez passer directement au récapitulatif.",
+          "wiz.clarify.readyBtn": "Passer au récapitulatif",
+          "wiz.q.ph": "Votre réponse (facultative, mais elle nous aide à cadrer plus vite)",
+          "wiz.q1": "Quel est le public ou l’utilisateur principal de ce projet, et quelle est la chose la plus importante qu’il doit pouvoir accomplir ?",
+          "wiz.q2": "Disposez-vous déjà d’une identité de marque, de contenus ou de comptes existants (domaine, identifiants, textes, images) sur lesquels nous appuyer, ou partons-nous de zéro ?",
+          "wiz.q3": "Quel est votre calendrier idéal et quelle fourchette budgétaire envisagez-vous pour ce projet ?",
+          "wiz.p4.legend": "Récapitulatif & envoi",
+          "wiz.back": "Retour",
+          "wiz.next": "Suivant",
+          "wiz.submit": "Envoyer le brief",
+          "wiz.submitting": "Envoi de votre brief…",
+          "wiz.stepAnnounce": "Étape {n} sur 4 : {name}",
+          "wiz.err.title": "Veuillez donner un titre à votre projet (3 à 200 caractères).",
+          "wiz.err.desc": "Veuillez décrire votre projet en 10 caractères minimum (5 000 max).",
+          "wiz.err.email": "Veuillez saisir une adresse e-mail valide.",
+          "wiz.err.phone": "Veuillez saisir un numéro de téléphone valide (7 à 25 caractères ; chiffres, espaces, +, -, parenthèses).",
+          "wiz.err.fix": "Veuillez corriger les champs signalés.",
+          "wiz.err.ref": "Les liens de référence doivent commencer par http:// ou https:// (500 caractères max). Laissez la ligne vide pour l’ignorer.",
+          "wiz.err.maxFiles": "Vous pouvez joindre jusqu’à {n} fichiers.",
+          "wiz.err.fileType": "Le format du fichier « {name} » n’est pas accepté.",
+          "wiz.err.fileName": "Le nom du fichier « {name} » ne peut pas être enregistré — veuillez le renommer en utilisant des lettres ou des chiffres, puis réessayer.",
+          "wiz.err.fileEmpty": "Le fichier « {name} » est vide.",
+          "wiz.err.fileSize": "Le fichier « {name} » dépasse {size}.",
+          "wiz.err.fileTotal": "Les pièces jointes dépassent la limite totale de {size}.",
+          "wiz.file.removeAria": "Supprimer {name}",
+          "wiz.filesOne": "1 fichier joint.",
+          "wiz.filesMany": "{n} fichiers joints.",
+          "wiz.announceReady": "Votre brief semble complet.",
+          "wiz.announceQuestions": "Quelques questions de clarification sont prêtes.",
+          "wiz.rv.title": "Titre",
+          "wiz.rv.desc": "Description",
+          "wiz.rv.email": "E-mail",
+          "wiz.rv.phone": "Téléphone",
+          "wiz.rv.refs": "Références",
+          "wiz.rv.colors": "Palette de couleurs",
+          "wiz.rv.files": "Fichiers",
+          "wiz.rv.clar": "Clarifications",
+          "wiz.rv.mode": "Mode",
+          "wiz.rv.colorsLbl": "Couleurs",
+          "wiz.rv.notes": "Notes",
+          "wiz.rv.answeredOne": "1 réponse apportée",
+          "wiz.rv.answeredMany": "{n} réponses apportées",
+          "wiz.err.generic": "Une erreur est survenue — veuillez réessayer.",
+          "wiz.err.network": "Erreur réseau — veuillez vérifier votre connexion et réessayer.",
+          "wiz.done.h": "Brief bien reçu",
+          "wiz.done.ref": "Référence",
+          "wiz.done.reply": "Nous vous répondrons à l’adresse {email} sous un jour ouvré.",
+          "proc.eyebrow": "Notre méthode",
+          "proc.h2": "De l’idée au lancement en quatre étapes",
+          "proc.p": "Un ingénieur senior et notre système de build IA vous mènent du brief au produit livré — en vous impliquant à chaque étape.",
+          "proc.s1.h": "Partagez votre brief",
+          "proc.s1.p": "Deux minutes dans le formulaire guidé. Joignez vos documents, vos sites de référence et vos préférences de couleurs.",
+          "proc.s2.h": "Nous cadrons le projet",
+          "proc.s2.p": "Notre IA clarifie les détails ; un ingénieur senior passe l’ensemble en revue et vous adresse un plan sous un jour ouvré.",
+          "proc.s3.h": "Nous construisons",
+          "proc.s3.p": "Une ingénierie accélérée par l’IA, supervisée par des seniors. Vous voyez des démos d’avancement chaque semaine, pas une boîte noire.",
+          "proc.s4.h": "Vous lancez",
+          "proc.s4.p": "Le code, le dépôt et le déploiement vous appartiennent. Nous restons à vos côtés pour le support et les itérations.",
+          "proc.ctaBrief": "Démarrer votre brief",
+          "proc.ctaAsk": "Poser une question",
+          "partners.eyebrow": "Références clients",
+          "partners.h2": "Des partenaires de confiance",
+          "marquee.pause": "Mettre en pause l’animation des logos",
+          "marquee.play": "Reprendre l’animation des logos",
+          "svc.eyebrow": "Ce que nous faisons",
+          "svc.h2": "Trois disciplines, une même exigence d’excellence",
+          "svc.p": "Des consultants seniors qui ont livré du logiciel en production, fait voler du matériel et fait autoriser des réacteurs — intégrés directement à votre programme.",
+          "svc.cs.h": "Informatique & logiciel",
+          "svc.cs.p": "Un conseil logiciel sur tout le cycle de vie — des revues d’architecture aux plateformes de niveau production qui tiennent la charge en conditions réelles.",
+          "svc.cs.l1": "Ingénierie & architecture logicielles",
+          "svc.cs.l2": "Transformation cloud & DevOps",
+          "svc.cs.l3": "Systèmes IA / ML",
+          "svc.cs.l4": "Cybersécurité & zero-trust",
+          "svc.cs.l5": "Ingénierie des données & analytique",
+          "svc.aero.h": "Ingénierie aérospatiale",
+          "svc.aero.p": "Un soutien d’ingénierie de niveau mission sur l’ensemble du cycle de vie des véhicules aérospatiaux, des études de concept à la certification.",
+          "svc.aero.l1": "Ingénierie mission & systèmes",
+          "svc.aero.l2": "Guidage, navigation & contrôle (GNC)",
+          "svc.aero.l3": "Analyse propulsion & structures",
+          "svc.aero.l4": "Avionique & logiciel de vol",
+          "svc.aero.l5": "Accompagnement essais & certification",
+          "svc.nuc.h": "Ingénierie nucléaire",
+          "svc.nuc.p": "Un conseil nucléaire où la sûreté prime, ancré dans la rigueur réglementaire, des codes de calcul validés et la simulation avancée.",
+          "svc.nuc.l1": "Analyse de sûreté des réacteurs",
+          "svc.nuc.l2": "Autorisation & appui réglementaire (NRC)",
+          "svc.nuc.l3": "Thermohydraulique & criticité",
+          "svc.nuc.l4": "Protection contre les rayonnements",
+          "svc.nuc.l5": "Planification du démantèlement",
+          "why.eyebrow": "Pourquoi nous choisir",
+          "why.h2": "Conçu pour les programmes où l'échec n'est pas une option.",
+          "why.1.h": "Maîtrise des coûts",
+          "why.1.p": "Une expertise de haut niveau sans les frais de structure des grands cabinets. Nous cadrons au plus juste, livrons vite et lions chaque mission à des résultats d'ingénierie mesurables.",
+          "why.2.h": "Technologies innovantes",
+          "why.2.p": "Des plateformes cloud natives à l'ingénierie système fondée sur les modèles, en passant par l'IA appliquée, nous apportons la chaîne d'outils moderne aux programmes ancrés dans des systèmes hérités.",
+          "why.3.h": "Expertise métier approfondie",
+          "why.3.p": "Des ingénieurs de niveau doctorat qui ont livré des logiciels de vol, fait autoriser des réacteurs et sécurisé des infrastructures critiques — pas des généralistes qui récitent un manuel.",
+          "why.4.h": "Évolutivité",
+          "why.4.p": "Mobilisez un spécialiste unique ou une équipe pluridisciplinaire complète. Nous évoluons avec votre programme, de l'étude de faisabilité jusqu'à l'exploitation pérenne.",
+          "metrics.aria": "Chiffres clés de l'entreprise",
+          "metrics.years": "Ans d'expérience éprouvée",
+          "metrics.satisfaction": "Satisfaction client",
+          "metrics.engineers": "Docteurs & ingénieurs seniors",
+          "metrics.projects": "Projets livrés",
+          "about.eyebrow": "À propos de CosmoLabs",
+          "about.h2": "Fondée par des ingénieurs, pilotée comme une mission",
+          "about.p1": "<strong>CosmoLabs a été fondée par des ingénieurs</strong> qui ont passé leur carrière au cœur de programmes exigeants — déploiement de plateformes cloud à l'échelle mondiale, intégration de matériel de vol, défense de dossiers de sûreté de réacteurs. Nous avons créé le cabinet avec une conviction simple : les programmes critiques méritent des consultants qui ont réellement fait le travail.",
+          "about.p2": "Nous combinons <strong>l'agilité d'une startup et la rigueur d'un laboratoire national</strong>. Nos équipes avancent en semaines, pas en trimestres — et chaque livrable, qu'il s'agisse d'une revue d'architecture, d'une campagne de simulation GNC ou d'un dossier d'autorisation, est conçu pour résister à l'examen d'un conseil d'administration comme d'un régulateur.",
+          "about.p3": "Aujourd'hui, CosmoLabs accompagne <strong>les CTO, DSI et directeurs de programme</strong> du secteur commercial comme fédéral, en jouant le rôle de passerelle technique de confiance entre des feuilles de route ambitieuses et la réalité d'ingénierie qu'exige leur concrétisation.",
+          "about.chipCommercial": "Commercial",
+          "about.chipFederal": "Fédéral",
+          "about.chipRnd": "R&D",
+          "about.chipCleared": "Personnel habilité",
+          "about.chipIso": "Processus de niveau ISO",
+          "q.eyebrow": "Témoignages",
+          "q.h2": "Ce que disent nos partenaires",
+          "q.1.text": "CosmoLabs a repensé l'architecture de notre migration cloud multi-régions, avec à la clé une réduction à deux chiffres de nos dépenses d'infrastructure et une sécurité renforcée sur des centaines de services. Ils travaillent comme une véritable extension de nos propres équipes d'ingénierie.",
+          "q.1.role": "Directeur de l'infrastructure",
+          "q.2.text": "Leur équipe a modernisé le socle de données de notre plateforme supply chain — des modèles de prévision de la demande à la télémétrie par magasin. La livraison a été conforme au calendrier et au budget, et rigoureusement documentée.",
+          "q.2.role": "Vice-président Technologie",
+          "q.3.text": "L'audit du logiciel avionique mené par CosmoLabs en amont de notre cycle de certification est le plus rigoureux que nous ayons connu. Les constats étaient précis, hiérarchisés et immédiatement exploitables.",
+          "q.3.role": "Responsable ingénierie",
+          "q.rated": "Noté 5 étoiles sur 5",
+          "ind.eyebrow": "Nos secteurs d'intervention",
+          "ind.h2": "Une expertise approfondie dans les secteurs réglementés à hauts enjeux",
+          "ind.1.h": "Aérospatiale & Défense",
+          "ind.1.p": "Systèmes de vol, programmes satellitaires & plateformes de défense.",
+          "ind.2.h": "Énergie & Services publics",
+          "ind.2.p": "Modernisation des réseaux & production nucléaire.",
+          "ind.3.h": "Secteur public & Fédéral",
+          "ind.3.p": "FedRAMP, NRC & livraison de systèmes de mission.",
+          "ind.4.h": "Santé",
+          "ind.4.p": "Plateformes de données sécurisées & ingénierie de la conformité.",
+          "ind.5.h": "Finance & Fintech",
+          "ind.5.p": "Infrastructures de trading résilientes et à faible latence.",
+          "ind.6.h": "Industrie manufacturière",
+          "ind.6.p": "Automatisation, jumeaux numériques & IoT industriel.",
+          "ind.7.h": "Transport & Logistique",
+          "ind.7.p": "Optimisation d'itinéraires, télémétrie & plateformes de gestion de flotte.",
+          "ind.8.h": "Recherche & Monde académique",
+          "ind.8.p": "HPC, campagnes de simulation & partenariats avec les laboratoires.",
+          "c.eyebrow": "Contact",
+          "c.h2": "Obtenez une consultation gratuite",
+          "c.p": "Parlez-nous de votre programme. Un ingénieur senior — et non un commercial — vous répondra sous un jour ouvré.",
+          "c.emailLbl": "E-mail",
+          "c.respLbl": "Délai de réponse",
+          "c.respVal": "Sous un jour ouvré",
+          "c.projLbl": "Un projet en tête ?",
+          "c.projLink": "Démarrer un brief structuré →",
+          "c.form.h": "Engagez la conversation",
+          "c.name.label": "Nom complet",
+          "c.name.ph": "Marie Dupont",
+          "c.msg.label": "Comment pouvons-nous vous aider ?",
+          "c.msg.ph": "Décrivez brièvement votre programme, votre calendrier et vos objectifs…",
+          "c.btn": "Demander une consultation gratuite",
+          "c.hint": "L'envoi ouvre un e-mail prérempli dans votre messagerie — ce formulaire n'enregistre aucune donnée.",
+          "c.subject": "Demande de consultation gratuite — {name}",
+          "c.status": "Ouverture de votre messagerie — votre message est prêt à être envoyé."
+        }
+      };
+
+      var current = 'en';
+
+      function t(key) {
+        var d = I18N[current];
+        if (d && typeof d[key] === 'string') return d[key];
+        return typeof I18N.en[key] === 'string' ? I18N.en[key] : key;
+      }
+      function fmt(s, vars) {
+        return String(s).replace(/\{(\w+)\}/g, function (m, k) {
+          return vars && Object.prototype.hasOwnProperty.call(vars, k) ? vars[k] : m;
+        });
+      }
+
+      function applyLang(lang, persist) {
+        if (!LANG_META[lang]) lang = 'en';
+        current = lang;
+        var root = document.documentElement;
+        root.lang = lang;
+        root.dir = LANG_META[lang].dir;
+
+        document.title = t('meta.title');
+        var metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute('content', t('meta.desc'));
+
+        document.querySelectorAll('[data-i18n]').forEach(function (el) {
+          el.textContent = t(el.getAttribute('data-i18n'));
+        });
+        document.querySelectorAll('[data-i18n-html]').forEach(function (el) {
+          el.innerHTML = t(el.getAttribute('data-i18n-html'));
+        });
+        document.querySelectorAll('[data-i18n-ph]').forEach(function (el) {
+          el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph')));
+        });
+        document.querySelectorAll('[data-i18n-aria]').forEach(function (el) {
+          el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
+        });
+
+        var cur = document.getElementById('lang-current');
+        if (cur) cur.textContent = LANG_META[lang].code;
+        document.querySelectorAll('#lang-menu .lang-opt').forEach(function (opt) {
+          opt.setAttribute('aria-selected', opt.getAttribute('data-lang') === lang ? 'true' : 'false');
+        });
+
+        if (persist) {
+          try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) { /* storage unavailable */ }
+        }
+        document.dispatchEvent(new CustomEvent('cosmolabs:langchange', { detail: { lang: lang } }));
+      }
+
+      function initialLang() {
+        try {
+          var q = new URLSearchParams(window.location.search).get('lang');
+          if (q && LANG_META[q]) return q;
+        } catch (e) { /* very old browser */ }
+        try {
+          var saved = localStorage.getItem(STORAGE_KEY);
+          if (saved && LANG_META[saved]) return saved;
+        } catch (e) { /* storage unavailable */ }
+        var prefs = navigator.languages || [navigator.language || 'en'];
+        for (var i = 0; i < prefs.length; i++) {
+          var p = String(prefs[i]).slice(0, 2).toLowerCase();
+          if (LANG_META[p]) return p;
+        }
+        return 'en';
+      }
+
+      function setupDropdown() {
+        var btn = document.getElementById('lang-btn');
+        var menu = document.getElementById('lang-menu');
+        if (!btn || !menu) return;
+        var opts = Array.prototype.slice.call(menu.querySelectorAll('.lang-opt'));
+
+        function isOpen() { return btn.getAttribute('aria-expanded') === 'true'; }
+        function setOpen(open, focusSelected) {
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+          menu.hidden = !open;
+          if (open && focusSelected !== false) {
+            var sel = opts.filter(function (o) { return o.getAttribute('aria-selected') === 'true'; })[0] || opts[0];
+            sel.focus();
+          }
+        }
+        function choose(opt) {
+          applyLang(opt.getAttribute('data-lang'), true);
+          setOpen(false);
+          btn.focus();
+        }
+
+        btn.addEventListener('click', function () { setOpen(!isOpen()); });
+        btn.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); setOpen(true); }
+        });
+        opts.forEach(function (opt) {
+          opt.addEventListener('click', function () { choose(opt); });
+        });
+        menu.addEventListener('keydown', function (e) {
+          var idx = opts.indexOf(document.activeElement);
+          if (e.key === 'Escape') { setOpen(false); btn.focus(); }
+          else if (e.key === 'ArrowDown') { e.preventDefault(); opts[(idx + 1) % opts.length].focus(); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); opts[(idx - 1 + opts.length) % opts.length].focus(); }
+          else if (e.key === 'Home') { e.preventDefault(); opts[0].focus(); }
+          else if (e.key === 'End') { e.preventDefault(); opts[opts.length - 1].focus(); }
+          else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (idx >= 0) choose(opts[idx]); }
+          else if (e.key === 'Tab') { setOpen(false); }
+        });
+        document.addEventListener('click', function (e) {
+          if (isOpen() && !btn.contains(e.target) && !menu.contains(e.target)) setOpen(false);
+        });
+      }
+
+      function init() {
+        setupDropdown();
+        applyLang(initialLang(), false);
+      }
+
+      return {
+        t: t,
+        fmt: fmt,
+        set: function (lang) { applyLang(lang, true); },
+        lang: function () { return current; },
+        init: init
+      };
+    })();
+  </script>
 
   <script>
     (function () {
@@ -2008,14 +2934,20 @@
       var toggle = document.querySelector('.nav-toggle');
       var menu = document.getElementById('mobile-menu');
 
+      var tr = window.i18n.t, fmt = window.i18n.fmt;
+
       function setMenu(open) {
         if (!toggle || !menu) return;
         toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-        toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        toggle.setAttribute('aria-label', open ? tr('nav.closeMenu') : tr('nav.openMenu'));
         menu.hidden = !open;
       }
 
       if (toggle && menu) {
+        document.addEventListener('cosmolabs:langchange', function () {
+          toggle.setAttribute('aria-label',
+            toggle.getAttribute('aria-expanded') === 'true' ? tr('nav.closeMenu') : tr('nav.openMenu'));
+        });
         toggle.addEventListener('click', function () {
           setMenu(toggle.getAttribute('aria-expanded') !== 'true');
         });
@@ -2044,10 +2976,14 @@
       var marqueeToggle = document.querySelector('.marquee-toggle');
       if (marquee && marqueeToggle) {
         marqueeToggle.hidden = false;
+        var marqueeLabel = function () {
+          marqueeToggle.textContent = marquee.classList.contains('is-paused') ? tr('marquee.play') : tr('marquee.pause');
+        };
         marqueeToggle.addEventListener('click', function () {
-          var paused = marquee.classList.toggle('is-paused');
-          marqueeToggle.textContent = paused ? 'Play logo animation' : 'Pause logo animation';
+          marquee.classList.toggle('is-paused');
+          marqueeLabel();
         });
+        document.addEventListener('cosmolabs:langchange', marqueeLabel);
       }
 
       /* ---------- Scroll-reveal (IntersectionObserver) ---------- */
@@ -2112,14 +3048,14 @@
           var email = form.elements.email.value.trim();
           var message = form.elements.message.value.trim();
 
-          var subject = 'Free consultation request — ' + name;
+          var subject = fmt(tr('c.subject'), { name: name });
           var body = message + '\n\n— ' + name + ' (' + email + ')';
           window.location.href = 'mailto:cosmolabshq@gmail.com' +
             '?subject=' + encodeURIComponent(subject) +
             '&body=' + encodeURIComponent(body);
 
           if (status) {
-            status.textContent = 'Opening your email app — your message is ready to send.';
+            status.textContent = tr('c.status');
           }
         });
       }
@@ -2135,6 +3071,8 @@
       var form = document.getElementById('wiz-form');
       if (!form || !window.fetch) return;
 
+      var tr = window.i18n.t, fmt = window.i18n.fmt;
+
       /* ---------- Config (hardcoded fallbacks match the API contract) ---------- */
       var config = {
         turnstileSiteKey: null,
@@ -2145,13 +3083,15 @@
         allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg', 'webp', 'txt', 'md', 'docx', 'xlsx', 'csv']
       };
 
-      var FALLBACK_QUESTIONS = [
-        { id: 'q1', question: 'Who is the primary audience or user of this project, and what is the single most important thing they should be able to do?' },
-        { id: 'q2', question: 'Do you have existing branding, content, or accounts (domain, logins, copy, images) we should build with, or are we starting from scratch?' },
-        { id: 'q3', question: 'What is your ideal timeline and budget range for this project?' }
-      ];
+      function fallbackQuestions() {
+        return [
+          { id: 'q1', question: tr('wiz.q1') },
+          { id: 'q2', question: tr('wiz.q2') },
+          { id: 'q3', question: tr('wiz.q3') }
+        ];
+      }
 
-      var STEP_NAMES = ['Brief', 'Details', 'Clarify', 'Review'];
+      function stepName(n) { return tr('wiz.step' + n); }
 
       var state = {
         step: 1,
@@ -2189,9 +3129,12 @@
       function updateDropHint() {
         var hint = $('wiz-drop-hint');
         if (!hint) return;
-        hint.textContent = config.allowedExtensions.join(', ').toUpperCase() +
-          ' — up to ' + config.maxFiles + ' files, ' + fmtSize(config.maxFileBytes) +
-          ' each, ' + fmtSize(config.maxTotalBytes) + ' total.';
+        hint.textContent = fmt(tr('wiz.drop.hint'), {
+          types: config.allowedExtensions.join(', ').toUpperCase(),
+          files: config.maxFiles,
+          size: fmtSize(config.maxFileBytes),
+          total: fmtSize(config.maxTotalBytes)
+        });
         var input = $('wiz-file-input');
         if (input) {
           input.setAttribute('accept', config.allowedExtensions.map(function (e) { return '.' + e; }).join(','));
@@ -2249,7 +3192,7 @@
           var legend = panels[n - 1].querySelector('.wiz-legend');
           if (legend) legend.focus();
         }
-        announce('Step ' + n + ' of 4: ' + STEP_NAMES[n - 1]);
+        announce(fmt(tr('wiz.stepAnnounce'), { n: n, name: stepName(n) }));
       }
 
       backBtn.addEventListener('click', function () {
@@ -2278,14 +3221,14 @@
           if (bad && !firstBad) firstBad = input;
         }
         var tv = t.value.trim();
-        check(t, 'wiz-title-err', tv.length < 3 || tv.length > 200, 'Please give your project a title (3–200 characters).');
+        check(t, 'wiz-title-err', tv.length < 3 || tv.length > 200, tr('wiz.err.title'));
         var dv = d.value.trim();
-        check(d, 'wiz-desc-err', dv.length < 10 || dv.length > 5000, 'Please describe your project in at least 10 characters (max 5,000).');
+        check(d, 'wiz-desc-err', dv.length < 10 || dv.length > 5000, tr('wiz.err.desc'));
         var ev = em.value.trim();
-        check(em, 'wiz-email-err', ev.length > 254 || !EMAIL_RE.test(ev), 'Please enter a valid email address.');
+        check(em, 'wiz-email-err', ev.length > 254 || !EMAIL_RE.test(ev), tr('wiz.err.email'));
         var pv = ph.value.trim();
-        check(ph, 'wiz-phone-err', !PHONE_RE.test(pv), 'Please enter a valid phone number (7–25 characters; digits, spaces, +, -, parentheses).');
-        if (firstBad) { firstBad.focus(); announce('Please fix the highlighted fields.'); return false; }
+        check(ph, 'wiz-phone-err', !PHONE_RE.test(pv), tr('wiz.err.phone'));
+        if (firstBad) { firstBad.focus(); announce(tr('wiz.err.fix')); return false; }
         return true;
       }
 
@@ -2300,14 +3243,14 @@
         var url = document.createElement('input');
         url.type = 'url'; url.className = 'wiz-in wiz-ref-url';
         url.placeholder = 'https://example.com'; url.maxLength = 500;
-        url.setAttribute('aria-label', 'Reference URL');
+        url.setAttribute('aria-label', tr('wiz.ref.urlAria'));
         var note = document.createElement('input');
         note.type = 'text'; note.className = 'wiz-in wiz-ref-note';
-        note.placeholder = 'What do you like about it? (optional)'; note.maxLength = 300;
-        note.setAttribute('aria-label', 'Reference note');
+        note.placeholder = tr('wiz.ref.notePh'); note.maxLength = 300;
+        note.setAttribute('aria-label', tr('wiz.ref.noteAria'));
         var del = document.createElement('button');
         del.type = 'button'; del.className = 'wiz-mini';
-        del.setAttribute('aria-label', 'Remove this reference');
+        del.setAttribute('aria-label', tr('wiz.ref.removeAria'));
         del.textContent = '×';
         del.addEventListener('click', function () {
           row.parentNode.removeChild(row);
@@ -2352,7 +3295,7 @@
           u.classList.toggle('wiz-invalid', !!invalid);
           if (invalid && !bad) bad = u;
         });
-        setErr(null, 'wiz-ref-err', bad ? 'Reference links must start with http:// or https:// (max 500 characters). Leave the row blank to skip it.' : '');
+        setErr(null, 'wiz-ref-err', bad ? tr('wiz.err.ref') : '');
         if (bad) { bad.focus(); return false; }
         return true;
       }
@@ -2367,13 +3310,13 @@
         wrap.className = 'wiz-swatch';
         var input = document.createElement('input');
         input.type = 'color'; input.value = hex || '#7C6CFF';
-        input.setAttribute('aria-label', 'Brand color ' + (colorCount() + 1));
+        input.setAttribute('aria-label', fmt(tr('wiz.color.aria'), { n: colorCount() + 1 }));
         var code = document.createElement('code');
         code.textContent = input.value.toUpperCase();
         input.addEventListener('input', function () { code.textContent = input.value.toUpperCase(); });
         var del = document.createElement('button');
         del.type = 'button'; del.className = 'wiz-mini';
-        del.setAttribute('aria-label', 'Remove this color');
+        del.setAttribute('aria-label', tr('wiz.color.removeAria'));
         del.textContent = '×';
         del.addEventListener('click', function () {
           wrap.parentNode.removeChild(wrap);
@@ -2422,7 +3365,7 @@
           size.className = 'wiz-file-size'; size.textContent = fmtSize(f.size);
           var del = document.createElement('button');
           del.type = 'button'; del.className = 'wiz-mini';
-          del.setAttribute('aria-label', 'Remove ' + f.name);
+          del.setAttribute('aria-label', fmt(tr('wiz.file.removeAria'), { name: f.name }));
           del.textContent = '×';
           del.addEventListener('click', function () {
             state.files.splice(idx, 1);
@@ -2449,28 +3392,28 @@
         var err = '';
         for (var i = 0; i < list.length; i++) {
           var f = list[i];
-          if (state.files.length >= config.maxFiles) { err = 'You can attach up to ' + config.maxFiles + ' files.'; break; }
+          if (state.files.length >= config.maxFiles) { err = fmt(tr('wiz.err.maxFiles'), { n: config.maxFiles }); break; }
           if (config.allowedExtensions.indexOf(fileExt(f.name)) === -1) {
-            err = '"' + f.name + '" is not an accepted file type.'; continue;
+            err = fmt(tr('wiz.err.fileType'), { name: f.name }); continue;
           }
           if (!serverAcceptsName(f.name)) {
-            err = '"' + f.name + '" has a name we can’t store — please rename it using letters or numbers and try again.'; continue;
+            err = fmt(tr('wiz.err.fileName'), { name: f.name }); continue;
           }
           if (f.size === 0) {
-            err = '"' + f.name + '" is empty.'; continue;
+            err = fmt(tr('wiz.err.fileEmpty'), { name: f.name }); continue;
           }
           if (f.size > config.maxFileBytes) {
-            err = '"' + f.name + '" is larger than ' + fmtSize(config.maxFileBytes) + '.'; continue;
+            err = fmt(tr('wiz.err.fileSize'), { name: f.name, size: fmtSize(config.maxFileBytes) }); continue;
           }
           if (totalFileBytes() + f.size > config.maxTotalBytes) {
-            err = 'Attachments exceed the ' + fmtSize(config.maxTotalBytes) + ' total limit.'; continue;
+            err = fmt(tr('wiz.err.fileTotal'), { size: fmtSize(config.maxTotalBytes) }); continue;
           }
           var dup = state.files.some(function (x) { return x.name === f.name && x.size === f.size; });
           if (!dup) state.files.push(f);
         }
         renderFiles();
         setErr(null, 'wiz-file-err', err);
-        if (!err) announce(state.files.length + ' file' + (state.files.length === 1 ? '' : 's') + ' attached.');
+        if (!err) announce(state.files.length === 1 ? tr('wiz.filesOne') : fmt(tr('wiz.filesMany'), { n: state.files.length }));
       }
       dropBtn.addEventListener('click', function () { fileInput.click(); });
       fileInput.addEventListener('change', function () {
@@ -2515,11 +3458,11 @@
           label.textContent = String(q.question).slice(0, 500);
           var ta = document.createElement('textarea');
           ta.id = qid; ta.maxLength = 2000;
-          ta.placeholder = 'Your answer (optional, but it helps us scope faster)';
+          ta.placeholder = tr('wiz.q.ph');
           field.appendChild(label); field.appendChild(ta);
           questionsWrap.appendChild(field);
         });
-        announce(ready ? 'Your brief looks complete.' : 'A few clarifying questions are ready.');
+        announce(ready ? tr('wiz.announceReady') : tr('wiz.announceQuestions'));
       }
       function enterClarify() {
         var key = briefKey();
@@ -2548,7 +3491,7 @@
           })
           .catch(function () {
             if (state.clarifyKey !== key) return;
-            renderQuestions(FALLBACK_QUESTIONS, false);
+            renderQuestions(fallbackQuestions(), false);
           });
       }
       function collectClarifications() {
@@ -2577,24 +3520,24 @@
           dl.appendChild(dt); dl.appendChild(dd);
         }
         var desc = $('wiz-desc').value.trim();
-        row('Title', $('wiz-title').value.trim());
-        row('Description', desc.length > 320 ? desc.slice(0, 320) + '…' : desc);
-        row('Email', $('wiz-email').value.trim());
-        row('Phone', $('wiz-phone').value.trim());
+        row(tr('wiz.rv.title'), $('wiz-title').value.trim());
+        row(tr('wiz.rv.desc'), desc.length > 320 ? desc.slice(0, 320) + '…' : desc);
+        row(tr('wiz.rv.email'), $('wiz-email').value.trim());
+        row(tr('wiz.rv.phone'), $('wiz-phone').value.trim());
         var refs = collectRefs();
         if (refs.length) {
-          row('References', refs.map(function (r) { return r.url + (r.note ? ' — ' + r.note : ''); }).join('\n'));
+          row(tr('wiz.rv.refs'), refs.map(function (r) { return r.url + (r.note ? ' — ' + r.note : ''); }).join('\n'));
         }
         var cs = collectColorScheme();
-        var csParts = ['Mode: ' + cs.mode];
-        if (cs.colors.length) csParts.push('Colors: ' + cs.colors.join(', '));
-        if (cs.notes) csParts.push('Notes: ' + cs.notes);
-        row('Color scheme', csParts.join('\n'));
+        var csParts = [tr('wiz.rv.mode') + ': ' + tr('wiz.mode.' + cs.mode)];
+        if (cs.colors.length) csParts.push(tr('wiz.rv.colorsLbl') + ': ' + cs.colors.join(', '));
+        if (cs.notes) csParts.push(tr('wiz.rv.notes') + ': ' + cs.notes);
+        row(tr('wiz.rv.colors'), csParts.join('\n'));
         if (state.files.length) {
-          row('Files', state.files.map(function (f) { return f.name + ' (' + fmtSize(f.size) + ')'; }).join('\n'));
+          row(tr('wiz.rv.files'), state.files.map(function (f) { return f.name + ' (' + fmtSize(f.size) + ')'; }).join('\n'));
         }
         var cl = collectClarifications();
-        if (cl.length) row('Clarifications', cl.length + ' question' + (cl.length === 1 ? '' : 's') + ' answered');
+        if (cl.length) row(tr('wiz.rv.clar'), cl.length === 1 ? tr('wiz.rv.answeredOne') : fmt(tr('wiz.rv.answeredMany'), { n: cl.length }));
         wrap.appendChild(dl);
       }
 
@@ -2646,7 +3589,7 @@
       function submitFailed(msg) {
         state.submitting = false;
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit brief';
+        submitBtn.textContent = tr('wiz.submit');
         // A Turnstile token is single-use: once the server has forwarded it to
         // siteverify, retrying with the same token is always rejected as a
         // duplicate. Reset the widget so the retry gets a fresh token.
@@ -2670,14 +3613,14 @@
           '<circle cx="12" cy="12" r="9.5"/><path d="m7.5 12.5 3 3 6-6.5"/></svg>';
         var h = document.createElement('h3');
         h.tabIndex = -1;
-        h.textContent = 'Brief received';
+        h.textContent = tr('wiz.done.h');
         var p1 = document.createElement('p');
-        p1.append('Reference ');
+        p1.append(tr('wiz.done.ref') + ' ');
         var code = document.createElement('code');
         code.textContent = id;
         p1.appendChild(code);
         var p2 = document.createElement('p');
-        p2.textContent = 'We’ll reply to ' + email + ' within one business day.';
+        p2.textContent = fmt(tr('wiz.done.reply'), { email: email });
         panel.appendChild(h); panel.appendChild(p1); panel.appendChild(p2);
         card.appendChild(panel);
         h.focus();
@@ -2688,7 +3631,7 @@
         if (state.step !== 4 || state.submitting) return;
         state.submitting = true;
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending your brief…';
+        submitBtn.textContent = tr('wiz.submitting');
         $('wiz-submit-err').hidden = true;
 
         readFilesAsBase64(state.files)
@@ -2722,12 +3665,28 @@
             if (res.data && res.data.ok === true && res.data.id) {
               showSuccess(res.data.id);
             } else {
-              submitFailed((res.data && res.data.error) || 'Something went wrong — please try again.');
+              submitFailed((res.data && res.data.error) || tr('wiz.err.generic'));
             }
           })
           .catch(function () {
-            submitFailed('Network error — please check your connection and try again.');
+            submitFailed(tr('wiz.err.network'));
           });
+      });
+
+      /* ---------- Re-render JS-owned strings when the language changes ---------- */
+      document.addEventListener('cosmolabs:langchange', function () {
+        updateDropHint();
+        renderFiles();
+        if (!state.submitting) submitBtn.textContent = tr('wiz.submit');
+        questionsWrap.querySelectorAll('textarea').forEach(function (ta) { ta.placeholder = tr('wiz.q.ph'); });
+        refsWrap.querySelectorAll('.wiz-ref-url').forEach(function (u) { u.setAttribute('aria-label', tr('wiz.ref.urlAria')); });
+        refsWrap.querySelectorAll('.wiz-ref-note').forEach(function (n) {
+          n.placeholder = tr('wiz.ref.notePh');
+          n.setAttribute('aria-label', tr('wiz.ref.noteAria'));
+        });
+        refsWrap.querySelectorAll('.wiz-mini').forEach(function (b) { b.setAttribute('aria-label', tr('wiz.ref.removeAria')); });
+        colorsWrap.querySelectorAll('.wiz-mini').forEach(function (b) { b.setAttribute('aria-label', tr('wiz.color.removeAria')); });
+        if (state.step === 4 && !state.submitting) buildReview();
       });
     })();
 
@@ -2866,6 +3825,12 @@
 
       host.appendChild(frag);
     })();
+
+    /* ============================================================
+       i18n init — runs last so every langchange listener above is
+       already registered when the saved language is applied.
+       ============================================================ */
+    if (window.i18n) window.i18n.init();
   </script>
 </body>
 </html>
