@@ -867,6 +867,49 @@
     .wiz-review dt{ font-weight:700; font-size:.88rem; color:var(--text-3); letter-spacing:.04em; text-transform:uppercase; }
     .wiz-review dd{ color:var(--text); font-size:.96rem; overflow-wrap:anywhere; white-space:pre-line; }
     .wiz-turnstile{ margin:1rem 0; min-height:0; }
+
+    /* ---------- Proof-of-work human check (step 4) ---------- */
+    .wiz-captcha{
+      display:flex; align-items:center; justify-content:space-between; gap:1rem;
+      max-width:440px; margin-top:.4rem;
+      padding:.7rem 1rem;
+      border:1px solid var(--line-strong); border-radius:12px;
+      background:rgba(255,255,255,.04);
+      transition:border-color .2s var(--ease);
+    }
+    .wiz-captcha[data-state="done"]{ border-color:rgba(69,230,255,.45); background:rgba(69,230,255,.05); }
+    .wiz-captcha[data-state="error"]{ border-color:rgba(255,143,163,.55); }
+    .wiz-captcha-btn{
+      display:inline-flex; align-items:center; gap:.85rem;
+      min-height:44px; padding:.25rem .25rem;
+      font-weight:600; font-size:.95rem; color:var(--text-2);
+      text-align:start; border-radius:8px;
+    }
+    .wiz-captcha[data-state="done"] .wiz-captcha-btn{ cursor:default; }
+    .wiz-captcha-box{
+      width:26px; height:26px; flex:none;
+      display:grid; place-items:center;
+      border:2px solid var(--line-strong); border-radius:7px;
+      background:rgba(255,255,255,.06);
+      transition:border-color .2s var(--ease), background .2s var(--ease);
+    }
+    .wiz-captcha[data-state="idle"] .wiz-captcha-btn:hover .wiz-captcha-box,
+    .wiz-captcha[data-state="error"] .wiz-captcha-btn:hover .wiz-captcha-box{ border-color:var(--cyan); }
+    .wiz-captcha .wiz-captcha-spin{ display:none; width:18px; height:18px; }
+    .wiz-captcha .wiz-captcha-tick{ display:none; width:15px; height:15px; color:#0A0F26; }
+    .wiz-captcha[data-state="working"] .wiz-captcha-box{ border-color:transparent; background:none; }
+    .wiz-captcha[data-state="working"] .wiz-captcha-spin{ display:block; }
+    .wiz-captcha[data-state="done"] .wiz-captcha-box{ background:var(--grad); border-color:transparent; }
+    .wiz-captcha[data-state="done"] .wiz-captcha-tick{ display:block; }
+    .wiz-captcha[data-state="done"] .wiz-captcha-label{ color:var(--text); }
+    .wiz-captcha[data-state="error"] .wiz-captcha-box{ border-color:rgba(255,143,163,.7); }
+    .wiz-captcha[data-state="error"] .wiz-captcha-label{ color:#FFB3C0; }
+    .wiz-captcha-brand{
+      display:inline-flex; flex-direction:column; align-items:center; gap:.2rem; flex:none;
+      font-family:"Sora", sans-serif; font-size:.62rem; font-weight:700;
+      letter-spacing:.08em; text-transform:uppercase; color:var(--text-3);
+    }
+    .wiz-captcha-brand svg{ width:20px; height:20px; color:var(--cyan); }
     .wiz-errorbox{
       margin-top:1rem; padding:.9rem 1.1rem;
       border:1px solid rgba(255,143,163,.45); border-radius:12px;
@@ -1440,6 +1483,22 @@
               <legend class="wiz-legend" tabindex="-1" data-i18n="wiz.p4.legend">Review &amp; submit</legend>
               <div class="wiz-review" id="wiz-review"></div>
               <div class="wiz-turnstile" id="wiz-turnstile"></div>
+              <!-- Self-hosted proof-of-work human check; hidden when Turnstile is configured -->
+              <div class="wiz-captcha" id="wiz-captcha" data-state="idle" hidden>
+                <button type="button" class="wiz-captcha-btn" id="wiz-captcha-btn">
+                  <span class="wiz-captcha-box" aria-hidden="true">
+                    <span class="wiz-spin wiz-captcha-spin"></span>
+                    <svg class="wiz-captcha-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>
+                  </span>
+                  <span class="wiz-captcha-label" id="wiz-captcha-label">I’m not a robot</span>
+                </button>
+                <span class="wiz-captcha-brand" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/>
+                  </svg>
+                  CosmoLabs
+                </span>
+              </div>
               <div class="wiz-errorbox" id="wiz-submit-err" role="alert" hidden></div>
             </fieldset>
 
@@ -2320,7 +2379,12 @@
           "c.btn": "Request a free consultation",
           "c.hint": "Submitting opens a pre-filled email in your mail app — this form itself stores nothing.",
           "c.subject": "Free consultation request — {name}",
-          "c.status": "Opening your email app — your message is ready to send."
+          "c.status": "Opening your email app — your message is ready to send.",
+          "wiz.captcha.label": "I’m not a robot",
+          "wiz.captcha.verifying": "Verifying…",
+          "wiz.captcha.done": "Verified",
+          "wiz.captcha.err": "Verification failed — click to try again.",
+          "wiz.err.captcha": "Please confirm you’re not a robot before submitting."
         },
         ar: {
           "meta.title": "CosmoLabs — استشارات الحوسبة وهندسة الطيران والفضاء والهندسة النووية",
@@ -2553,7 +2617,12 @@
           "c.btn": "اطلب استشارة مجانية",
           "c.hint": "عند الإرسال تُفتح رسالة بريد إلكتروني معبّأة مسبقًا في تطبيق البريد لديك — وهذا النموذج نفسه لا يخزّن أي بيانات.",
           "c.subject": "طلب استشارة مجانية — {name}",
-          "c.status": "جارٍ فتح تطبيق البريد الإلكتروني لديك — رسالتك جاهزة للإرسال."
+          "c.status": "جارٍ فتح تطبيق البريد الإلكتروني لديك — رسالتك جاهزة للإرسال.",
+          "wiz.captcha.label": "لستُ روبوتًا",
+          "wiz.captcha.verifying": "جارٍ التحقق…",
+          "wiz.captcha.done": "تم التحقق",
+          "wiz.captcha.err": "تعذّر التحقق — انقر للمحاولة مجددًا.",
+          "wiz.err.captcha": "يُرجى تأكيد أنك لست روبوتًا قبل الإرسال."
         },
         fr: {
           "meta.title": "CosmoLabs — Conseil en informatique, ingénierie aérospatiale & nucléaire",
@@ -2786,7 +2855,12 @@
           "c.btn": "Demander une consultation gratuite",
           "c.hint": "L'envoi ouvre un e-mail prérempli dans votre messagerie — ce formulaire n'enregistre aucune donnée.",
           "c.subject": "Demande de consultation gratuite — {name}",
-          "c.status": "Ouverture de votre messagerie — votre message est prêt à être envoyé."
+          "c.status": "Ouverture de votre messagerie — votre message est prêt à être envoyé.",
+          "wiz.captcha.label": "Je ne suis pas un robot",
+          "wiz.captcha.verifying": "Vérification en cours…",
+          "wiz.captcha.done": "Vérifié",
+          "wiz.captcha.err": "Échec de la vérification — cliquez pour réessayer.",
+          "wiz.err.captcha": "Veuillez confirmer que vous n’êtes pas un robot avant l’envoi."
         }
       };
 
@@ -3100,6 +3174,8 @@
         turnstileToken: '',
         turnstileWidgetId: null,
         turnstileRequested: false,
+        captcha: null,        // solved PoW challenge {challenge, salt, number, signature}
+        captchaState: 'idle', // idle | working | done | error
         clarifyKey: '',       // brief snapshot the questions were fetched for
         submitting: false
       };
@@ -3187,7 +3263,7 @@
         nextBtn.hidden = (n === 4);
         submitBtn.hidden = (n !== 4);
         if (n === 3) enterClarify();
-        if (n === 4) { buildReview(); setupTurnstile(); }
+        if (n === 4) { buildReview(); setupTurnstile(); setupCaptcha(); }
         if (focusHeading) {
           var legend = panels[n - 1].querySelector('.wiz-legend');
           if (legend) legend.focus();
@@ -3565,6 +3641,76 @@
         document.head.appendChild(s);
       }
 
+      /* ---------- Proof-of-work human check (when Turnstile isn't configured) ----------
+         The server signs each challenge and /api/intake refuses submissions
+         without a valid solution, so this widget is UX — the enforcement is
+         server-side. Solving ~30k SHA-256 hashes takes a moment by design. */
+      var captchaWrap = $('wiz-captcha'), captchaBtn = $('wiz-captcha-btn');
+
+      function renderCaptcha() {
+        if (!captchaWrap) return;
+        var labels = {
+          idle: 'wiz.captcha.label',
+          working: 'wiz.captcha.verifying',
+          done: 'wiz.captcha.done',
+          error: 'wiz.captcha.err'
+        };
+        captchaWrap.setAttribute('data-state', state.captchaState);
+        $('wiz-captcha-label').textContent = tr(labels[state.captchaState] || 'wiz.captcha.label');
+        captchaBtn.disabled = state.captchaState === 'working' || state.captchaState === 'done';
+      }
+      function setCaptchaState(s) {
+        state.captchaState = s;
+        if (s === 'done') $('wiz-submit-err').hidden = true;
+        renderCaptcha();
+      }
+      function resetCaptcha() {
+        state.captcha = null;
+        setCaptchaState('idle');
+      }
+      function setupCaptcha() {
+        if (!captchaWrap) return;
+        captchaWrap.hidden = Boolean(config.turnstileSiteKey);
+        renderCaptcha();
+      }
+
+      function sha256Hex(str) {
+        return window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
+          var b = new Uint8Array(buf), out = '';
+          for (var i = 0; i < b.length; i++) out += (b[i] < 16 ? '0' : '') + b[i].toString(16);
+          return out;
+        });
+      }
+      async function solvePow(ch) {
+        for (var n = 0; n <= ch.maxnumber; n++) {
+          if ((await sha256Hex(ch.salt + '.' + n)) === ch.challenge) return n;
+          if (n % 800 === 0) await new Promise(function (r) { setTimeout(r, 0); }); // keep the UI responsive
+        }
+        return null;
+      }
+
+      if (captchaBtn) {
+        captchaBtn.addEventListener('click', function () {
+          if (state.captchaState === 'working' || state.captchaState === 'done') return;
+          if (!window.crypto || !window.crypto.subtle) { setCaptchaState('error'); return; }
+          setCaptchaState('working');
+          fetch('/api/captcha')
+            .then(function (r) { if (!r.ok) throw new Error('captcha unavailable'); return r.json(); })
+            .then(function (ch) {
+              if (!ch || ch.ok !== true) throw new Error('captcha unavailable');
+              return solvePow(ch).then(function (n) {
+                if (n === null) throw new Error('no solution');
+                state.captcha = { challenge: ch.challenge, salt: ch.salt, number: n, signature: ch.signature };
+                setCaptchaState('done');
+              });
+            })
+            .catch(function () {
+              state.captcha = null;
+              setCaptchaState('error');
+            });
+        });
+      }
+
       /* ---------- Submit ---------- */
       function readFilesAsBase64(files) {
         return Promise.all(files.map(function (f) {
@@ -3629,6 +3775,14 @@
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         if (state.step !== 4 || state.submitting) return;
+        // Human check first: without Turnstile, a solved PoW captcha is required.
+        if (!config.turnstileSiteKey && !state.captcha) {
+          var capErr = $('wiz-submit-err');
+          capErr.textContent = tr('wiz.err.captcha');
+          capErr.hidden = false;
+          if (captchaBtn) captchaBtn.focus();
+          return;
+        }
         state.submitting = true;
         submitBtn.disabled = true;
         submitBtn.textContent = tr('wiz.submitting');
@@ -3649,6 +3803,7 @@
               startedAt: state.startedAt
             };
             if (state.turnstileToken) payload.turnstileToken = state.turnstileToken;
+            if (state.captcha) payload.captcha = state.captcha;
             return fetch('/api/intake', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -3664,6 +3819,10 @@
           .then(function (res) {
             if (res.data && res.data.ok === true && res.data.id) {
               showSuccess(res.data.id);
+            } else if (res.data && res.data.code === 'captcha') {
+              // Solution rejected (e.g. expired) — reset the widget for a redo.
+              resetCaptcha();
+              submitFailed(tr('wiz.captcha.err'));
             } else {
               submitFailed((res.data && res.data.error) || tr('wiz.err.generic'));
             }
@@ -3686,6 +3845,7 @@
         });
         refsWrap.querySelectorAll('.wiz-mini').forEach(function (b) { b.setAttribute('aria-label', tr('wiz.ref.removeAria')); });
         colorsWrap.querySelectorAll('.wiz-mini').forEach(function (b) { b.setAttribute('aria-label', tr('wiz.color.removeAria')); });
+        renderCaptcha();
         if (state.step === 4 && !state.submitting) buildReview();
       });
     })();

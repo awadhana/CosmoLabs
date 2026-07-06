@@ -37,9 +37,11 @@ Files:
 | `api/_lib/security.js` | Guards (method/content-type/size/origin), sanitizers, validators, filename sanitizer, client IP |
 | `api/_lib/ratelimit.js` | In-memory sliding-window rate limiter (best-effort per instance) |
 | `api/_lib/email.js` | Resend integration — internal notification + customer confirmation, never throws |
-| `api/intake.js` | `POST /api/intake` — validate, anti-bot, Turnstile, Blob storage, email |
+| `api/_lib/captcha.js` | Stateless proof-of-work captcha: HMAC-signed challenges, IP-bound, 15-min TTL |
+| `api/intake.js` | `POST /api/intake` — validate, anti-bot, human check (Turnstile or PoW captcha), Blob storage, email |
 | `api/clarify.js` | `POST /api/clarify` — AI clarifying questions via `@anthropic-ai/sdk`, static fallback |
 | `api/intake-config.js` | `GET /api/intake-config` — public form config, cached 5 min |
+| `api/captcha.js` | `GET /api/captcha` — issue a proof-of-work challenge for the wizard's human check |
 | `api/admin/submissions.js` | `GET /api/admin/submissions` — pipeline listing, bearer-token auth |
 
 `api/_lib/` is underscore-prefixed so Vercel does **not** expose it as endpoints.
@@ -78,7 +80,13 @@ Request body:
   ],
   "website": "",                        // HONEYPOT — must be empty string
   "startedAt": 1751500000000,           // epoch ms when the form was opened
-  "turnstileToken": "string"            // optional; verified when TURNSTILE_SECRET_KEY set
+  "turnstileToken": "string",           // optional; verified when TURNSTILE_SECRET_KEY set
+  "captcha": {                          // REQUIRED when TURNSTILE_SECRET_KEY is NOT set
+    "challenge": "<64 hex>",            //   echoed from GET /api/captcha
+    "salt": "<expires>.<iphash>.<rand>",//   echoed from GET /api/captcha
+    "number": 12345,                    //   the brute-forced solution (0..maxnumber)
+    "signature": "<64 hex>"             //   echoed from GET /api/captcha
+  }
 }
 ```
 
@@ -92,7 +100,7 @@ Responses:
 | Status | Body |
 |---|---|
 | 200 | `{"ok":true,"id":"int_<base36 timestamp>_<6 random chars>"}` |
-| 400 | `{"ok":false,"error":"<human readable>"}` (validation, origin mismatch/missing on POST, or `"Verification failed"` for Turnstile) |
+| 400 | `{"ok":false,"error":"<human readable>"}` (validation, origin mismatch/missing on POST, or `"Verification failed"` for Turnstile). PoW captcha failures additionally carry `"code":"captcha"` so the frontend can show a translated message and reset its widget. |
 | 405 | Method not allowed |
 | 413 | Payload too large (raw body > ~4.3MB — base64 of the 3MB decoded cap plus JSON envelope headroom) |
 | 415 | Wrong content type |
@@ -145,6 +153,29 @@ Response 200 (Cache-Control: `public, max-age=300`):
 
 `turnstileSiteKey` comes from `TURNSTILE_SITE_KEY`; `clarifyEnabled` is true
 when `ANTHROPIC_API_KEY` is set.
+
+### GET `/api/captcha`
+
+Issues a stateless proof-of-work challenge for the wizard's "I'm not a robot"
+check (used whenever Turnstile is not configured — the frontend shows the PoW
+widget iff `turnstileSiteKey` is null). Response 200 (Cache-Control: `no-store`):
+
+```json
+{
+  "ok": true,
+  "algorithm": "SHA-256",
+  "challenge": "<64 hex — sha256(salt + '.' + secretNumber)>",
+  "salt": "<expiresEpochSec>.<ipHash12>.<rand16hex>",
+  "maxnumber": 60000,
+  "signature": "<64 hex — hmacSha256(CAPTCHA_SECRET, challenge + '.' + salt)>"
+}
+```
+
+The client brute-forces `secretNumber` (avg ~30k SHA-256 hashes, ~1-2s in the
+browser) and submits `{challenge, salt, number, signature}` as the `captcha`
+field of `POST /api/intake`. Verification is stateless: signature HMAC, 15-min
+expiry and client-IP binding are all encoded in the salt. Rate limited to
+30 challenges / 10 min / IP. Also returns 400 (cross-origin) / 405 / 429.
 
 ### GET `/api/admin/submissions`
 
@@ -218,6 +249,7 @@ Environment Variables (or `vercel env add`).
 | `TURNSTILE_SITE_KEY` | intake-config | Cloudflare Dashboard → Turnstile → Add widget → enter the site's domain(s) → copy the **Site Key** (public, served to the browser). |
 | `TURNSTILE_SECRET_KEY` | intake | The matching **Secret Key** from the same Turnstile widget. When set, `/api/intake` verifies `turnstileToken` server-side against `https://challenges.cloudflare.com/turnstile/v0/siteverify` and rejects failures with 400 "Verification failed". When unset, verification is skipped. |
 | `INTAKE_ADMIN_TOKEN` | admin | Long random secret for the pipeline. Generate: `openssl rand -base64 32` (or `node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"`). When unset, `/api/admin/submissions` returns 503. |
+| `CAPTCHA_SECRET` | captcha, intake | HMAC key signing proof-of-work challenges (any long random string; set in all environments). Falls back to `INTAKE_ADMIN_TOKEN`, then to a dev-only constant — set it explicitly in production. |
 
 ---
 
@@ -235,8 +267,13 @@ Environment Variables (or `vercel env add`).
   `Origin` so non-browser pipeline clients work.
 - **Honeypot + time gate** — bot submissions get a fake success
   (`{"ok":true,"id":"int_0"}`) and are never stored, giving bots no signal.
-- **Cloudflare Turnstile** — optional CAPTCHA-less human verification, checked
-  server-side with the secret key and the client IP.
+- **Human check (required)** — when Cloudflare Turnstile is configured, its
+  token is verified server-side with the secret key and client IP. Otherwise a
+  **self-hosted proof-of-work captcha** is mandatory: `/api/intake` rejects
+  submissions without a valid solution (HMAC-signed challenge, 15-min TTL,
+  IP-bound, ~30k SHA-256 hashes of client CPU per submission). Solutions are
+  replayable from the same IP until expiry by design (stateless) — the per-IP
+  rate limit bounds the blast radius.
 - **Rate limiting** — sliding window per IP (`intake`: 8/10 min, `clarify`:
   6/10 min). In-memory and therefore best-effort per serverless instance;
   enable **Vercel WAF rate limiting** for hard guarantees.

@@ -10,6 +10,7 @@
 import crypto from "node:crypto";
 import { put } from "@vercel/blob";
 
+import { verifyCaptcha } from "./_lib/captcha.js";
 import { checkRateLimit } from "./_lib/ratelimit.js";
 import { sendIntakeEmails } from "./_lib/email.js";
 import {
@@ -318,6 +319,24 @@ export default async function handler(req, res) {
       return;
     }
 
+    // Human check: whenever Turnstile isn't configured, a solved proof-of-work
+    // captcha (issued by GET /api/captcha) is REQUIRED. code:"captcha" lets the
+    // frontend show a translated message and reset its widget.
+    let powVerified = false;
+    if (!turnstile.required) {
+      const pow = verifyCaptcha(body.captcha, ip);
+      if (!pow.verified) {
+        console.log(`[intake] captcha rejected (${pow.reason}) from ${ip}`);
+        sendJson(res, 400, {
+          ok: false,
+          code: "captcha",
+          error: "Human verification failed. Please redo the check and try again.",
+        });
+        return;
+      }
+      powVerified = true;
+    }
+
     const id = newSubmissionId();
     const data = validated.value;
 
@@ -349,6 +368,7 @@ export default async function handler(req, res) {
         ip,
         userAgent: sanitizeText(req.headers["user-agent"], 300) || "",
         turnstileVerified: turnstile.verified,
+        powVerified,
       },
       status: "new",
     };
