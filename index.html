@@ -13,16 +13,16 @@
   <meta property="og:site_name" content="CosmoLabs">
   <meta property="og:title" content="CosmoLabs — Computing, Aerospace &amp; Nuclear Engineering Consulting">
   <meta property="og:description" content="Where science is standard, excellence is engineered. Professional consulting in computing, aerospace &amp; nuclear engineering for mission-critical programs.">
-  <meta property="og:url" content="https://cosmolabs-nu.vercel.app/">
-  <meta property="og:image" content="https://cosmolabs-nu.vercel.app/og-image.png">
+  <meta property="og:url" content="https://cosmolabshq.com/">
+  <meta property="og:image" content="https://cosmolabshq.com/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="CosmoLabs — computing, aerospace &amp; nuclear engineering consulting">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="CosmoLabs — Computing, Aerospace &amp; Nuclear Engineering Consulting">
   <meta name="twitter:description" content="Professional consulting in computing, aerospace &amp; nuclear engineering for mission-critical programs.">
-  <meta name="twitter:image" content="https://cosmolabs-nu.vercel.app/og-image.png">
-  <link rel="canonical" href="https://cosmolabs-nu.vercel.app/">
+  <meta name="twitter:image" content="https://cosmolabshq.com/og-image.png">
+  <link rel="canonical" href="https://cosmolabshq.com/">
 
   <!-- Favicon: inline SVG data URI -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238B7BFF'/%3E%3Cstop offset='1' stop-color='%2345E6FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%230E1430'/%3E%3Cellipse cx='32' cy='32' rx='24' ry='10' fill='none' stroke='url(%23g)' stroke-width='3' transform='rotate(-25 32 32)'/%3E%3Ccircle cx='32' cy='32' r='10' fill='url(%23g)'/%3E%3C/svg%3E">
@@ -275,7 +275,7 @@
     html[lang="ar"] .eyebrow, html[lang="ar"] .hero-tagline, html[lang="ar"] .footer-col h3,
     html[lang="ar"] .contact-row .lbl, html[lang="ar"] .wiz-review dt, html[lang="ar"] .lang-btn,
     html[lang="ar"] .footer-bottom .tag, html[lang="ar"] .about-chips span,
-    html[lang="ar"] .wiz-trust span{ letter-spacing:0; }
+    html[lang="ar"] .hero-kicker, html[lang="ar"] .wiz-trust span{ letter-spacing:0; }
     html[dir="rtl"] .eyebrow::before{ transform-origin:right center; }
 
     .nav-toggle{
@@ -430,6 +430,16 @@
       font-size:.9rem; color:var(--text-3);
     }
     .hero-note svg{ width:18px; height:18px; color:var(--cyan); flex:none; }
+    .hero-kicker{
+      display:inline-flex; align-items:center; gap:.5rem;
+      font-family:"Sora", sans-serif;
+      font-size:.76rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+      color:#F2F5FF;
+      padding:.42rem .9rem; margin-bottom:1.35rem; border-radius:999px;
+      border:1px solid rgba(139,123,255,.4);
+      background:linear-gradient(90deg, rgba(139,123,255,.16), rgba(69,230,255,.10));
+    }
+    .hero-kicker svg{ width:15px; height:15px; color:var(--cyan); flex:none; }
 
     /* ---------- Partners marquee ---------- */
     .partners{ padding-block:clamp(3.5rem, 6vw, 5rem); }
@@ -1213,6 +1223,7 @@
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     "name": "CosmoLabs",
+    "url": "https://cosmolabshq.com",
     "slogan": "Where science is standard, excellence is engineered",
     "description": "Multidisciplinary consulting firm delivering expert services in computer science, aerospace engineering, and nuclear engineering for mission-critical commercial and federal programs.",
     "email": "cosmolabshq@gmail.com",
@@ -1337,6 +1348,10 @@
       </div>
 
       <div class="container hero-inner">
+        <p class="hero-kicker reveal" style="--d:0s">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l1.7 4.5L18.5 9.2l-4.8 1.7L12 15.5l-1.7-4.6L5.5 9.2l4.8-1.7z"/><path d="M18.5 14.5l.8 2.1 2.2.8-2.2.8-.8 2.1-.8-2.1-2.1-.8 2.1-.8z"/></svg>
+          <span data-i18n="hero.kicker">AI-augmented engineering</span>
+        </p>
         <p class="hero-tagline reveal" data-i18n-html="hero.tagline">
           Where <span class="grad-text">science</span> is standard,<br>
           excellence is <span class="grad-text">engineered</span>
@@ -1379,6 +1394,10 @@
             <span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4.5 12.5 5 5 10-11"/></svg>
               <span data-i18n="start.trustPrivate">Your files stay private</span>
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l1.7 4.5L18.5 9.2l-4.8 1.7L12 15.5l-1.7-4.6L5.5 9.2l4.8-1.7z"/><path d="M18.5 14.5l.8 2.1 2.2.8-2.2.8-.8 2.1-.8-2.1-2.1-.8 2.1-.8z"/></svg>
+              <span data-i18n="start.trustAI">AI-assisted scoping</span>
             </span>
           </div>
         </div>
@@ -1467,7 +1486,7 @@
             <!-- STEP 3: Clarify -->
             <fieldset class="wiz-panel" id="wiz-p3" hidden>
               <legend class="wiz-legend" tabindex="-1" data-i18n="wiz.p3.legend">Clarify</legend>
-              <p class="wiz-clarify-note" data-i18n="wiz.clarify.note">A few quick questions help us scope your project accurately. Answers are optional, but the more you share the better our first response will be.</p>
+              <p class="wiz-clarify-note" data-i18n="wiz.clarify.note">Our AI reviews your brief and asks a few targeted questions so a senior engineer can scope it precisely. Answers are optional — the more you share, the sharper our first response.</p>
               <div class="wiz-loading" id="wiz-clarify-loading" hidden>
                 <span class="wiz-spin" aria-hidden="true"></span> <span data-i18n="wiz.clarify.loading">Reviewing your brief…</span>
               </div>
@@ -1686,7 +1705,7 @@
             <ul class="svc-list">
               <li data-i18n="svc.cs.l1">Software engineering &amp; architecture</li>
               <li data-i18n="svc.cs.l2">Cloud &amp; DevOps transformation</li>
-              <li data-i18n="svc.cs.l3">AI / ML systems</li>
+              <li data-i18n="svc.cs.l3">Applied AI, ML &amp; LLM systems</li>
               <li data-i18n="svc.cs.l4">Cybersecurity &amp; zero-trust</li>
               <li data-i18n="svc.cs.l5">Data engineering &amp; analytics</li>
             </ul>
@@ -2166,6 +2185,7 @@
           "nav.contact": "Contact",
           "nav.cta": "Start your project",
           "lang.label": "Language",
+          "hero.kicker": "AI-augmented engineering",
           "hero.tagline": "Where <span class=\"grad-text\">science</span> is standard,<br> excellence is <span class=\"grad-text\">engineered</span>",
           "hero.h1": "We provide professional consulting in computing, aerospace & nuclear engineering.",
           "hero.sub": "Take charge of your mission-critical programs. Tell us what you need built — we scope it within one business day.",
@@ -2184,6 +2204,7 @@
           "start.trustFree": "Free to submit",
           "start.trustReply": "Reply within one business day",
           "start.trustPrivate": "Your files stay private",
+          "start.trustAI": "AI-assisted scoping",
           "wiz.progressAria": "Form progress",
           "wiz.step1": "Brief",
           "wiz.step2": "Details",
@@ -2221,7 +2242,7 @@
           "wiz.drop.main": "<strong>Drag &amp; drop files here</strong> or click to browse",
           "wiz.drop.hint": "{types} — up to {files} files, {size} each, {total} total.",
           "wiz.p3.legend": "Clarify",
-          "wiz.clarify.note": "A few quick questions help us scope your project accurately. Answers are optional, but the more you share the better our first response will be.",
+          "wiz.clarify.note": "Our AI reviews your brief and asks a few targeted questions so a senior engineer can scope it precisely. Answers are optional — the more you share, the sharper our first response.",
           "wiz.clarify.loading": "Reviewing your brief…",
           "wiz.clarify.ready": "Your brief looks complete — you can continue straight to review.",
           "wiz.clarify.readyBtn": "Continue to review",
@@ -2294,7 +2315,7 @@
           "svc.cs.p": "Full-lifecycle software consulting — from architecture reviews to production-grade platforms that scale under real-world load.",
           "svc.cs.l1": "Software engineering & architecture",
           "svc.cs.l2": "Cloud & DevOps transformation",
-          "svc.cs.l3": "AI / ML systems",
+          "svc.cs.l3": "Applied AI, ML & LLM systems",
           "svc.cs.l4": "Cybersecurity & zero-trust",
           "svc.cs.l5": "Data engineering & analytics",
           "svc.aero.h": "Aerospace Engineering",
@@ -2404,6 +2425,7 @@
           "nav.contact": "تواصل معنا",
           "nav.cta": "ابدأ مشروعك",
           "lang.label": "اللغة",
+          "hero.kicker": "هندسة معزّزة بالذكاء الاصطناعي",
           "hero.tagline": "حيث <span class=\"grad-text\">العلم</span> هو المعيار،<br> والتميّز صنيع <span class=\"grad-text\">الهندسة</span>",
           "hero.h1": "نقدم استشارات احترافية في الحوسبة وهندسة الطيران والفضاء والهندسة النووية.",
           "hero.sub": "تولَّ زمام برامجك البالغة الأهمية. أخبرنا بما تحتاج إلى بنائه — وسنحدد نطاقه خلال يوم عمل واحد.",
@@ -2422,6 +2444,7 @@
           "start.trustFree": "الإرسال مجاني",
           "start.trustReply": "رد خلال يوم عمل واحد",
           "start.trustPrivate": "ملفاتك تبقى خاصة",
+          "start.trustAI": "تحديد النطاق بالذكاء الاصطناعي",
           "wiz.progressAria": "تقدم النموذج",
           "wiz.step1": "الموجز",
           "wiz.step2": "التفاصيل",
@@ -2459,7 +2482,7 @@
           "wiz.drop.main": "<strong>اسحب الملفات وأفلتها هنا</strong> أو انقر للتصفح",
           "wiz.drop.hint": "{types} — حتى {files} ملفات، بحدّ أقصى {size} لكل ملف، و{total} إجمالًا.",
           "wiz.p3.legend": "توضيح",
-          "wiz.clarify.note": "بضعة أسئلة سريعة تساعدنا على تحديد نطاق مشروعك بدقة. الإجابات اختيارية، لكن كلما شاركتنا المزيد كان ردّنا الأول أفضل.",
+          "wiz.clarify.note": "يراجع الذكاء الاصطناعي لدينا موجزك ويطرح بضعة أسئلة موجّهة ليتمكّن مهندس أول من تحديد نطاق مشروعك بدقة. الإجابات اختيارية — وكلما شاركتنا أكثر، كان ردّنا الأول أدق.",
           "wiz.clarify.loading": "جارٍ مراجعة موجزك…",
           "wiz.clarify.ready": "يبدو موجزك مكتملًا — يمكنك المتابعة مباشرةً إلى المراجعة.",
           "wiz.clarify.readyBtn": "المتابعة إلى المراجعة",
@@ -2532,7 +2555,7 @@
           "svc.cs.p": "استشارات برمجية تغطي دورة الحياة كاملةً — من مراجعات البنية المعمارية إلى منصات بجاهزية الإنتاج تتوسّع بثبات تحت أحمال التشغيل الفعلية.",
           "svc.cs.l1": "هندسة البرمجيات ومعماريتها",
           "svc.cs.l2": "التحوّل السحابي وDevOps",
-          "svc.cs.l3": "أنظمة AI / ML",
+          "svc.cs.l3": "أنظمة الذكاء الاصطناعي التطبيقي والتعلّم الآلي ونماذج اللغة الكبيرة",
           "svc.cs.l4": "الأمن السيبراني ونموذج انعدام الثقة",
           "svc.cs.l5": "هندسة البيانات وتحليلاتها",
           "svc.aero.h": "هندسة الطيران والفضاء",
@@ -2642,6 +2665,7 @@
           "nav.contact": "Contact",
           "nav.cta": "Lancer votre projet",
           "lang.label": "Langue",
+          "hero.kicker": "Ingénierie augmentée par l'IA",
           "hero.tagline": "Là où la <span class=\"grad-text\">science</span> est la norme,<br> l'excellence est affaire d'<span class=\"grad-text\">ingénierie</span>",
           "hero.h1": "Nous proposons des services de conseil professionnels en informatique, en ingénierie aérospatiale et en ingénierie nucléaire.",
           "hero.sub": "Reprenez la main sur vos programmes critiques. Dites-nous ce que vous devez construire — nous en définissons le périmètre sous un jour ouvré.",
@@ -2660,6 +2684,7 @@
           "start.trustFree": "Gratuit et sans engagement",
           "start.trustReply": "Réponse sous un jour ouvré",
           "start.trustPrivate": "Vos fichiers restent confidentiels",
+          "start.trustAI": "Cadrage assisté par IA",
           "wiz.progressAria": "Progression du formulaire",
           "wiz.step1": "Brief",
           "wiz.step2": "Détails",
@@ -2697,7 +2722,7 @@
           "wiz.drop.main": "<strong>Glissez-déposez vos fichiers ici</strong> ou cliquez pour parcourir",
           "wiz.drop.hint": "{types} — jusqu'à {files} fichiers, {size} chacun, {total} au total.",
           "wiz.p3.legend": "Précisions",
-          "wiz.clarify.note": "Quelques questions rapides nous aident à cadrer votre projet avec précision. Les réponses sont facultatives, mais plus vous nous en dites, plus notre première réponse sera pertinente.",
+          "wiz.clarify.note": "Notre IA examine votre brief et pose quelques questions ciblées afin qu'un ingénieur senior puisse le cadrer précisément. Les réponses sont facultatives — plus vous en partagez, plus notre première réponse sera précise.",
           "wiz.clarify.loading": "Analyse de votre brief…",
           "wiz.clarify.ready": "Votre brief semble complet — vous pouvez passer directement au récapitulatif.",
           "wiz.clarify.readyBtn": "Passer au récapitulatif",
@@ -2770,7 +2795,7 @@
           "svc.cs.p": "Un conseil logiciel sur tout le cycle de vie — des revues d’architecture aux plateformes de niveau production qui tiennent la charge en conditions réelles.",
           "svc.cs.l1": "Ingénierie & architecture logicielles",
           "svc.cs.l2": "Transformation cloud & DevOps",
-          "svc.cs.l3": "Systèmes IA / ML",
+          "svc.cs.l3": "IA appliquée, ML et systèmes LLM",
           "svc.cs.l4": "Cybersécurité & zero-trust",
           "svc.cs.l5": "Ingénierie des données & analytique",
           "svc.aero.h": "Ingénierie aérospatiale",
