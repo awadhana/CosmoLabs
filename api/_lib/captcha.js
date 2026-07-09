@@ -26,12 +26,28 @@ import crypto from "node:crypto";
 export const CAPTCHA_MAX_NUMBER = 60_000; // avg ~30k hashes ≈ 1-2s in-browser
 const TTL_SECONDS = 15 * 60;
 
+function isProduction() {
+  return process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
+}
+
+/**
+ * True when a real signing secret is available, OR when we're not in
+ * production (where the dev-constant fallback is acceptable). Call sites use
+ * this to fail CLOSED — refusing to issue/accept forgeable challenges signed
+ * with the hardcoded dev constant on a production deployment.
+ */
+export function isCaptchaSecretConfigured() {
+  return Boolean(process.env.CAPTCHA_SECRET || process.env.INTAKE_ADMIN_TOKEN) || !isProduction();
+}
+
 function secret() {
-  return (
-    process.env.CAPTCHA_SECRET ||
-    process.env.INTAKE_ADMIN_TOKEN ||
-    "cosmolabs-captcha-dev-only" // local dev fallback — never rely on in prod
-  );
+  const configured = process.env.CAPTCHA_SECRET || process.env.INTAKE_ADMIN_TOKEN;
+  if (configured) return configured;
+  // Local dev fallback only — never sign with the dev constant in production.
+  // Guarded by isCaptchaSecretConfigured() at every call site, so this throw
+  // is an unreachable backstop rather than a request-crashing path.
+  if (isProduction()) throw new Error("CAPTCHA secret is not configured");
+  return "cosmolabs-captcha-dev-only";
 }
 
 function sha256Hex(value) {
@@ -68,6 +84,10 @@ const SALT_RE = /^\d{1,12}\.[0-9a-f]{12}\.[0-9a-f]{16}$/;
  * only; never sent to the client.
  */
 export function verifyCaptcha(raw, ip) {
+  // Fail closed in production without a real secret: never accept a challenge
+  // that could only have been signed with the dev constant. /api/intake turns
+  // this into its normal 400 captcha error, not a 500.
+  if (!isCaptchaSecretConfigured()) return { verified: false, reason: "captcha secret not configured" };
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return { verified: false, reason: "missing" };
   const { challenge, salt, number, signature } = raw;
   if (typeof challenge !== "string" || !HEX64_RE.test(challenge)) return { verified: false, reason: "bad challenge" };

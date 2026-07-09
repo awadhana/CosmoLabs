@@ -3159,9 +3159,9 @@
 
       function fallbackQuestions() {
         return [
-          { id: 'q1', question: tr('wiz.q1') },
-          { id: 'q2', question: tr('wiz.q2') },
-          { id: 'q3', question: tr('wiz.q3') }
+          { id: 'q1', i18n: 'wiz.q1', question: tr('wiz.q1') },
+          { id: 'q2', i18n: 'wiz.q2', question: tr('wiz.q2') },
+          { id: 'q3', i18n: 'wiz.q3', question: tr('wiz.q3') }
         ];
       }
 
@@ -3229,7 +3229,7 @@
             config.allowedExtensions = c.allowedExtensions;
           }
           updateDropHint();
-          if (state.step === 4) setupTurnstile();
+          if (state.step === 4) { setupTurnstile(); setupCaptcha(); }
         })
         .catch(function () { /* fallbacks already in place */ });
 
@@ -3372,7 +3372,7 @@
           if (invalid && !bad) bad = u;
         });
         setErr(null, 'wiz-ref-err', bad ? tr('wiz.err.ref') : '');
-        if (bad) { bad.focus(); return false; }
+        if (bad) { bad.focus(); announce(tr('wiz.err.ref')); return false; }
         return true;
       }
 
@@ -3489,7 +3489,8 @@
         }
         renderFiles();
         setErr(null, 'wiz-file-err', err);
-        if (!err) announce(state.files.length === 1 ? tr('wiz.filesOne') : fmt(tr('wiz.filesMany'), { n: state.files.length }));
+        if (err) announce(err);
+        else announce(state.files.length === 1 ? tr('wiz.filesOne') : fmt(tr('wiz.filesMany'), { n: state.files.length }));
       }
       dropBtn.addEventListener('click', function () { fileInput.click(); });
       fileInput.addEventListener('change', function () {
@@ -3528,6 +3529,9 @@
           var field = document.createElement('div');
           field.className = 'field wiz-q';
           field.setAttribute('data-question', String(q.question).slice(0, 500));
+          // Local fallback questions carry an i18n key so they can be re-translated
+          // on language change; API-generated questions have none and stay as-is.
+          if (q.i18n) field.setAttribute('data-i18n-q', String(q.i18n));
           var label = document.createElement('label');
           var qid = 'wiz-q-' + i;
           label.setAttribute('for', qid);
@@ -3648,7 +3652,8 @@
       var captchaWrap = $('wiz-captcha'), captchaBtn = $('wiz-captcha-btn');
 
       function renderCaptcha() {
-        if (!captchaWrap) return;
+        var capLabel = $('wiz-captcha-label');
+        if (!captchaWrap || !capLabel || !captchaBtn) return;
         var labels = {
           idle: 'wiz.captcha.label',
           working: 'wiz.captcha.verifying',
@@ -3656,7 +3661,7 @@
           error: 'wiz.captcha.err'
         };
         captchaWrap.setAttribute('data-state', state.captchaState);
-        $('wiz-captcha-label').textContent = tr(labels[state.captchaState] || 'wiz.captcha.label');
+        capLabel.textContent = tr(labels[state.captchaState] || 'wiz.captcha.label');
         captchaBtn.disabled = state.captchaState === 'working' || state.captchaState === 'done';
       }
       function setCaptchaState(s) {
@@ -3746,6 +3751,7 @@
         var box = $('wiz-submit-err');
         box.textContent = msg;
         box.hidden = false;
+        announce(msg);
       }
 
       function showSuccess(id) {
@@ -3780,6 +3786,7 @@
           var capErr = $('wiz-submit-err');
           capErr.textContent = tr('wiz.err.captcha');
           capErr.hidden = false;
+          announce(tr('wiz.err.captcha'));
           if (captchaBtn) captchaBtn.focus();
           return;
         }
@@ -3845,6 +3852,22 @@
         });
         refsWrap.querySelectorAll('.wiz-mini').forEach(function (b) { b.setAttribute('aria-label', tr('wiz.ref.removeAria')); });
         colorsWrap.querySelectorAll('.wiz-mini').forEach(function (b) { b.setAttribute('aria-label', tr('wiz.color.removeAria')); });
+        // Brand-color inputs: rebuild each aria-label ("Brand color N") in the new language.
+        if (!state.submitting) {
+          colorsWrap.querySelectorAll('input[type="color"]').forEach(function (c, i) {
+            c.setAttribute('aria-label', fmt(tr('wiz.color.aria'), { n: i + 1 }));
+          });
+        }
+        // Local fallback clarify questions: re-translate label + data-question while
+        // step 3 is showing. API-generated questions have no i18n key and are skipped.
+        if (state.step === 3 && !state.submitting) {
+          questionsWrap.querySelectorAll('.wiz-q[data-i18n-q]').forEach(function (field) {
+            var text = String(tr(field.getAttribute('data-i18n-q'))).slice(0, 500);
+            field.setAttribute('data-question', text);
+            var lbl = field.querySelector('label');
+            if (lbl) lbl.textContent = text;
+          });
+        }
         renderCaptcha();
         if (state.step === 4 && !state.submitting) buildReview();
       });

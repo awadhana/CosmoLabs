@@ -10,22 +10,11 @@
  * discoverable through each submission's `files[].blobPath` manifest.
  */
 
-import crypto from "node:crypto";
 import { list } from "@vercel/blob";
 
-import { requireMethod, sendJson } from "../_lib/security.js";
+import { requireMethod, sendJson, tokenMatches } from "../_lib/security.js";
 
 const SUBMISSION_PATH_RE = /^intake\/([^/]+)\/submission\.json$/;
-
-/**
- * Constant-time-ish comparison: hash both sides to fixed-length buffers first
- * so timingSafeEqual can be used regardless of input lengths.
- */
-function tokenMatches(provided, expected) {
-  const a = crypto.createHash("sha256").update(provided, "utf8").digest();
-  const b = crypto.createHash("sha256").update(expected, "utf8").digest();
-  return crypto.timingSafeEqual(a, b);
-}
 
 export default async function handler(req, res) {
   try {

@@ -9,25 +9,25 @@ from Vercel Blob.
 ## System diagram
 
 ```
-                ┌──────────────────────────── Vercel project ───────────────────────────┐
-                │                                                                       │
- Browser        │  index.html (static)                                                  │
- ───────────────┼──► GET  /api/intake-config ──► env flags + upload limits              │
-   intake form  │                                                                       │
-                │──► POST /api/clarify ────────► Anthropic API (claude-opus-4-8)        │
-                │        │ fallback questions when key unset / error                    │
-                │                                                                       │
-                │──► POST /api/intake ─┬───────► Cloudflare Turnstile /siteverify       │
-                │                      │            (when TURNSTILE_SECRET_KEY set)     │
-                │                      ├───────► Vercel Blob (private store)            │
-                │                      │            intake/<id>/submission.json         │
-                │                      │            intake/<id>/files/<name>            │
-                │                      └───────► Resend (internal + customer email)     │
-                │                                                                       │
- Pipeline       │──► GET  /api/admin/submissions ─► Blob list() under "intake/"         │
- (Hermes /      │        Authorization: Bearer <INTAKE_ADMIN_TOKEN>                     │
-  Obsidian)     │                                                                       │
-                └───────────────────────────────────────────────────────────────────────┘
+                ┌──────────────────────────── Vercel project ────────────────────────────────────────┐
+                │                                                                                    │
+ Browser        │  index.html (static)                                                               │
+ ───────────────┼──► GET  /api/intake-config ──► env flags + upload limits                           │
+   intake form  │                                                                                    │
+                │──► POST /api/clarify ────────► Anthropic API (claude-opus-4-8)                     │
+                │        │ fallback questions when key unset / error                                 │
+                │                                                                                    │
+                │──► POST /api/intake ─┬───────► Cloudflare Turnstile /siteverify                    │
+                │                      │            (when TURNSTILE_SECRET_KEY set)                  │
+                │                      ├───────► Vercel Blob (private store)                         │
+                │                      │            intake/<id>/submission.json                      │
+                │                      │            intake/<id>/files/<name>                         │
+                │                      └───────► Gmail SMTP (nodemailer) (internal + customer email) │
+                │                                                                                    │
+ Pipeline       │──► GET  /api/admin/submissions ─► Blob list() under "intake/"                      │
+ (Hermes /      │        Authorization: Bearer <INTAKE_ADMIN_TOKEN>                                  │
+  Obsidian)     │                                                                                    │
+                └────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Files:
@@ -36,7 +36,7 @@ Files:
 |---|---|
 | `api/_lib/security.js` | Guards (method/content-type/size/origin), sanitizers, validators, filename sanitizer, client IP |
 | `api/_lib/ratelimit.js` | In-memory sliding-window rate limiter (best-effort per instance) |
-| `api/_lib/email.js` | Resend integration — internal notification + customer confirmation, never throws |
+| `api/_lib/email.js` | Gmail SMTP (nodemailer) — internal notification + customer confirmation, never throws |
 | `api/_lib/captcha.js` | Stateless proof-of-work captcha: HMAC-signed challenges, IP-bound, 15-min TTL |
 | `api/intake.js` | `POST /api/intake` — validate, anti-bot, human check (Turnstile or PoW captcha), Blob storage, email |
 | `api/clarify.js` | `POST /api/clarify` — AI clarifying questions via `@anthropic-ai/sdk`, static fallback |
@@ -223,7 +223,7 @@ intake/
     { "name": "brief.pdf", "type": "application/pdf", "size": 12345,
       "blobPath": "intake/int_.../files/brief.pdf" }
   ],
-  "meta": { "ip": "...", "userAgent": "...", "turnstileVerified": true },
+  "meta": { "ip": "...", "userAgent": "...", "turnstileVerified": true, "powVerified": true },
   "status": "new"            // lifecycle: "new" → "processing" → "done"
 }
 ```

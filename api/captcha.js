@@ -8,7 +8,7 @@
  * Errors:  400 origin · 405 method · 429 rate limited
  */
 
-import { createChallenge } from "./_lib/captcha.js";
+import { createChallenge, isCaptchaSecretConfigured } from "./_lib/captcha.js";
 import { checkRateLimit } from "./_lib/ratelimit.js";
 import {
   checkSameOrigin,
@@ -21,6 +21,12 @@ export default async function handler(req, res) {
   if (!requireMethod(req, res, "GET")) return;
   // GET: non-browser clients may omit Origin; if present it must match Host.
   if (!checkSameOrigin(req, res, { allowMissingOrigin: true })) return;
+
+  // Refuse to issue a forgeable challenge in production without a real secret.
+  if (!isCaptchaSecretConfigured()) {
+    sendJson(res, 503, { ok: false, error: "Human verification is not configured" });
+    return;
+  }
 
   const ip = getClientIp(req);
   const rate = checkRateLimit(ip, "captcha", 30, 10 * 60 * 1000);

@@ -23,6 +23,7 @@ import {
   isValidHexColor,
   isValidHttpUrl,
   isValidPhone,
+  magicBytesOk,
   rejectOversizedBody,
   requireJsonContentType,
   requireMethod,
@@ -100,36 +101,6 @@ function validateClarifications(raw) {
   return { value: out };
 }
 
-/** Minimal magic-byte sniffing so a renamed executable can't pose as a document. */
-function magicBytesOk(ext, buf) {
-  switch (ext) {
-    case "pdf":
-      return buf.length >= 4 && buf.toString("latin1", 0, 4) === "%PDF";
-    case "png":
-      return (
-        buf.length >= 8 &&
-        buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47 &&
-        buf[4] === 0x0d && buf[5] === 0x0a && buf[6] === 0x1a && buf[7] === 0x0a
-      );
-    case "jpg":
-    case "jpeg":
-      return buf.length >= 3 && buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff;
-    case "webp":
-      return (
-        buf.length >= 12 &&
-        buf.toString("latin1", 0, 4) === "RIFF" &&
-        buf.toString("latin1", 8, 12) === "WEBP"
-      );
-    case "docx":
-    case "xlsx":
-      // Office Open XML files are ZIP containers.
-      return buf.length >= 4 && buf[0] === 0x50 && buf[1] === 0x4b && buf[2] === 0x03 && buf[3] === 0x04;
-    default:
-      // txt / md / csv have no reliable signature.
-      return true;
-  }
-}
-
 const BASE64_RE = /^[A-Za-z0-9+/]*={0,2}$/;
 
 function validateFiles(raw) {
@@ -184,7 +155,7 @@ function validateSubmission(body) {
   if (!email || !isValidEmail(email)) return fail("Please provide a valid email address.");
 
   const phone = cleanString(body.phone);
-  if (!phone || !isValidPhone(phone)) return fail("Please provide a valid phone number (7-25 digits, +, -, parentheses and spaces allowed).");
+  if (!phone || !isValidPhone(phone)) return fail("Please provide a valid phone number (at least 7 digits; +, -, parentheses and spaces allowed).");
 
   const title = cleanString(body.title);
   if (!title || title.length < 3 || title.length > 200) return fail("Project title must be between 3 and 200 characters.");
@@ -239,6 +210,10 @@ function isBot(body) {
 async function verifyTurnstile(token, ip) {
   const secret = process.env.TURNSTILE_SECRET_KEY;
   if (!secret) return { required: false, verified: false };
+  // 10s budget (mirrors clarify.js): a hung siteverify must not stall intake
+  // into a platform 504 — abort and fail closed as "verification failed".
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 10_000);
   try {
     const params = new URLSearchParams({
       secret,
@@ -248,12 +223,15 @@ async function verifyTurnstile(token, ip) {
     const resp = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
       method: "POST",
       body: params,
+      signal: controller.signal,
     });
     const data = await resp.json().catch(() => null);
     return { required: true, verified: data?.success === true };
   } catch (err) {
     console.error("[intake] Turnstile verification error:", err?.message || err);
     return { required: true, verified: false };
+  } finally {
+    clearTimeout(timer);
   }
 }
 

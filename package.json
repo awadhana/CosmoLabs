@@ -2,9 +2,16 @@
   "name": "cosmolabs",
   "private": true,
   "type": "module",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
   "dependencies": {
-    "@vercel/blob": "latest",
-    "@anthropic-ai/sdk": "latest",
-    "nodemailer": "latest"
+    "@vercel/blob": "^2.5.0",
+    "@anthropic-ai/sdk": "^0.110.0",
+    "nodemailer": "^9.0.3"
   }
 }

@@ -9,6 +9,8 @@
  * so handlers can `if (!guard(...)) return;`.
  */
 
+import crypto from "node:crypto";
+
 // Raw request body cap. The contract caps decoded file payloads at 3MB total,
 // which is exactly 4,194,304 characters as base64 — so the cap must leave
 // headroom for base64 expansion PLUS the JSON envelope (field names, email,
@@ -142,7 +144,10 @@ export function isValidEmail(value) {
 }
 
 export function isValidPhone(value) {
-  return typeof value === "string" && /^[0-9+\-() ]{7,25}$/.test(value);
+  if (typeof value !== "string" || !/^[0-9+\-() ]{7,25}$/.test(value)) return false;
+  // Charset+length alone accepts digit-free input like "() () ()" — also
+  // require at least 7 actual numeric digits.
+  return value.replace(/[^0-9]/g, "").length >= 7;
 }
 
 export function isValidHttpUrl(value, maxLen = 500) {
@@ -176,4 +181,44 @@ export function sanitizeFilename(name) {
   const ext = base.slice(dot + 1).toLowerCase();
   if (!ALLOWED_EXTENSIONS.includes(ext)) return null;
   return base;
+}
+
+/** Minimal magic-byte sniffing so a renamed executable can't pose as a document. */
+export function magicBytesOk(ext, buf) {
+  switch (ext) {
+    case "pdf":
+      return buf.length >= 4 && buf.toString("latin1", 0, 4) === "%PDF";
+    case "png":
+      return (
+        buf.length >= 8 &&
+        buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47 &&
+        buf[4] === 0x0d && buf[5] === 0x0a && buf[6] === 0x1a && buf[7] === 0x0a
+      );
+    case "jpg":
+    case "jpeg":
+      return buf.length >= 3 && buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff;
+    case "webp":
+      return (
+        buf.length >= 12 &&
+        buf.toString("latin1", 0, 4) === "RIFF" &&
+        buf.toString("latin1", 8, 12) === "WEBP"
+      );
+    case "docx":
+    case "xlsx":
+      // Office Open XML files are ZIP containers.
+      return buf.length >= 4 && buf[0] === 0x50 && buf[1] === 0x4b && buf[2] === 0x03 && buf[3] === 0x04;
+    default:
+      // txt / md / csv have no reliable signature.
+      return true;
+  }
+}
+
+/**
+ * Constant-time-ish comparison: hash both sides to fixed-length buffers first
+ * so timingSafeEqual can be used regardless of input lengths.
+ */
+export function tokenMatches(provided, expected) {
+  const a = crypto.createHash("sha256").update(provided, "utf8").digest();
+  const b = crypto.createHash("sha256").update(expected, "utf8").digest();
+  return crypto.timingSafeEqual(a, b);
 }
