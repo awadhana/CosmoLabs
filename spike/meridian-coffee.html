@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridian Coffee Roasters — Coffee with a sense of place</title>
+<meta name="description" content="Single-origin, small-batch coffee roasted to order in Portland. Choose your ritual and taste where your cup comes from.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --espresso:#2E1C12; --espresso-2:#241109;
+    --copper:#C67B4A; --copper-deep:#A75F31;
+    --cream:#F5EDE1; --cream-2:#EFE3D2; --tan:#E4C9A8;
+    --pine:#3A4A3C; --ink:#2E1C12; --muted:#7A6653;
+    --radius:18px; --maxw:1180px;
+    --ease:cubic-bezier(.2,.7,.2,1);
+    --shadow:0 18px 40px -24px rgba(46,28,18,.55);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--cream); color:var(--ink);
+    font-family:"DM Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{font-family:"Fraunces",Georgia,serif; font-weight:600; line-height:1.05; letter-spacing:-.01em; margin:0}
+  a{color:inherit; text-decoration:none}
+  img{max-width:100%}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
+  .eyebrow{font-size:.78rem; letter-spacing:.22em; text-transform:uppercase; color:var(--copper-deep); font-weight:600}
+  .btn{display:inline-flex; align-items:center; gap:.5rem; font-weight:600; font-size:.98rem; padding:.85rem 1.4rem; border-radius:999px; cursor:pointer; border:1px solid transparent; transition:transform .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease)}
+  .btn:focus-visible{outline:3px solid var(--pine); outline-offset:3px}
+  .btn-primary{background:var(--copper); color:#fff}
+  .btn-primary:hover{background:var(--copper-deep); transform:translateY(-2px); box-shadow:var(--shadow)}
+  .btn-ghost{background:transparent; color:var(--espresso); border-color:rgba(46,28,18,.25)}
+  .btn-ghost:hover{border-color:var(--espresso); transform:translateY(-2px)}
+
+  /* grain overlay */
+  body::after{content:""; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  /* nav */
+  header{position:sticky; top:0; z-index:100; transition:background .3s var(--ease), box-shadow .3s var(--ease)}
+  header.scrolled{background:rgba(245,237,225,.82); backdrop-filter:blur(10px); box-shadow:0 1px 0 rgba(46,28,18,.08)}
+  .nav{display:flex; align-items:center; justify-content:space-between; height:74px}
+  .brand{font-family:"Fraunces",serif; font-weight:600; font-size:1.4rem; letter-spacing:.02em; display:flex; align-items:center; gap:.6rem}
+  .brand .dot{width:12px; height:12px; border-radius:50%; background:radial-gradient(circle at 35% 30%,var(--copper),var(--espresso))}
+  .nav-links{display:flex; gap:2rem; align-items:center}
+  .nav-links a{font-size:.95rem; color:var(--muted); font-weight:500; transition:color .2s}
+  .nav-links a:hover{color:var(--espresso)}
+  .nav-cta{display:flex; gap:.6rem; align-items:center}
+  .hamburger{display:none; background:none; border:0; cursor:pointer; padding:8px}
+
+  /* hero */
+  .hero{position:relative; padding:clamp(48px,7vw,96px) 0 clamp(56px,8vw,110px)}
+  .hero-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:48px; align-items:center}
+  .hero h1{font-size:clamp(2.6rem,6vw,4.6rem); margin:.6rem 0 1rem}
+  .hero h1 em{font-style:italic; color:var(--copper-deep)}
+  .hero p.lede{font-size:1.15rem; color:var(--muted); max-width:46ch; margin:0 0 1.8rem}
+  .hero-cta{display:flex; gap:.8rem; flex-wrap:wrap}
+  .trust{margin-top:1.6rem; font-size:.85rem; color:var(--muted); display:flex; gap:.5rem; align-items:center}
+  .stars{color:var(--copper)}
+
+  /* hero visual: cup + steam */
+  .cupwrap{position:relative; aspect-ratio:1/1; width:min(460px,100%); margin-inline:auto; display:grid; place-items:center}
+  .cup-glow{position:absolute; inset:6%; border-radius:50%; background:radial-gradient(circle at 50% 40%,rgba(198,123,74,.35),rgba(46,28,18,0) 62%); filter:blur(6px)}
+  .disc{position:absolute; inset:8%; border-radius:50%; background:
+      radial-gradient(circle at 38% 34%,#5a3a25,#2e1c12 68%),
+      conic-gradient(from 210deg at 50% 50%, rgba(255,255,255,.05), rgba(0,0,0,.18), rgba(255,255,255,.05));
+    box-shadow:inset 0 10px 40px rgba(0,0,0,.5), var(--shadow); overflow:hidden}
+  .disc::after{content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 30%,rgba(198,123,74,.4),transparent 45%)}
+  .crema{position:absolute; top:14%; left:16%; width:26%; height:14%; border-radius:50%; background:rgba(228,201,168,.4); filter:blur(3px)}
+  .steam{position:absolute; top:2%; left:50%; width:10px; height:120px; transform:translateX(-50%); display:flex; gap:34px}
+  .steam span{display:block; width:8px; height:110px; border-radius:8px;
+    background:linear-gradient(to top,rgba(245,237,225,0),rgba(245,237,225,.75) 45%,rgba(245,237,225,0));
+    filter:blur(3px); animation:steam 4.5s var(--ease) infinite; transform-origin:bottom center}
+  .steam span:nth-child(2){animation-delay:1.2s; height:130px}
+  .steam span:nth-child(3){animation-delay:2.1s; height:96px}
+  @keyframes steam{0%{opacity:0; transform:translateY(20px) scaleX(1)}
+    30%{opacity:.9}
+    100%{opacity:0; transform:translateY(-70px) scaleX(1.7) translateX(8px)}}
+  .badge{position:absolute; bottom:6%; right:0; background:var(--cream); border:1px solid var(--tan); border-radius:14px; padding:.7rem .9rem; box-shadow:var(--shadow); font-size:.8rem}
+  .badge b{font-family:"Fraunces",serif; display:block; font-size:1.1rem; color:var(--espresso)}
+
+  /* origins marquee */
+  .marquee{border-block:1px solid rgba(46,28,18,.12); background:var(--cream-2); overflow:hidden; padding:14px 0}
+  .marquee-track{display:flex; gap:56px; width:max-content; animation:scroll 26s linear infinite; font-family:"Fraunces",serif; font-size:1.1rem; color:var(--muted)}
+  .marquee-track span{display:flex; gap:56px; align-items:center; white-space:nowrap}
+  .marquee .sep{color:var(--copper)}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+
+  section{padding:clamp(56px,8vw,110px) 0}
+  .sec-head{max-width:60ch}
+  .sec-head h2{font-size:clamp(2rem,4vw,3rem); margin:.5rem 0 .8rem}
+  .sec-head p{color:var(--muted); font-size:1.1rem}
+
+  /* subscription */
+  .plan{background:linear-gradient(160deg,var(--espresso),var(--espresso-2)); color:var(--cream); border-radius:26px; padding:clamp(28px,4vw,48px); display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center; box-shadow:var(--shadow); position:relative; overflow:hidden}
+  .plan::before{content:""; position:absolute; width:340px; height:340px; right:-90px; top:-90px; border-radius:50%; background:radial-gradient(circle,rgba(198,123,74,.35),transparent 70%)}
+  .plan h3{color:#fff; font-size:clamp(1.8rem,3vw,2.6rem)}
+  .plan .lede{color:rgba(245,237,225,.75); margin:.6rem 0 1.4rem}
+  .segment{display:inline-flex; background:rgba(255,255,255,.08); border-radius:999px; padding:5px; gap:4px; margin-bottom:1.2rem}
+  .segment button{border:0; background:none; color:rgba(245,237,225,.7); font:inherit; font-weight:600; padding:.5rem 1.1rem; border-radius:999px; cursor:pointer; transition:.2s}
+  .segment button[aria-pressed="true"]{background:var(--copper); color:#fff}
+  .price{font-family:"Fraunces",serif; font-size:3rem; line-height:1}
+  .price small{font-size:1rem; color:rgba(245,237,225,.6); font-family:"DM Sans"}
+  .plan ul{list-style:none; padding:0; margin:1.2rem 0 0; display:grid; gap:.6rem}
+  .plan li{display:flex; gap:.6rem; align-items:flex-start; color:rgba(245,237,225,.9); font-size:.98rem}
+  .check{color:var(--copper); flex:none; margin-top:2px}
+  .plan-card{background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); border-radius:18px; padding:26px; text-align:center; backdrop-filter:blur(4px)}
+
+  /* beans */
+  .beans{display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:44px}
+  .bean{background:#fff; border:1px solid var(--cream-2); border-radius:var(--radius); overflow:hidden; transition:transform .25s var(--ease), box-shadow .25s var(--ease)}
+  .bean:hover{transform:translateY(-6px); box-shadow:var(--shadow)}
+  .bean .img{aspect-ratio:4/3; position:relative} /* placeholder — real Pexels media swapped here in prod */
+  .bean .img::after{content:"single origin"; position:absolute; left:12px; bottom:12px; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:#fff; opacity:.85}
+  .bean:nth-child(1) .img{background:linear-gradient(150deg,#7a4a2a,#3a2114)}
+  .bean:nth-child(2) .img{background:linear-gradient(150deg,#8a6a3a,#4a3418)}
+  .bean:nth-child(3) .img{background:linear-gradient(150deg,#5a5238,#2e2a18)}
+  .bean .body{padding:20px}
+  .bean h3{font-size:1.35rem; margin-bottom:.15rem}
+  .bean .origin{color:var(--copper-deep); font-size:.82rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600}
+  .notes{display:flex; flex-wrap:wrap; gap:.4rem; margin:.9rem 0}
+  .notes span{background:var(--cream); border:1px solid var(--tan); color:var(--muted); font-size:.78rem; padding:.25rem .6rem; border-radius:999px}
+  .bean .row{display:flex; justify-content:space-between; align-items:center; margin-top:.6rem}
+  .bean .price-sm{font-family:"Fraunces",serif; font-size:1.3rem}
+
+  /* story */
+  .story{background:var(--pine); color:var(--cream)}
+  .story .grid{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center}
+  .story h2{color:#fff; font-size:clamp(2rem,4vw,3rem)}
+  .quote{font-family:"Fraunces",serif; font-style:italic; font-size:clamp(1.4rem,2.4vw,2rem); line-height:1.3; color:#fff}
+  .timeline{display:grid; gap:1.4rem; margin-top:1rem}
+  .step{display:grid; grid-template-columns:auto 1fr; gap:1rem; align-items:start}
+  .step .n{width:38px; height:38px; border-radius:50%; border:1px solid rgba(245,237,225,.4); display:grid; place-items:center; font-family:"Fraunces",serif; color:var(--copper)}
+  .step h4{margin:0 0 .2rem; font-size:1.05rem; color:#fff}
+  .step p{margin:0; color:rgba(245,237,225,.75); font-size:.95rem}
+
+  /* cta */
+  .signup{background:linear-gradient(160deg,var(--copper),var(--copper-deep)); color:#fff; border-radius:26px; padding:clamp(32px,5vw,60px); text-align:center; box-shadow:var(--shadow)}
+  .signup h2{color:#fff; font-size:clamp(2rem,4vw,3rem)}
+  .signup p{color:rgba(255,255,255,.85); max-width:48ch; margin:.6rem auto 1.6rem}
+  form{display:flex; gap:.6rem; max-width:460px; margin:0 auto; flex-wrap:wrap; justify-content:center}
+  form input{flex:1; min-width:220px; padding:.9rem 1.1rem; border-radius:999px; border:0; font:inherit; background:rgba(255,255,255,.95); color:var(--espresso)}
+  form input:focus-visible{outline:3px solid var(--espresso); outline-offset:2px}
+  form .btn-primary{background:var(--espresso)}
+  form .btn-primary:hover{background:var(--espresso-2)}
+  .form-msg{min-height:1.4em; margin-top:.8rem; font-size:.9rem; color:#fff}
+
+  footer{background:var(--espresso); color:rgba(245,237,225,.7); padding:64px 0 36px}
+  .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:32px}
+  footer h4{color:#fff; font-family:"Fraunces",serif; font-size:1rem; margin:0 0 1rem}
+  footer a{display:block; color:rgba(245,237,225,.7); padding:.25rem 0; font-size:.92rem}
+  footer a:hover{color:var(--copper)}
+  .socials{display:flex; gap:.8rem; margin-top:1rem}
+  .socials a{width:38px; height:38px; border:1px solid rgba(245,237,225,.25); border-radius:50%; display:grid; place-items:center}
+  .foot-bottom{border-top:1px solid rgba(245,237,225,.15); margin-top:40px; padding-top:20px; display:flex; justify-content:space-between; font-size:.82rem; flex-wrap:wrap; gap:8px}
+
+  /* scroll reveal */
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s var(--ease), transform .7s var(--ease)}
+  .reveal.in{opacity:1; transform:none}
+
+  @media (max-width:900px){
+    .hero-grid,.plan,.story .grid,.beans,.foot-grid{grid-template-columns:1fr}
+    .beans{gap:18px}
+    .nav-links{display:none}
+    .hamburger{display:block}
+    .cupwrap{order:-1; max-width:340px}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important; transition:none!important; scroll-behavior:auto!important}
+    .reveal{opacity:1; transform:none}
+  }
+</style>
+</head>
+<body>
+<a href="#main" class="btn-ghost" style="position:absolute;left:-999px;top:8px;z-index:200" onfocus="this.style.left='8px'" onblur="this.style.left='-999px'">Skip to content</a>
+
+<header id="hdr">
+  <div class="wrap nav">
+    <a class="brand" href="#" aria-label="Meridian Coffee Roasters home"><span class="dot" aria-hidden="true"></span>Meridian</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#subscribe">Subscription</a>
+      <a href="#beans">Single origins</a>
+      <a href="#story">Our craft</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#subscribe" class="btn btn-primary">Start your ritual</a>
+      <button class="hamburger" aria-label="Open menu" aria-expanded="false">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="reveal">
+        <span class="eyebrow">Single-origin · Small-batch · Roasted to order</span>
+        <h1>Coffee with a <em>sense of place.</em></h1>
+        <p class="lede">We source one farm at a time and roast the week you order, so every cup tastes like where it actually came from. Not "coffee." <em>That</em> coffee.</p>
+        <div class="hero-cta">
+          <a href="#subscribe" class="btn btn-primary">Start a subscription
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 8h8M9 4l4 4-4 4"/></svg></a>
+          <a href="#beans" class="btn btn-ghost">Explore this month's beans</a>
+        </div>
+        <p class="trust"><span class="stars" aria-hidden="true">★★★★★</span> Loved by 4,200+ home brewers · Free shipping over $40</p>
+      </div>
+      <div class="cupwrap reveal" aria-hidden="true">
+        <div class="cup-glow"></div>
+        <div class="steam"><span></span><span></span><span></span></div>
+        <div class="disc"><div class="crema"></div></div>
+        <div class="badge">Roasted<b>3 days ago</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORIGINS MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Ethiopia <i class="sep">✦</i> Colombia <i class="sep">✦</i> Guatemala <i class="sep">✦</i> Kenya <i class="sep">✦</i> Rwanda <i class="sep">✦</i> Honduras <i class="sep">✦</i></span>
+      <span>Ethiopia <i class="sep">✦</i> Colombia <i class="sep">✦</i> Guatemala <i class="sep">✦</i> Kenya <i class="sep">✦</i> Rwanda <i class="sep">✦</i> Honduras <i class="sep">✦</i></span>
+    </div>
+  </div>
+
+  <!-- SUBSCRIPTION -->
+  <section id="subscribe">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">The subscription</span>
+        <h2>Choose your ritual.</h2>
+        <p>Fresh beans on your schedule. Skip, swap, or pause anytime — no lock-in, ever.</p>
+      </div>
+      <div class="plan reveal" style="margin-top:36px">
+        <div>
+          <h3>The Meridian Club</h3>
+          <p class="lede">Pick a cadence. We match you to a roast, dial it to your brew method, and ship it the day it's roasted.</p>
+          <div class="segment" role="group" aria-label="Delivery cadence">
+            <button data-price="19" data-per="week" aria-pressed="false">Weekly</button>
+            <button data-price="17" data-per="2 weeks" aria-pressed="true">Fortnightly</button>
+            <button data-price="15" data-per="month" aria-pressed="false">Monthly</button>
+          </div>
+          <ul>
+            <li><svg class="check" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 9l3.5 3.5L14 5"/></svg> 12 oz single-origin, roasted to order</li>
+            <li><svg class="check" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 9l3.5 3.5L14 5"/></svg> Ground for your exact brewer, or whole bean</li>
+            <li><svg class="check" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 9l3.5 3.5L14 5"/></svg> A tasting card with origin story + notes</li>
+          </ul>
+        </div>
+        <div class="plan-card">
+          <p style="color:rgba(245,237,225,.7);margin:0 0 .4rem;font-size:.85rem">from</p>
+          <div class="price">$<span id="price">17</span><small>/<span id="per">2 weeks</span></small></div>
+          <a href="#signup" class="btn btn-primary" style="margin-top:1.2rem;width:100%;justify-content:center">Start your ritual</a>
+          <p style="color:rgba(245,237,225,.6);font-size:.8rem;margin-top:.9rem">Cancel in one tap. Seriously.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEANS -->
+  <section id="beans" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">This month's lineup</span>
+        <h2>Four farms. Four stories.</h2>
+        <p>Rotating single origins, chosen for the season and roasted in small batches.</p>
+      </div>
+      <div class="beans">
+        <article class="bean reveal">
+          <div class="img" role="img" aria-label="Whole coffee beans, dark and glossy"></div>
+          <div class="body">
+            <span class="origin">Ethiopia · Yirgacheffe</span>
+            <h3>Kochere</h3>
+            <div class="notes"><span>Jasmine</span><span>Bergamot</span><span>Honey</span></div>
+            <div class="row"><span class="price-sm">$21</span><a href="#signup" class="btn btn-ghost" style="padding:.5rem 1rem">Add</a></div>
+          </div>
+        </article>
+        <article class="bean reveal">
+          <div class="img" role="img" aria-label="Roasted coffee beans in warm light"></div>
+          <div class="body">
+            <span class="origin">Colombia · Huila</span>
+            <h3>La Esperanza</h3>
+            <div class="notes"><span>Red apple</span><span>Caramel</span><span>Cocoa</span></div>
+            <div class="row"><span class="price-sm">$19</span><a href="#signup" class="btn btn-ghost" style="padding:.5rem 1rem">Add</a></div>
+          </div>
+        </article>
+        <article class="bean reveal">
+          <div class="img" role="img" aria-label="Green-tinted specialty coffee beans"></div>
+          <div class="body">
+            <span class="origin">Guatemala · Antigua</span>
+            <h3>El Volcán</h3>
+            <div class="notes"><span>Dark chocolate</span><span>Orange</span><span>Almond</span></div>
+            <div class="row"><span class="price-sm">$20</span><a href="#signup" class="btn btn-ghost" style="padding:.5rem 1rem">Add</a></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section id="story" class="story">
+    <div class="wrap grid">
+      <div class="reveal">
+        <span class="eyebrow" style="color:var(--copper)">Our craft</span>
+        <h2>We roast the week you order.</h2>
+        <p style="color:rgba(245,237,225,.8)">Most coffee sits for months before it reaches you. We buy small, roast small, and ship the same week — so the beans are still alive when they land on your counter.</p>
+        <p class="quote">"Freshness isn't a label. It's a date."</p>
+      </div>
+      <div class="timeline reveal">
+        <div class="step"><div class="n">1</div><div><h4>Sourcing</h4><p>Direct relationships with a handful of farms we visit every harvest.</p></div></div>
+        <div class="step"><div class="n">2</div><div><h4>Roasting</h4><p>Small batches on a 1970s drum roaster, profiled bean by bean.</p></div></div>
+        <div class="step"><div class="n">3</div><div><h4>Cupping</h4><p>Every batch tasted before it ships. If it's not remarkable, it doesn't go.</p></div></div>
+        <div class="step"><div class="n">4</div><div><h4>Shipping</h4><p>Sealed within hours of roasting and on a truck the same day.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGNUP -->
+  <section id="signup">
+    <div class="wrap">
+      <div class="signup reveal">
+        <h2>Taste the difference this week.</h2>
+        <p>Join the Meridian Club and get 25% off your first bag. One email, no spam, cancel anytime.</p>
+        <form id="joinForm" novalidate>
+          <label for="email" style="position:absolute;left:-999px">Email address</label>
+          <input id="email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+          <button type="submit" class="btn btn-primary">Claim 25% off</button>
+        </form>
+        <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4 style="font-size:1.3rem">Meridian</h4>
+        <p style="max-width:32ch">Single-origin coffee, roasted to order in Portland, Oregon.</p>
+        <div class="socials" aria-label="Social links">
+          <a href="#" aria-label="Instagram"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="14" height="14" rx="4"/><circle cx="9" cy="9" r="3.2"/><circle cx="13" cy="5" r=".6" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="X"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3l12 12M15 3L3 15"/></svg></a>
+        </div>
+      </div>
+      <div><h4>Shop</h4><a href="#beans">Single origins</a><a href="#subscribe">Subscription</a><a href="#">Gift boxes</a><a href="#">Equipment</a></div>
+      <div><h4>Learn</h4><a href="#story">Our craft</a><a href="#">Brew guides</a><a href="#">Origins</a></div>
+      <div><h4>Company</h4><a href="#">About</a><a href="#">Wholesale</a><a href="#">Contact</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Meridian Coffee Roasters</span>
+      <span>Roasted in Portland · Shipped nationwide</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // sticky nav shadow
+  var hdr=document.getElementById('hdr');
+  addEventListener('scroll',function(){hdr.classList.toggle('scrolled',scrollY>20)},{passive:true});
+
+  // scroll reveal
+  var io=new IntersectionObserver(function(es){es.forEach(function(e,i){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.14});
+  document.querySelectorAll('.reveal').forEach(function(el,i){el.style.transitionDelay=(i%3*70)+'ms';io.observe(el)});
+
+  // subscription price toggle
+  var seg=document.querySelector('.segment');
+  seg.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    seg.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed','false')});
+    b.setAttribute('aria-pressed','true');
+    document.getElementById('price').textContent=b.dataset.price;
+    document.getElementById('per').textContent=b.dataset.per;
+  });
+
+  // signup validation
+  var form=document.getElementById('joinForm'), msg=document.getElementById('formMsg'), email=document.getElementById('email');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var v=email.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){msg.style.color='#2E1C12';msg.textContent='Please enter a valid email so we can send your discount.';email.focus();return;}
+    msg.textContent='Welcome to the Club — check your inbox for 25% off. ☕';
+    form.reset();
+  });
+
+  // mobile menu (minimal)
+  var burger=document.querySelector('.hamburger'), links=document.querySelector('.nav-links');
+  burger.addEventListener('click',function(){
+    var open=links.style.display==='flex';
+    links.style.display=open?'':'flex';
+    if(!open){links.style.position='absolute';links.style.top='74px';links.style.left='0';links.style.right='0';links.style.flexDirection='column';links.style.background='var(--cream)';links.style.padding='20px 24px';links.style.gap='16px';links.style.boxShadow='var(--shadow)'}
+    burger.setAttribute('aria-expanded',String(!open));
+  });
+</script>
+</body>
+</html>

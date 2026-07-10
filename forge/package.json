@@ -1,0 +1,26 @@
+{
+  "name": "forge-pipeline",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "fetch": "node scripts/fetch-brief.mjs",
+    "media": "node scripts/fetch-media.mjs",
+    "build": "node scripts/build-site.mjs",
+    "test": "node scripts/test-gate.mjs",
+    "deploy": "node scripts/deploy.mjs",
+    "mark-failed": "node scripts/lib.mjs mark-failed"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.5.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "@playwright/test": "^1.48.0",
+    "playwright": "^1.48.0"
+  }
+}

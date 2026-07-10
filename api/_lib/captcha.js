@@ -109,3 +109,58 @@ export function verifyCaptcha(raw, ip) {
 
   return { verified: true, reason: "ok" };
 }
+
+// ---------------------------------------------------------------------------
+// Forge pipeline signed-link HMAC.
+//
+// Separate concern from the captcha above: the Forge pipeline signs the
+// approve / skip / promote links embedded in Discord messages so a plain URL
+// click can safely mutate submission.json. These use the Forge-wide
+// HMAC_SECRET (shared with the Actions runner), NOT the captcha secret() — the
+// captcha's secret handling is deliberately left untouched.
+
+function pipelineSecret() {
+  const configured = process.env.HMAC_SECRET;
+  if (configured) return configured;
+  // Non-production fallback only — mirrors the captcha dev fallback so local
+  // dev works without secrets. Never sign with a fallback in production.
+  if (isProduction()) throw new Error("HMAC_SECRET is not configured");
+  return process.env.INTAKE_ADMIN_TOKEN || "cosmolabs-forge-dev-only";
+}
+
+/** Generic Forge signer: HMAC-SHA256(HMAC_SECRET, payload) as hex. */
+export function signHmac(payload) {
+  return crypto.createHmac("sha256", pipelineSecret()).update(String(payload)).digest("hex");
+}
+
+const PIPELINE_ACTIONS = new Set(["approve", "skip", "promote"]);
+
+/**
+ * Sign a pipeline action token.
+ * sig = HMAC-SHA256(HMAC_SECRET, `${action}.${id}.${exp}`) — see buildActionUrl
+ * in _lib/pipeline.js for the URL shape and per-action TTLs.
+ */
+export function signPipelineToken(action, id, exp) {
+  return signHmac(`${action}.${id}.${exp}`);
+}
+
+/**
+ * Verify a signed action link. Checks the HMAC in constant time AND that the
+ * link has not expired (exp >= now). Returns a boolean; callers render a single
+ * generic "invalid or expired" page for every failure so nothing is leaked.
+ */
+export function verifyPipelineToken(action, id, exp, sig) {
+  if (!PIPELINE_ACTIONS.has(action)) return false;
+  if (typeof id !== "string" || id.length === 0 || id.length > 128) return false;
+  if (typeof sig !== "string" || !HEX64_RE.test(sig)) return false;
+  const expNum = Number(exp);
+  if (!Number.isInteger(expNum) || expNum <= 0) return false;
+
+  // Sign the exp value exactly as received so the string form matches the
+  // signer's (both stringify the same integer).
+  const expected = Buffer.from(signPipelineToken(action, id, exp), "hex");
+  const given = Buffer.from(sig, "hex");
+  if (expected.length !== given.length || !crypto.timingSafeEqual(expected, given)) return false;
+
+  return expNum >= Math.floor(Date.now() / 1000);
+}

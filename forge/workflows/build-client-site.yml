@@ -1,0 +1,161 @@
+# Forge — autonomous client-site build (LANE B, PRIVATE repo).
+#
+# Two jobs, least privilege by design:
+#   fetch  — holds ONLY BLOB_READ_WRITE_TOKEN + HMAC_SECRET (+ DISCORD/PUBLIC_BASE_URL
+#            for the failure alert). Reads the brief, strips PII, sets status
+#            "building", and uploads the sanitized brief + files. NO Anthropic /
+#            Vercel / Pexels tokens live in this job.
+#   build  — needs: fetch. Holds ANTHROPIC_API_KEY, PEXELS_API_KEY,
+#            VERCEL_TOKEN/ORG/PROJECT, DISCORD_WEBHOOK_URL, HMAC_SECRET,
+#            BLOB_READ_WRITE_TOKEN (status writeback only), PUBLIC_BASE_URL.
+#            Each STEP only gets the secrets it needs — the agent step itself
+#            gets ONLY ANTHROPIC_API_KEY (no Vercel/Blob), so a hijacked agent
+#            can neither deploy nor reach client data.
+#
+# Repo secrets required: BLOB_READ_WRITE_TOKEN, ANTHROPIC_API_KEY, PEXELS_API_KEY,
+# VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID, HMAC_SECRET, DISCORD_WEBHOOK_URL,
+# PUBLIC_BASE_URL, GITHUB_OWNER.
+
+name: build-client-site
+
+on:
+  repository_dispatch:
+    types: [build_site]
+  workflow_dispatch:
+    inputs:
+      id:
+        description: "Submission id to build (intake/<id>/submission.json)"
+        required: true
+        type: string
+
+# Collapse duplicate dispatches for one submission into a single run.
+concurrency:
+  group: build-${{ github.event.client_payload.id || github.event.inputs.id }}
+  cancel-in-progress: true
+
+env:
+  CLIENT_ID: ${{ github.event.client_payload.id || github.event.inputs.id }}
+
+jobs:
+  # ------------------------------------------------------------------ FETCH
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci || npm install
+
+      # Secrets in scope for fetch: BLOB (read brief + write status), HMAC (parity).
+      - name: Fetch brief, strip PII, claim build
+        env:
+          CLIENT_ID: ${{ env.CLIENT_ID }}
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+          HMAC_SECRET: ${{ secrets.HMAC_SECRET }}
+        run: node scripts/fetch-brief.mjs
+
+      - name: Upload sanitized brief + files
+        uses: actions/upload-artifact@v4
+        with:
+          name: brief-${{ env.CLIENT_ID }}
+          path: work/
+          retention-days: 1
+          if-no-files-found: error
+
+      # On any fetch failure: alert Discord + mark build_failed (best-effort).
+      - name: On failure — alert + mark build_failed
+        if: failure()
+        env:
+          CLIENT_ID: ${{ env.CLIENT_ID }}
+          FAILED_STAGE: fetch
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: node scripts/lib.mjs mark-failed
+
+  # ------------------------------------------------------------------ BUILD
+  build:
+    needs: fetch
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci || npm install
+
+      - name: Install Playwright chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Download sanitized brief + files
+        uses: actions/download-artifact@v4
+        with:
+          name: brief-${{ env.CLIENT_ID }}
+          path: work/
+
+      # Media step: ONLY the Pexels key.
+      - name: Fetch stock media (Pexels)
+        env:
+          CLIENT_ID: ${{ env.CLIENT_ID }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+        run: node scripts/fetch-media.mjs
+
+      # Agent step: ONLY the Anthropic key — no Vercel/Blob/Pexels token here.
+      - name: Build site (Claude Code agent)
+        env:
+          CLIENT_ID: ${{ env.CLIENT_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/build-site.mjs
+
+      # Test gate: no secrets needed (serves ./build locally).
+      - name: Test gate (Playwright + axe-core)
+        env:
+          CLIENT_ID: ${{ env.CLIENT_ID }}
+        run: node scripts/test-gate.mjs
+
+      # Deploy step: Vercel + Blob writeback + Discord + signed promote link.
+      - name: Deploy preview to Vercel
+        env:
+          CLIENT_ID: ${{ env.CLIENT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+          HMAC_SECRET: ${{ secrets.HMAC_SECRET }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          PUBLIC_BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
+        run: node scripts/deploy.mjs
+
+      # Debug artifacts (scrubbed — the site + test reports carry no PII).
+      - name: Upload build + test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ env.CLIENT_ID }}
+          path: |
+            build/
+            work/test-report.json
+            work/test-failures.json
+          retention-days: 3
+          if-no-files-found: ignore
+
+      # Any build-job failure: mark build_failed + Discord alert.
+      - name: On failure — mark build_failed + alert
+        if: failure()
+        env:
+          CLIENT_ID: ${{ env.CLIENT_ID }}
+          FAILED_STAGE: build
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: node scripts/lib.mjs mark-failed

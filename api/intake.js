@@ -13,6 +13,7 @@ import { put } from "@vercel/blob";
 import { verifyCaptcha } from "./_lib/captcha.js";
 import { checkRateLimit } from "./_lib/ratelimit.js";
 import { sendIntakeEmails } from "./_lib/email.js";
+import { notifyDiscord } from "./_lib/pipeline.js";
 import {
   ALLOWED_EXTENSIONS,
   MAX_RAW_BODY_BYTES,
@@ -359,6 +360,15 @@ export default async function handler(req, res) {
 
     // Best-effort notifications — sendIntakeEmails never throws.
     const emailResult = await sendIntakeEmails({ submission });
+
+    // Best-effort Forge ping with signed approve/skip links. notifyDiscord is
+    // already non-throwing; the extra guard makes doubly sure a webhook outage
+    // can never fail an otherwise-successful intake.
+    try {
+      await notifyDiscord(submission);
+    } catch (err) {
+      console.error(`[intake] Discord notify failed for ${id}:`, err?.message || err);
+    }
 
     console.log(`[intake] stored ${id} (${storedFiles.length} files, email sent: ${emailResult.sent})`);
     sendJson(res, 200, { ok: true, id });
