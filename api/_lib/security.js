@@ -41,14 +41,14 @@ export function sendJson(res, status, payload) {
 export function requireMethod(req, res, method) {
   if (req.method === method) return true;
   res.setHeader("Allow", method);
-  sendJson(res, 405, { ok: false, error: "Method not allowed" });
+  sendJson(res, 405, { ok: false, code: "method_not_allowed", error: "Method not allowed" });
   return false;
 }
 
 export function requireJsonContentType(req, res) {
   const contentType = String(req.headers["content-type"] || "");
   if (contentType.toLowerCase().startsWith("application/json")) return true;
-  sendJson(res, 415, { ok: false, error: "Content-Type must be application/json" });
+  sendJson(res, 415, { ok: false, code: "unsupported_media", error: "Content-Type must be application/json" });
   return false;
 }
 
@@ -64,7 +64,7 @@ export function requireJsonContentType(req, res) {
 export function rejectOversizedBody(req, res) {
   const contentLength = Number(req.headers["content-length"] || 0);
   if (!Number.isFinite(contentLength) || contentLength <= MAX_RAW_BODY_BYTES) return true;
-  sendJson(res, 413, { ok: false, error: "Payload too large" });
+  sendJson(res, 413, { ok: false, code: "too_large", error: "Payload too large" });
   return false;
 }
 
@@ -80,7 +80,7 @@ export function checkSameOrigin(req, res, { allowMissingOrigin = false } = {}) {
   const origin = req.headers.origin;
   if (!origin) {
     if (allowMissingOrigin) return true;
-    sendJson(res, 400, { ok: false, error: "Cross-origin requests are not allowed." });
+    sendJson(res, 400, { ok: false, code: "origin", error: "Cross-origin requests are not allowed." });
     return false;
   }
   const host = String(req.headers["x-forwarded-host"] || req.headers.host || "");
@@ -89,7 +89,7 @@ export function checkSameOrigin(req, res, { allowMissingOrigin = false } = {}) {
   } catch {
     // fall through — malformed Origin is rejected below
   }
-  sendJson(res, 400, { ok: false, error: "Cross-origin requests are not allowed." });
+  sendJson(res, 400, { ok: false, code: "origin", error: "Cross-origin requests are not allowed." });
   return false;
 }
 

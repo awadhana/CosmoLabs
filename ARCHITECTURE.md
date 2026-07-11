@@ -109,9 +109,21 @@ Responses:
 
 ### POST `/api/clarify` (Content-Type: `application/json`)
 
-Request: `{ "title", "description", "references": [...], "colorScheme": {...} }`
+Request: `{ "title", "description", "references": [...], "colorScheme": {...},
+"captcha": {...}, "website": "", "startedAt": <ms>, "lang": "en"|"ar"|"fr" }`
 (same shapes as `/api/intake`; inputs are defensively truncated server-side —
 title 200, description 5000, max 5 references).
+
+**Abuse gate (the paid model call).** Because each request can trigger a billed
+`claude-opus-4-8` call, `/api/clarify` is protected the same way the money path
+is: the honeypot (`website`) + time-gate (`startedAt`) filter obvious bots, and
+a **solved proof-of-work `captcha`** (issued by `GET /api/captcha`, IP-bound) is
+**required**. Any request that fails these — or omits the captcha — gets the
+static fallback questions (HTTP 200, `source: "fallback"`) and never reaches
+Anthropic. The browser solves the PoW transparently before calling the endpoint;
+if it can't (no WebCrypto), it shows the localized fallback without a round-trip.
+`lang` (validated to `en`/`ar`/`fr`) makes the model write the questions in the
+user's UI language.
 
 Response 200:
 
@@ -131,7 +143,7 @@ Response 200:
   discipline as `/api/intake`; rate bucket `clarify`, 6 requests / 10 min.
 
 AI integration details: official `@anthropic-ai/sdk`, model `claude-opus-4-8`,
-`max_tokens: 1500`, structured JSON via
+`max_tokens: 1024`, structured JSON via
 `output_config: { format: { type: "json_schema", schema: ... } }`, 10-second
 client timeout, no retries, and **no** `temperature`/`top_p` (rejected on this
 model).

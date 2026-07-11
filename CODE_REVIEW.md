@@ -4,6 +4,8 @@
 **Date:** 2026-07-09
 **Method:** multi-agent review — four subsystem surveys, three defect hunts, adversarial verification of every candidate finding (17 of 19 confirmed), and synthesis.
 
+> **Update — 2026-07-11 (historical note).** This document is a snapshot from 2026-07-09 and several of its findings have since been resolved. `package.json` now has a `scripts.test` and pinned dependencies; a Node test suite (96 tests) covers the security helpers, captcha round-trip, rate limiting, **intake validation + captcha-gate enforcement (end-to-end handler test)**, clarify helpers, email HTML-escaping, and EN/AR/FR dictionary parity; the CSP, `engines`, and `license` are set in `vercel.json`/`package.json`; the clarify endpoint is now captcha-gated and language-aware; server errors and the confirmation email are localized; captcha state changes are announced to screen readers; a Privacy Policy & Terms page (`legal.html`) was added; and `robots.txt`/`sitemap.xml` now exist. Read the sections below as the *2026-07-09* state, not today's.
+
 ---
 
 ## Verdict

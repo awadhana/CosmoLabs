@@ -717,6 +717,12 @@
     }
     .contact-form .btn{ width:100%; margin-top:.5rem; }
     .form-status{ margin-top:.9rem; font-size:.9rem; color:var(--cyan); min-height:1.4em; }
+    .form-status.form-status-err{ color:#FFB3C0; }
+    .wiz-consent{ margin:1rem 0 .25rem; font-size:.82rem; line-height:1.5; color:var(--text-3); }
+    .wiz-consent a{ color:var(--cyan); text-decoration:underline; }
+    .footer-legal{ display:inline-flex; gap:1.1rem; flex-wrap:wrap; }
+    .footer-legal a{ color:inherit; text-decoration:none; opacity:.85; }
+    .footer-legal a:hover{ opacity:1; text-decoration:underline; }
     .form-hint{ margin-top:.65rem; font-size:.82rem; color:var(--text-3); }
 
     /* ---------- Intake wizard (#start) ---------- */
@@ -1074,6 +1080,8 @@
       pointer-events:none;
       display:none;
     }
+    /* transform-origin keywords are physical, so mirror the fill origin under RTL. */
+    html[dir="rtl"] .scroll-progress{ transform-origin:right; }
     @media (prefers-reduced-motion: no-preference){
       .scroll-progress{ display:block; }
     }
@@ -1518,6 +1526,7 @@
                   CosmoLabs
                 </span>
               </div>
+              <p class="wiz-consent" data-i18n-html="wiz.consent">By submitting, you agree to our <a href="/legal.html#privacy">Privacy Policy</a> and <a href="/legal.html#terms">Terms of Service</a>.</p>
               <div class="wiz-errorbox" id="wiz-submit-err" role="alert" hidden></div>
             </fieldset>
 
@@ -2144,6 +2153,10 @@
 
       <div class="footer-bottom">
         <span data-i18n="f.copyright">© 2026 CosmoLabs. All rights reserved.</span>
+        <span class="footer-legal">
+          <a href="/legal.html#privacy" data-i18n="f.privacy">Privacy Policy</a>
+          <a href="/legal.html#terms" data-i18n="f.terms">Terms of Service</a>
+        </span>
         <span class="tag" data-i18n="f.tagline">Where science is standard, excellence is engineered</span>
       </div>
     </div>
@@ -2405,7 +2418,15 @@
           "wiz.captcha.verifying": "Verifying…",
           "wiz.captcha.done": "Verified",
           "wiz.captcha.err": "Verification failed — click to try again.",
-          "wiz.err.captcha": "Please confirm you’re not a robot before submitting."
+          "wiz.err.captcha": "Please confirm you’re not a robot before submitting.",
+          "wiz.err.rate": "Too many requests. Please wait a few minutes and try again.",
+          "wiz.err.tooLarge": "Your attachments are too large. Please remove or shrink a file and try again.",
+          "wiz.consent": "By submitting, you agree to our <a href='/legal.html#privacy'>Privacy Policy</a> and <a href='/legal.html#terms'>Terms of Service</a>.",
+          "c.err.name": "Please enter your name.",
+          "c.err.email": "Please enter a valid email address.",
+          "c.err.message": "Please tell us how we can help.",
+          "f.privacy": "Privacy Policy",
+          "f.terms": "Terms of Service"
         },
         ar: {
           "meta.title": "CosmoLabs — استشارات الحوسبة وهندسة الطيران والفضاء والهندسة النووية",
@@ -2645,7 +2666,15 @@
           "wiz.captcha.verifying": "جارٍ التحقق…",
           "wiz.captcha.done": "تم التحقق",
           "wiz.captcha.err": "تعذّر التحقق — انقر للمحاولة مجددًا.",
-          "wiz.err.captcha": "يُرجى تأكيد أنك لست روبوتًا قبل الإرسال."
+          "wiz.err.captcha": "يُرجى تأكيد أنك لست روبوتًا قبل الإرسال.",
+          "wiz.err.rate": "طلبات كثيرة جدًا. يُرجى الانتظار بضع دقائق ثم المحاولة مرة أخرى.",
+          "wiz.err.tooLarge": "المرفقات كبيرة جدًا. يُرجى إزالة ملف أو تصغيره ثم المحاولة مرة أخرى.",
+          "wiz.consent": "بالإرسال، أنت توافق على <a href='/legal.html#privacy'>سياسة الخصوصية</a> و<a href='/legal.html#terms'>شروط الخدمة</a>.",
+          "c.err.name": "يُرجى إدخال اسمك.",
+          "c.err.email": "يُرجى إدخال عنوان بريد إلكتروني صحيح.",
+          "c.err.message": "يُرجى إخبارنا بالطريقة التي يمكننا مساعدتك بها.",
+          "f.privacy": "سياسة الخصوصية",
+          "f.terms": "شروط الخدمة"
         },
         fr: {
           "meta.title": "CosmoLabs — Conseil en informatique, ingénierie aérospatiale & nucléaire",
@@ -2885,7 +2914,15 @@
           "wiz.captcha.verifying": "Vérification en cours…",
           "wiz.captcha.done": "Vérifié",
           "wiz.captcha.err": "Échec de la vérification — cliquez pour réessayer.",
-          "wiz.err.captcha": "Veuillez confirmer que vous n’êtes pas un robot avant l’envoi."
+          "wiz.err.captcha": "Veuillez confirmer que vous n’êtes pas un robot avant l’envoi.",
+          "wiz.err.rate": "Trop de requêtes. Veuillez patienter quelques minutes puis réessayer.",
+          "wiz.err.tooLarge": "Vos pièces jointes sont trop volumineuses. Veuillez en retirer ou en réduire une, puis réessayer.",
+          "wiz.consent": "En envoyant, vous acceptez notre <a href='/legal.html#privacy'>politique de confidentialité</a> et nos <a href='/legal.html#terms'>conditions d’utilisation</a>.",
+          "c.err.name": "Veuillez saisir votre nom.",
+          "c.err.email": "Veuillez saisir une adresse e-mail valide.",
+          "c.err.message": "Veuillez nous indiquer comment nous pouvons vous aider.",
+          "f.privacy": "Politique de confidentialité",
+          "f.terms": "Conditions d’utilisation"
         }
       };
 
@@ -3135,17 +3172,29 @@
       /* ---------- Contact form → mailto (no backend) ---------- */
       var form = document.getElementById('contact-form');
       if (form) {
+        var CONTACT_EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
         form.addEventListener('submit', function (e) {
           e.preventDefault();
           var status = document.getElementById('form-status');
+          var nameEl = form.elements.name, emailEl = form.elements.email, msgEl = form.elements.message;
+          var name = nameEl.value.trim(), email = emailEl.value.trim(), message = msgEl.value.trim();
 
-          if (!form.checkValidity()) {
-            form.reportValidity();
+          // Custom, dict-keyed validation instead of native checkValidity()
+          // bubbles — the browser's bubbles follow the OS locale, not the site's.
+          var firstBad = null, errKey = null;
+          function mark(el, bad, key) {
+            if (bad) { el.setAttribute('aria-invalid', 'true'); if (!firstBad) { firstBad = el; errKey = key; } }
+            else el.removeAttribute('aria-invalid');
+          }
+          mark(nameEl, name.length === 0, 'c.err.name');
+          mark(emailEl, email.length === 0 || email.length > 254 || !CONTACT_EMAIL_RE.test(email), 'c.err.email');
+          mark(msgEl, message.length === 0, 'c.err.message');
+          if (firstBad) {
+            if (status) { status.textContent = tr(errKey); status.classList.add('form-status-err'); }
+            firstBad.focus();
             return;
           }
-          var name = form.elements.name.value.trim();
-          var email = form.elements.email.value.trim();
-          var message = form.elements.message.value.trim();
+          if (status) status.classList.remove('form-status-err');
 
           var subject = fmt(tr('c.subject'), { name: name });
           var body = message + '\n\n— ' + name + ' (' + email + ')';
@@ -3576,28 +3625,43 @@
         questionsWrap.innerHTML = '';
         $('wiz-clarify-ready').hidden = true;
         $('wiz-clarify-loading').hidden = false;
-        fetch('/api/clarify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: $('wiz-title').value.trim(),
-            description: $('wiz-desc').value.trim(),
-            references: collectRefs(),
-            colorScheme: collectColorScheme()
+        // /api/clarify gates its paid model call behind a solved proof-of-work
+        // challenge. Solve one transparently first; if we can't (no WebCrypto,
+        // or the challenge/solve fails) skip the round-trip and show the
+        // localized fallback questions instead of billing the endpoint.
+        obtainPow().then(function (pow) {
+          if (state.clarifyKey !== key) return; // user edited the brief meanwhile
+          if (!pow) { renderQuestions(fallbackQuestions(), false); return; }
+          return fetch('/api/clarify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: $('wiz-title').value.trim(),
+              description: $('wiz-desc').value.trim(),
+              references: collectRefs(),
+              colorScheme: collectColorScheme(),
+              captcha: pow,
+              website: $('wiz-website').value, // honeypot
+              startedAt: state.startedAt,
+              lang: window.i18n.lang()
+            })
           })
-        })
-          .then(function (r) { if (!r.ok) throw new Error('clarify failed'); return r.json(); })
-          .then(function (d) {
-            // Stale-response guard: if the user went back, edited the brief and
-            // re-entered step 3, a newer request owns this panel — drop ours.
-            if (state.clarifyKey !== key) return;
-            if (!d || d.ok !== true) throw new Error('clarify failed');
-            renderQuestions((d.questions || []).slice(0, 4), d.ready === true);
-          })
-          .catch(function () {
-            if (state.clarifyKey !== key) return;
-            renderQuestions(fallbackQuestions(), false);
-          });
+            .then(function (r) { if (!r.ok) throw new Error('clarify failed'); return r.json(); })
+            .then(function (d) {
+              // Stale-response guard: if the user went back, edited the brief and
+              // re-entered step 3, a newer request owns this panel — drop ours.
+              if (state.clarifyKey !== key) return;
+              if (!d || d.ok !== true) throw new Error('clarify failed');
+              // Server returned its English fallback set (no key / model error /
+              // gate) — swap in our localized fallback questions instead.
+              if (d.source === 'fallback') { renderQuestions(fallbackQuestions(), false); return; }
+              renderQuestions((d.questions || []).slice(0, 4), d.ready === true);
+            })
+            .catch(function () {
+              if (state.clarifyKey !== key) return;
+              renderQuestions(fallbackQuestions(), false);
+            });
+        });
       }
       function collectClarifications() {
         var out = [];
@@ -3676,23 +3740,36 @@
          server-side. Solving ~30k SHA-256 hashes takes a moment by design. */
       var captchaWrap = $('wiz-captcha'), captchaBtn = $('wiz-captcha-btn');
 
+      var CAPTCHA_LABELS = {
+        idle: 'wiz.captcha.label',
+        working: 'wiz.captcha.verifying',
+        done: 'wiz.captcha.done',
+        error: 'wiz.captcha.err'
+      };
       function renderCaptcha() {
         var capLabel = $('wiz-captcha-label');
         if (!captchaWrap || !capLabel || !captchaBtn) return;
-        var labels = {
-          idle: 'wiz.captcha.label',
-          working: 'wiz.captcha.verifying',
-          done: 'wiz.captcha.done',
-          error: 'wiz.captcha.err'
-        };
         captchaWrap.setAttribute('data-state', state.captchaState);
-        capLabel.textContent = tr(labels[state.captchaState] || 'wiz.captcha.label');
-        captchaBtn.disabled = state.captchaState === 'working' || state.captchaState === 'done';
+        capLabel.textContent = tr(CAPTCHA_LABELS[state.captchaState] || 'wiz.captcha.label');
+        // Use aria-disabled, NOT the disabled attribute: disabling a focused
+        // button drops focus to <body> and breaks Tab order. The click handler
+        // already guards re-entry while working/done.
+        var busy = state.captchaState === 'working' || state.captchaState === 'done';
+        captchaBtn.setAttribute('aria-disabled', busy ? 'true' : 'false');
       }
       function setCaptchaState(s) {
+        var hadFocus = captchaBtn && document.activeElement === captchaBtn;
         state.captchaState = s;
         if (s === 'done') $('wiz-submit-err').hidden = true;
         renderCaptcha();
+        // Announce every state change to the wiz-status live region so screen
+        // readers learn the outcome of the mandatory human check.
+        announce(tr(CAPTCHA_LABELS[s] || 'wiz.captcha.label'));
+        // On success, move focus forward to Submit so a keyboard user isn't
+        // stranded on a now-inert control.
+        if (s === 'done' && hadFocus && submitBtn && !submitBtn.hidden) {
+          try { submitBtn.focus(); } catch (e) { /* not yet focusable */ }
+        }
       }
       function resetCaptcha() {
         state.captcha = null;
@@ -3719,25 +3796,34 @@
         return null;
       }
 
+      // Fetch + solve one proof-of-work challenge. Resolves to the solved token
+      // {challenge, salt, number, signature}, or null if WebCrypto is missing or
+      // anything fails. Shared by the visible step-4 widget and the transparent
+      // step-3 clarify gate. Never rejects.
+      function obtainPow() {
+        if (!window.crypto || !window.crypto.subtle) return Promise.resolve(null);
+        return fetch('/api/captcha')
+          .then(function (r) { if (!r.ok) throw new Error('captcha unavailable'); return r.json(); })
+          .then(function (ch) {
+            if (!ch || ch.ok !== true) throw new Error('captcha unavailable');
+            return solvePow(ch).then(function (n) {
+              if (n === null) throw new Error('no solution');
+              return { challenge: ch.challenge, salt: ch.salt, number: n, signature: ch.signature };
+            });
+          })
+          .catch(function () { return null; });
+      }
+
       if (captchaBtn) {
         captchaBtn.addEventListener('click', function () {
           if (state.captchaState === 'working' || state.captchaState === 'done') return;
           if (!window.crypto || !window.crypto.subtle) { setCaptchaState('error'); return; }
           setCaptchaState('working');
-          fetch('/api/captcha')
-            .then(function (r) { if (!r.ok) throw new Error('captcha unavailable'); return r.json(); })
-            .then(function (ch) {
-              if (!ch || ch.ok !== true) throw new Error('captcha unavailable');
-              return solvePow(ch).then(function (n) {
-                if (n === null) throw new Error('no solution');
-                state.captcha = { challenge: ch.challenge, salt: ch.salt, number: n, signature: ch.signature };
-                setCaptchaState('done');
-              });
-            })
-            .catch(function () {
-              state.captcha = null;
-              setCaptchaState('error');
-            });
+          obtainPow().then(function (pow) {
+            if (!pow) { state.captcha = null; setCaptchaState('error'); return; }
+            state.captcha = pow;
+            setCaptchaState('done');
+          });
         });
       }
 
@@ -3760,6 +3846,26 @@
             reader.readAsDataURL(f);
           });
         }));
+      }
+
+      // Map the server's stable error `code` to a localized dict key so an
+      // AR/FR user never sees a raw English server string. Unknown codes fall
+      // back to the localized generic message; a code-less response (legacy)
+      // uses its own text only as a last resort.
+      var ERR_CODE_KEY = {
+        rate_limit: 'wiz.err.rate',
+        too_large: 'wiz.err.tooLarge',
+        validation: 'wiz.err.fix',
+        turnstile: 'wiz.err.captcha',
+        server: 'wiz.err.generic',
+        bad_json: 'wiz.err.generic',
+        origin: 'wiz.err.generic',
+        method_not_allowed: 'wiz.err.generic',
+        unsupported_media: 'wiz.err.generic'
+      };
+      function localizeServerError(d) {
+        if (d && d.code) return tr(ERR_CODE_KEY[d.code] || 'wiz.err.generic');
+        return (d && d.error) || tr('wiz.err.generic');
       }
 
       function submitFailed(msg) {
@@ -3832,7 +3938,8 @@
               clarifications: collectClarifications(),
               files: fileData,
               website: $('wiz-website').value, // honeypot — humans leave this empty
-              startedAt: state.startedAt
+              startedAt: state.startedAt,
+              lang: window.i18n.lang()
             };
             if (state.turnstileToken) payload.turnstileToken = state.turnstileToken;
             if (state.captcha) payload.captcha = state.captcha;
@@ -3849,14 +3956,15 @@
             );
           })
           .then(function (res) {
-            if (res.data && res.data.ok === true && res.data.id) {
-              showSuccess(res.data.id);
-            } else if (res.data && res.data.code === 'captcha') {
+            var d = res.data;
+            if (d && d.ok === true && d.id) {
+              showSuccess(d.id);
+            } else if (d && d.code === 'captcha') {
               // Solution rejected (e.g. expired) — reset the widget for a redo.
               resetCaptcha();
               submitFailed(tr('wiz.captcha.err'));
             } else {
-              submitFailed((res.data && res.data.error) || tr('wiz.err.generic'));
+              submitFailed(localizeServerError(d));
             }
           })
           .catch(function () {
@@ -3883,9 +3991,11 @@
             c.setAttribute('aria-label', fmt(tr('wiz.color.aria'), { n: i + 1 }));
           });
         }
-        // Local fallback clarify questions: re-translate label + data-question while
-        // step 3 is showing. API-generated questions have no i18n key and are skipped.
-        if (state.step === 3 && !state.submitting) {
+        // Local fallback clarify questions carry an i18n key: re-translate their
+        // label + data-question whenever they exist (not only while step 3 shows,
+        // so labels rendered under a previous language don't go stale after a
+        // Back → switch-language → Next round-trip). API questions have no key.
+        if (!state.submitting) {
           questionsWrap.querySelectorAll('.wiz-q[data-i18n-q]').forEach(function (field) {
             var text = String(tr(field.getAttribute('data-i18n-q'))).slice(0, 500);
             field.setAttribute('data-question', text);

@@ -43,6 +43,13 @@ const MIN_FORM_FILL_MS = 3000; // time-gate: humans take longer than 3s
 
 const GENERIC_500 = "Something went wrong. Please email cosmolabshq@gmail.com.";
 
+// UI languages we localize the customer confirmation email for; anything else
+// (or missing) falls back to English.
+const SUPPORTED_LANGS = ["en", "ar", "fr"];
+export function normalizeLang(value) {
+  return SUPPORTED_LANGS.includes(value) ? value : "en";
+}
+
 // ---------------------------------------------------------------------------
 // Validation
 
@@ -50,7 +57,7 @@ function fail(message) {
   return { error: message };
 }
 
-function validateReferences(raw) {
+export function validateReferences(raw) {
   if (raw === undefined || raw === null) return { value: [] };
   if (!Array.isArray(raw) || raw.length > 5) return fail("References must be a list of at most 5 links.");
   const out = [];
@@ -65,7 +72,7 @@ function validateReferences(raw) {
   return { value: out };
 }
 
-function validateColorScheme(raw) {
+export function validateColorScheme(raw) {
   if (raw === undefined || raw === null) return { value: null };
   if (typeof raw !== "object" || Array.isArray(raw)) return fail("Color scheme must be an object.");
   const mode = raw.mode;
@@ -83,7 +90,7 @@ function validateColorScheme(raw) {
   return { value: { mode, colors, notes } };
 }
 
-function validateClarifications(raw) {
+export function validateClarifications(raw) {
   if (raw === undefined || raw === null) return { value: [] };
   if (!Array.isArray(raw) || raw.length > 8) return fail("At most 8 clarification answers are allowed.");
   const out = [];
@@ -104,7 +111,7 @@ function validateClarifications(raw) {
 
 const BASE64_RE = /^[A-Za-z0-9+/]*={0,2}$/;
 
-function validateFiles(raw) {
+export function validateFiles(raw) {
   if (raw === undefined || raw === null) return { value: [] };
   if (!Array.isArray(raw) || raw.length > MAX_FILES) return fail(`At most ${MAX_FILES} files are allowed.`);
 
@@ -151,7 +158,7 @@ function validateFiles(raw) {
   return { value: out };
 }
 
-function validateSubmission(body) {
+export function validateSubmission(body) {
   const email = cleanString(body.email);
   if (!email || !isValidEmail(email)) return fail("Please provide a valid email address.");
 
@@ -195,7 +202,7 @@ function validateSubmission(body) {
 // ---------------------------------------------------------------------------
 // Anti-abuse
 
-function isBot(body) {
+export function isBot(body) {
   // Honeypot: the browser always submits the visually hidden "website" field
   // as an empty string. Any present value that isn't exactly "" — including
   // non-string types (0, null, [], {}) a bot might send to dodge the check —
@@ -206,6 +213,23 @@ function isBot(body) {
   const startedAt = typeof body.startedAt === "number" ? body.startedAt : 0;
   if (!startedAt || Date.now() - startedAt < MIN_FORM_FILL_MS) return true;
   return false;
+}
+
+/**
+ * The human-verification gate decision, factored out of the handler so it can
+ * be unit-tested directly (the handler wiring around blob storage/email is not
+ * easily exercised). Whenever Turnstile is configured it is authoritative;
+ * otherwise a solved proof-of-work captcha is REQUIRED.
+ *
+ * @param {{required: boolean, verified: boolean}} turnstile
+ * @param {{verified: boolean, reason?: string}} captchaResult
+ * @returns {{ok: true, powVerified: boolean} | {ok: false, code: "turnstile"|"captcha"}}
+ */
+export function humanCheckResult(turnstile, captchaResult) {
+  if (turnstile.required) {
+    return turnstile.verified ? { ok: true, powVerified: false } : { ok: false, code: "turnstile" };
+  }
+  return captchaResult.verified ? { ok: true, powVerified: true } : { ok: false, code: "captcha" };
 }
 
 async function verifyTurnstile(token, ip) {
@@ -238,7 +262,7 @@ async function verifyTurnstile(token, ip) {
 
 // ---------------------------------------------------------------------------
 
-function newSubmissionId() {
+export function newSubmissionId() {
   const alphabet = "abcdefghijklmnopqrstuvwxyz0123456789";
   let random = "";
   for (const byte of crypto.randomBytes(6)) random += alphabet[byte % alphabet.length];
@@ -256,7 +280,7 @@ export default async function handler(req, res) {
     const rate = checkRateLimit(ip, "intake", 8, 10 * 60 * 1000);
     if (!rate.allowed) {
       res.setHeader("Retry-After", String(rate.retryAfterSec));
-      sendJson(res, 429, { ok: false, error: "Too many requests. Please wait a few minutes and try again." });
+      sendJson(res, 429, { ok: false, code: "rate_limit", error: "Too many requests. Please wait a few minutes and try again." });
       return;
     }
 
@@ -265,18 +289,18 @@ export default async function handler(req, res) {
     if (typeof body === "string") {
       // Backstop for the header-based pre-check: measure the actual bytes.
       if (Buffer.byteLength(body, "utf8") > MAX_RAW_BODY_BYTES) {
-        sendJson(res, 413, { ok: false, error: "Payload too large" });
+        sendJson(res, 413, { ok: false, code: "too_large", error: "Payload too large" });
         return;
       }
       try {
         body = JSON.parse(body);
       } catch {
-        sendJson(res, 400, { ok: false, error: "Request body must be valid JSON." });
+        sendJson(res, 400, { ok: false, code: "bad_json", error: "Request body must be valid JSON." });
         return;
       }
     }
     if (!body || typeof body !== "object" || Array.isArray(body)) {
-      sendJson(res, 400, { ok: false, error: "Request body must be a JSON object." });
+      sendJson(res, 400, { ok: false, code: "bad_json", error: "Request body must be a JSON object." });
       return;
     }
 
@@ -288,33 +312,27 @@ export default async function handler(req, res) {
 
     const validated = validateSubmission(body);
     if (validated.error) {
-      sendJson(res, 400, { ok: false, error: validated.error });
+      sendJson(res, 400, { ok: false, code: "validation", error: validated.error });
       return;
     }
 
+    // Human check: Turnstile is authoritative when configured; otherwise a
+    // solved proof-of-work captcha (issued by GET /api/captcha) is REQUIRED.
+    // code:"captcha" lets the frontend show a translated message and reset its
+    // widget; code:"turnstile" maps to a generic localized failure.
     const turnstile = await verifyTurnstile(body.turnstileToken, ip);
-    if (turnstile.required && !turnstile.verified) {
-      sendJson(res, 400, { ok: false, error: "Verification failed" });
+    const captchaResult = turnstile.required
+      ? { verified: false, reason: "turnstile path" }
+      : verifyCaptcha(body.captcha, ip);
+    const human = humanCheckResult(turnstile, captchaResult);
+    if (!human.ok) {
+      if (human.code === "captcha") console.log(`[intake] captcha rejected (${captchaResult.reason}) from ${ip}`);
+      sendJson(res, 400, human.code === "captcha"
+        ? { ok: false, code: "captcha", error: "Human verification failed. Please redo the check and try again." }
+        : { ok: false, code: "turnstile", error: "Verification failed" });
       return;
     }
-
-    // Human check: whenever Turnstile isn't configured, a solved proof-of-work
-    // captcha (issued by GET /api/captcha) is REQUIRED. code:"captcha" lets the
-    // frontend show a translated message and reset its widget.
-    let powVerified = false;
-    if (!turnstile.required) {
-      const pow = verifyCaptcha(body.captcha, ip);
-      if (!pow.verified) {
-        console.log(`[intake] captcha rejected (${pow.reason}) from ${ip}`);
-        sendJson(res, 400, {
-          ok: false,
-          code: "captcha",
-          error: "Human verification failed. Please redo the check and try again.",
-        });
-        return;
-      }
-      powVerified = true;
-    }
+    const powVerified = human.powVerified;
 
     const id = newSubmissionId();
     const data = validated.value;
@@ -335,6 +353,7 @@ export default async function handler(req, res) {
     const submission = {
       id,
       receivedAt: new Date().toISOString(),
+      lang: normalizeLang(body.lang),
       email: data.email,
       phone: data.phone,
       title: data.title,
@@ -374,6 +393,6 @@ export default async function handler(req, res) {
     sendJson(res, 200, { ok: true, id });
   } catch (err) {
     console.error("[intake] unexpected error:", err);
-    sendJson(res, 500, { ok: false, error: GENERIC_500 });
+    sendJson(res, 500, { ok: false, code: "server", error: GENERIC_500 });
   }
 }

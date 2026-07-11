@@ -11,6 +11,7 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 
+import { verifyCaptcha } from "./_lib/captcha.js";
 import { checkRateLimit } from "./_lib/ratelimit.js";
 import {
   checkSameOrigin,
@@ -25,6 +26,8 @@ import {
 } from "./_lib/security.js";
 
 const MODEL = "claude-opus-4-8";
+const MIN_FORM_FILL_MS = 3000; // time-gate: humans don't reach step 3 in <3s
+const LANG_NAME = { en: "English", ar: "Arabic", fr: "French" };
 
 const FALLBACK_QUESTIONS = [
   {
@@ -74,8 +77,40 @@ function sendFallback(res) {
   sendJson(res, 200, { ok: true, ready: false, questions: FALLBACK_QUESTIONS, source: "fallback" });
 }
 
+/**
+ * Honeypot + time-gate, mirroring intake.js. Cheap, browser-safe signals that
+ * cost a competent attacker nothing individually but let us skip the paid model
+ * call for the obvious bots (the PoW captcha below is the real cost gate).
+ */
+export function looksAutomated(body) {
+  if (body && "website" in body && body.website !== "") return true;
+  const startedAt = typeof body?.startedAt === "number" ? body.startedAt : 0;
+  if (!startedAt || Date.now() - startedAt < MIN_FORM_FILL_MS) return true;
+  return false;
+}
+
+/** Instruct the model to answer in the site's UI language (en/ar/fr only). */
+export function langInstruction(lang) {
+  const name = LANG_NAME[lang];
+  return name ? `\n\nWrite every clarifying question in ${name}.` : "";
+}
+
+/** Coerce a raw model response into a safe {ready, questions} shape. */
+export function sanitizeQuestions(parsed) {
+  const ready = Boolean(parsed) && parsed.ready === true;
+  let questions = Array.isArray(parsed?.questions) ? parsed.questions : [];
+  questions = questions
+    .slice(0, 4)
+    .map((q, i) => ({
+      id: typeof q?.id === "string" && q.id.trim() ? sanitizeText(q.id, 32) : `q${i + 1}`,
+      question: sanitizeText(q?.question, 500) || "",
+    }))
+    .filter((q) => q.question.length > 0);
+  return { ready, questions };
+}
+
 /** Defensive truncation — never trust client-supplied lengths. */
-function buildBrief(body) {
+export function buildBrief(body) {
   const title = sanitizeText(body.title, 200) || "(not provided)";
   const description = sanitizeText(body.description, 5000) || "(not provided)";
 
@@ -130,6 +165,22 @@ export default async function handler(req, res) {
     if (typeof body === "string") body = JSON.parse(body);
     if (!body || typeof body !== "object" || Array.isArray(body)) throw new Error("invalid body");
 
+    // Abuse gate for the paid model call. Obvious bots and any request without
+    // a valid proof-of-work solution (issued by GET /api/captcha, IP-bound) get
+    // the static fallback questions — the flow keeps working, but Anthropic is
+    // never billed for them. The PoW imposes real per-request CPU cost on an
+    // attacker regardless of IP rotation; honeypot/time-gate are free filters.
+    if (looksAutomated(body)) {
+      sendFallback(res);
+      return;
+    }
+    const pow = verifyCaptcha(body.captcha, ip);
+    if (!pow.verified) {
+      console.log(`[clarify] captcha rejected (${pow.reason}) from ${ip}`);
+      sendFallback(res);
+      return;
+    }
+
     if (!process.env.ANTHROPIC_API_KEY) {
       sendFallback(res);
       return;
@@ -142,8 +193,8 @@ export default async function handler(req, res) {
 
     const message = await client.messages.create({
       model: MODEL,
-      max_tokens: 1500,
-      system: SYSTEM_PROMPT,
+      max_tokens: 1024,
+      system: SYSTEM_PROMPT + langInstruction(body.lang),
       output_config: {
         format: { type: "json_schema", schema: RESPONSE_SCHEMA },
       },
@@ -157,17 +208,7 @@ export default async function handler(req, res) {
 
     // With output_config.format the first text block contains valid JSON.
     const text = message.content.find((block) => block.type === "text")?.text ?? "";
-    const parsed = JSON.parse(text);
-
-    const ready = parsed.ready === true;
-    let questions = Array.isArray(parsed.questions) ? parsed.questions : [];
-    questions = questions
-      .slice(0, 4)
-      .map((q, i) => ({
-        id: typeof q?.id === "string" && q.id.trim() ? sanitizeText(q.id, 32) : `q${i + 1}`,
-        question: sanitizeText(q?.question, 500) || "",
-      }))
-      .filter((q) => q.question.length > 0);
+    const { ready, questions } = sanitizeQuestions(JSON.parse(text));
 
     if (ready) {
       // Model says the brief is complete — trust it and return no questions,

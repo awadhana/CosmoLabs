@@ -40,9 +40,20 @@ export function isCaptchaSecretConfigured() {
   return Boolean(process.env.CAPTCHA_SECRET || process.env.INTAKE_ADMIN_TOKEN) || !isProduction();
 }
 
+// Domain-separation label so a key derived from INTAKE_ADMIN_TOKEN is
+// cryptographically distinct from the admin token itself (see secret()).
+const CAPTCHA_KEY_INFO = "cosmolabs/captcha-signing/v1";
+
 function secret() {
-  const configured = process.env.CAPTCHA_SECRET || process.env.INTAKE_ADMIN_TOKEN;
-  if (configured) return configured;
+  // Prefer a dedicated captcha secret.
+  if (process.env.CAPTCHA_SECRET) return process.env.CAPTCHA_SECRET;
+  // Fallback: derive a captcha-only signing key from the admin token rather
+  // than reusing its raw value. HMAC domain-separation means the public
+  // challenge signatures never expose (or share a value with) the bearer
+  // secret that authorizes reading PII-bearing submissions — one secret can
+  // still power both, but a weakness in the captcha scheme can't touch admin.
+  const admin = process.env.INTAKE_ADMIN_TOKEN;
+  if (admin) return crypto.createHmac("sha256", admin).update(CAPTCHA_KEY_INFO).digest("hex");
   // Local dev fallback only — never sign with the dev constant in production.
   // Guarded by isCaptchaSecretConfigured() at every call site, so this throw
   // is an unreachable backstop rather than a request-crashing path.

@@ -14,7 +14,48 @@ import nodemailer from "nodemailer";
 
 const DEFAULT_NOTIFY = "cosmolabshq@gmail.com";
 
-function escapeHtml(value) {
+// Per-locale copy for the customer confirmation email so an Arabic/French
+// submitter gets a confirmation in the language they used on the site. The
+// internal team notification stays English. {id} is interpolated as an escaped
+// <strong>. Anything not in this map (or a missing lang) falls back to English.
+export const CONFIRM_COPY = {
+  en: {
+    dir: "ltr",
+    subject: "We received your project brief — CosmoLabs",
+    heading: "We received your project brief",
+    p1: "Thanks for reaching out to CosmoLabs. Your brief is in our queue and a senior engineer will follow up within one business day.",
+    p2a: "Your reference id is ",
+    p2b: " — keep it handy if you want to add anything later.",
+    summary: "Summary",
+    footer: "Questions in the meantime? Just reply to this email or write to cosmolabshq@gmail.com.",
+  },
+  fr: {
+    dir: "ltr",
+    subject: "Nous avons bien reçu votre brief de projet — CosmoLabs",
+    heading: "Nous avons bien reçu votre brief de projet",
+    p1: "Merci d’avoir contacté CosmoLabs. Votre brief est dans notre file d’attente et un ingénieur senior vous répondra sous un jour ouvré.",
+    p2a: "Votre identifiant de référence est ",
+    p2b: " — conservez-le si vous souhaitez ajouter des éléments plus tard.",
+    summary: "Résumé",
+    footer: "Une question entre-temps ? Répondez simplement à cet e-mail ou écrivez à cosmolabshq@gmail.com.",
+  },
+  ar: {
+    dir: "rtl",
+    subject: "لقد استلمنا موجز مشروعك — CosmoLabs",
+    heading: "لقد استلمنا موجز مشروعك",
+    p1: "شكرًا لتواصلك مع CosmoLabs. موجزك الآن في قائمة انتظارنا، وسيتابع معك أحد كبار المهندسين خلال يوم عمل واحد.",
+    p2a: "معرّف المرجع الخاص بك هو ",
+    p2b: " — احتفظ به إن رغبت في إضافة أي تفاصيل لاحقًا.",
+    summary: "ملخّص",
+    footer: "هل لديك أي سؤال في هذه الأثناء؟ ما عليك سوى الردّ على هذا البريد الإلكتروني أو المراسلة على cosmolabshq@gmail.com.",
+  },
+};
+
+export function confirmCopy(lang) {
+  return CONFIRM_COPY[lang] || CONFIRM_COPY.en;
+}
+
+export function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
@@ -23,7 +64,7 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-function nl2br(value) {
+export function nl2br(value) {
   return escapeHtml(value).replaceAll("\n", "<br>");
 }
 
@@ -41,7 +82,7 @@ function row(label, valueHtml) {
   </tr>`;
 }
 
-function internalHtml(submission) {
+export function internalHtml(submission) {
   const refs = (submission.references || [])
     .map(
       (r, i) =>
@@ -95,30 +136,23 @@ function internalHtml(submission) {
   </div>`;
 }
 
-function customerHtml(submission) {
+export function customerHtml(submission, lang) {
+  const c = confirmCopy(lang || submission.lang);
+  const align = c.dir === "rtl" ? "right" : "left";
+  const desc = submission.description.length > 400
+    ? `${submission.description.slice(0, 400)}…`
+    : submission.description;
   return `
-  <div style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;max-width:560px;margin:0 auto;padding:24px">
-    <h2 style="margin:0 0 12px 0;color:#0f172a">We received your project brief</h2>
-    <p style="margin:0 0 12px 0;color:#334155;line-height:1.6">
-      Thanks for reaching out to CosmoLabs. Your brief is in our queue and a senior
-      engineer will follow up within one business day.
-    </p>
-    <p style="margin:0 0 16px 0;color:#334155;line-height:1.6">
-      Your reference id is <strong>${escapeHtml(submission.id)}</strong> — keep it handy
-      if you want to add anything later.
-    </p>
+  <div dir="${c.dir}" style="font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;max-width:560px;margin:0 auto;padding:24px;text-align:${align}">
+    <h2 style="margin:0 0 12px 0;color:#0f172a">${escapeHtml(c.heading)}</h2>
+    <p style="margin:0 0 12px 0;color:#334155;line-height:1.6">${escapeHtml(c.p1)}</p>
+    <p style="margin:0 0 16px 0;color:#334155;line-height:1.6">${escapeHtml(c.p2a)}<strong>${escapeHtml(submission.id)}</strong>${escapeHtml(c.p2b)}</p>
     <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px">
-      <p style="margin:0 0 6px 0;font-size:13px;color:#64748b">Summary</p>
+      <p style="margin:0 0 6px 0;font-size:13px;color:#64748b">${escapeHtml(c.summary)}</p>
       <p style="margin:0 0 6px 0;color:#0f172a"><strong>${escapeHtml(submission.title)}</strong></p>
-      <p style="margin:0;color:#334155;font-size:14px;line-height:1.5">${nl2br(
-        submission.description.length > 400
-          ? `${submission.description.slice(0, 400)}…`
-          : submission.description
-      )}</p>
+      <p style="margin:0;color:#334155;font-size:14px;line-height:1.5">${nl2br(desc)}</p>
     </div>
-    <p style="margin:16px 0 0 0;color:#64748b;font-size:13px">
-      Questions in the meantime? Just reply to this email or write to cosmolabshq@gmail.com.
-    </p>
+    <p style="margin:16px 0 0 0;color:#64748b;font-size:13px">${escapeHtml(c.footer)}</p>
   </div>`;
 }
 
@@ -196,10 +230,11 @@ export async function sendIntakeEmails({ submission, notifyEmail }) {
     }
 
     try {
+      const copy = confirmCopy(submission.lang);
       const info = await transporter.sendMail({
         from,
         to: submission.email,
-        subject: "We received your project brief — CosmoLabs",
+        subject: copy.subject,
         html: customerHtml(submission),
       });
       confirmationId = info?.messageId ?? null;
