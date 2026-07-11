@@ -463,12 +463,19 @@
     }
     @media (prefers-reduced-motion: no-preference){
       .marquee-track{ animation:marquee 48s linear infinite; }
+      /* RTL lays the duplicate tracks to the LEFT of the primary one, so the
+         loop must scroll toward them (positive X) to stay seamless. */
+      html[dir="rtl"] .marquee-track{ animation-name:marquee-rtl; }
       .marquee:hover .marquee-track,
       .marquee.is-paused .marquee-track{ animation-play-state:paused; }
     }
     @keyframes marquee{
       from{ transform:translateX(0); }
       to{ transform:translateX(calc(-100% - var(--gap))); }
+    }
+    @keyframes marquee-rtl{
+      from{ transform:translateX(0); }
+      to{ transform:translateX(calc(100% + var(--gap))); }
     }
     .marquee-controls{ display:flex; justify-content:center; margin-top:1.25rem; }
     .marquee-toggle{
@@ -709,6 +716,13 @@
       transition:border-color .2s var(--ease), background-color .2s var(--ease);
     }
     .field textarea{ min-height:132px; resize:vertical; }
+    /* Phone/email/URL are inherently LTR: keep their content left-to-right even
+       under RTL (Arabic) so "+1 (404) 555-0100" isn't bidi-reordered; align to
+       the right edge to match the RTL form flow. */
+    html[dir="rtl"] .field input[type="tel"],
+    html[dir="rtl"] .field input[type="email"],
+    html[dir="rtl"] .field input[type="url"],
+    html[dir="rtl"] .wiz-ref-url{ direction:ltr; text-align:right; }
     .field input::placeholder, .field textarea::placeholder{ color:var(--text-3); opacity:1; }
     .field input:focus, .field textarea:focus{
       outline:2px solid var(--cyan); outline-offset:0;
@@ -3624,6 +3638,11 @@
         state.clarifyKey = key;
         questionsWrap.innerHTML = '';
         $('wiz-clarify-ready').hidden = true;
+        // When AI clarify is disabled server-side (no ANTHROPIC_API_KEY →
+        // intake-config reports clarifyEnabled:false), the endpoint can only
+        // ever return the fallback set — so skip the ~1-2s proof-of-work solve
+        // and two round-trips entirely and render the localized fallback now.
+        if (!config.clarifyEnabled) { renderQuestions(fallbackQuestions(), false); return; }
         $('wiz-clarify-loading').hidden = false;
         // /api/clarify gates its paid model call behind a solved proof-of-work
         // challenge. Solve one transparently first; if we can't (no WebCrypto,
@@ -4002,6 +4021,18 @@
             var lbl = field.querySelector('label');
             if (lbl) lbl.textContent = text;
           });
+          // AI-generated questions carry no i18n key and can't be re-translated
+          // in place. If such questions are showing on step 3 and nothing has
+          // been answered yet, re-fetch so they return in the new language;
+          // skip when answers exist so the user's work is never discarded.
+          if (state.step === 3 && config.clarifyEnabled) {
+            var aiFields = questionsWrap.querySelectorAll('.wiz-q:not([data-i18n-q])');
+            if (aiFields.length) {
+              var answered = false;
+              questionsWrap.querySelectorAll('.wiz-q textarea').forEach(function (ta) { if (ta.value.trim()) answered = true; });
+              if (!answered) { state.clarifyKey = ''; enterClarify(); }
+            }
+          }
         }
         renderCaptcha();
         if (state.step === 4 && !state.submitting) buildReview();

@@ -46,11 +46,14 @@
     hr{ border:0; border-top:1px solid var(--line); margin:3.5rem 0 0; }
     .note{ font-size:.86rem; color:var(--text-3); margin-top:2rem; }
     section{ scroll-margin-top:1.5rem; }
+    .skip{ position:absolute; left:-9999px; top:0; background:var(--surface); color:var(--text); padding:.6rem 1rem; border-radius:8px; z-index:10; }
+    .skip:focus{ left:1rem; top:1rem; }
   </style>
 </head>
 <body>
+  <a class="skip" href="#main">Skip to content</a>
   <div class="wrap">
-    <div class="top">
+    <header class="top">
       <a class="brand" href="/">
         <svg viewBox="0 0 64 64" aria-hidden="true">
           <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8B7BFF"/><stop offset="1" stop-color="#45E6FF"/></linearGradient></defs>
@@ -60,29 +63,30 @@
         <span>Cosmo<em>Labs</em></span>
       </a>
       <a class="back" href="/">← Back to home</a>
-    </div>
+    </header>
 
+    <main id="main">
     <h1>Privacy Policy &amp; Terms of Service</h1>
     <p class="updated">Last updated: 11 July 2026 · This page is provided in English.</p>
 
-    <div class="toc">
+    <nav class="toc" aria-label="On this page">
       <div class="toc-row">
         <a href="#privacy"><strong>Privacy Policy</strong></a>
         <a href="#terms"><strong>Terms of Service</strong></a>
         <a href="/#contact">Contact</a>
       </div>
-    </div>
+    </nav>
 
     <!-- ================= PRIVACY ================= -->
-    <section id="privacy">
-      <h2>Privacy Policy</h2>
+    <section id="privacy" aria-labelledby="privacy-h">
+      <h2 id="privacy-h">Privacy Policy</h2>
       <p class="lead">This policy explains what information CosmoLabs (&ldquo;we&rdquo;, &ldquo;us&rdquo;) collects when you use this website, how we use it, who processes it on our behalf, and the choices you have. If you have any question, email <a href="mailto:cosmolabshq@gmail.com">cosmolabshq@gmail.com</a>.</p>
 
       <h3>1. Information we collect</h3>
       <ul>
         <li><strong>Project brief.</strong> When you submit the &ldquo;Start a project&rdquo; intake form, we collect the information you provide: your email address, phone number, project title and description, any reference links, colour-scheme preferences, your answers to clarifying questions, and any files you choose to attach.</li>
         <li><strong>Contact form.</strong> The contact form opens a pre-filled message in your own email application. It does not transmit or store anything on our servers — sending the email is your action.</li>
-        <li><strong>Technical data.</strong> When you submit a brief we record the originating IP address and browser user-agent string, together with timestamps, to operate the service and protect it against abuse.</li>
+        <li><strong>Technical data.</strong> When you submit a brief we record the originating IP address and browser user-agent string, together with timestamps, to operate the service and protect it against abuse. In addition, this site loads its web fonts from Google Fonts, so on any page you view your IP address and user-agent are sent to Google&rsquo;s servers to deliver those fonts.</li>
         <li><strong>Preferences.</strong> Your chosen site language is stored in your browser&rsquo;s local storage. We do not use advertising or cross-site tracking cookies.</li>
       </ul>
 
@@ -102,7 +106,7 @@
       <p>We rely on the following providers to run the service; each processes data only to provide their function:</p>
       <ul>
         <li><strong>Vercel</strong> — website hosting and private file/record storage.</li>
-        <li><strong>Google (Gmail)</strong> — sending the notification and confirmation emails.</li>
+        <li><strong>Google</strong> — Gmail for sending the notification and confirmation emails, and Google Fonts for serving the site&rsquo;s typefaces (which receives your IP and user-agent on each page load).</li>
         <li><strong>Anthropic</strong> — generating the clarifying questions described above.</li>
         <li><strong>Cloudflare</strong> — bot-protection (human-verification) challenges, where enabled.</li>
       </ul>
@@ -124,8 +128,8 @@
     </section>
 
     <!-- ================= TERMS ================= -->
-    <section id="terms">
-      <h2>Terms of Service</h2>
+    <section id="terms" aria-labelledby="terms-h">
+      <h2 id="terms-h">Terms of Service</h2>
       <p class="lead">These terms govern your use of this website and the project-intake service. By using the site or submitting a brief, you agree to them.</p>
 
       <h3>1. The service</h3>
@@ -162,9 +166,12 @@
       <h3>10. Contact</h3>
       <p>Questions about these terms? Email <a href="mailto:cosmolabshq@gmail.com">cosmolabshq@gmail.com</a>.</p>
     </section>
+    </main>
 
-    <hr>
-    <p class="note">© 2026 CosmoLabs. All rights reserved. · <a href="/">cosmolabshq.com</a></p>
+    <footer>
+      <hr>
+      <p class="note">© 2026 CosmoLabs. All rights reserved. · <a href="/">cosmolabshq.com</a></p>
+    </footer>
   </div>
 </body>
 </html>
