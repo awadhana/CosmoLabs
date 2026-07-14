@@ -76,10 +76,20 @@ describe("POST /api/intake handler", { skip: moduleMockingAvailable ? false : "m
   before(async () => {
     putCalls = [];
     mock.module("@vercel/blob", {
-      namedExports: { put: async (path) => { putCalls.push(path); return { url: `blob://${path}` }; } },
+      namedExports: {
+        put: async (path) => { putCalls.push(path); return { url: `blob://${path}` }; },
+        head: async () => null,
+        list: async () => ({ blobs: [] }),
+        del: async () => {},
+      },
     });
     mock.module("../api/_lib/email.js", {
       namedExports: { sendIntakeEmails: async () => ({ sent: true }) },
+    });
+    // The Forge pipeline ping is best-effort; stub it so the handler test stays
+    // hermetic (no Discord webhook, no blob reads inside pipeline.js).
+    mock.module("../api/_lib/pipeline.js", {
+      namedExports: { notifyDiscord: async () => ({ sent: false }) },
     });
     handler = (await import("../api/intake.js")).default;
     createChallenge = (await import("../api/_lib/captcha.js")).createChallenge;
